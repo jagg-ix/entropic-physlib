@@ -141,6 +141,7 @@ lemma castToField_eq_self {S : TensorSpecies k C G} {c}
     (v : (↑((𝟙_ (Discrete C ⥤ Rep k G)).obj { as := c }).V)) :
     S.castToField v = v := rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Casts an element of `(S.F.obj (OverColor.mk c)).V` for `c` a map from `Fin 0` to an
   element of the field. -/
 def castFin0ToField {c : Fin 0 → C} : (S.F.obj (OverColor.mk c)).V →ₗ[k] k :=
@@ -149,7 +150,7 @@ def castFin0ToField {c : Fin 0 → C} : (S.F.obj (OverColor.mk c)).V →ₗ[k] k
 lemma castFin0ToField_tprod {c : Fin 0 → C}
     (x : (i : Fin 0) → S.FD.obj (Discrete.mk (c i))) :
     castFin0ToField S (PiTensorProduct.tprod k x) = 1 := by
-  simp only [castFin0ToField, mk_hom, LinearEquiv.coe_coe]
+  simp only [castFin0ToField, mk_hom]
   erw [PiTensorProduct.isEmptyEquiv_apply_tprod]
 
 /-!
@@ -158,6 +159,7 @@ lemma castFin0ToField_tprod {c : Fin 0 → C}
 
 -/
 
+set_option backward.isDefEq.respectTransparency false in
 lemma contr_congr (c c' : C) (h : c = c') (x : S.FD.obj (Discrete.mk c))
     (y : S.FD.obj (Discrete.mk (S.τ c))) :
     (S.contr.app { as := c }).hom (x ⊗ₜ[k] y) =

@@ -170,6 +170,7 @@ lemma exists_liminf_zero_of_forall_liminf_le (y : ℝ≥0) (f : ℝ≥0 → ℕ 
 
 /- Version of `exists_liminf_zero_of_forall_liminf_le` that lets you also require `g`
 to have an upper bound. -/
+set_option backward.isDefEq.respectTransparency false in
 lemma exists_liminf_zero_of_forall_liminf_le_with_UB (y : ℝ≥0) (f : ℝ≥0 → ℕ → ℝ≥0∞)
   {z : ℝ≥0} (hz : 0 < z)
   (hf : ∀ x, x > 0 → Filter.atTop.liminf (f x) ≤ y) :
@@ -370,6 +371,7 @@ lemma limsup_le_of_block_sequence_bound {α : Type*} (y : ℝ≥0) (f : α → �
 
 /- Version of `exists_liminf_zero_of_forall_liminf_le_with_UB` that lets you stipulate it for
 two different functions simultaneously, one with liminf and one with limsup. -/
+set_option backward.isDefEq.respectTransparency false in
 lemma exists_liminf_zero_of_forall_liminf_limsup_le_with_UB (y₁ y₂ : ℝ≥0) (f₁ f₂ : ℝ≥0 → ℕ → ℝ≥0∞)
     {z : ℝ≥0} (hz : 0 < z)
     (hf₁ : ∀ x > 0, Filter.atTop.liminf (f₁ x) ≤ y₁)

@@ -53,6 +53,7 @@ def speciesFamilyProj {m n : ℕ} (h : n ≤ m) :
 def familyProjection {m n : ℕ} (h : n ≤ m) : (SMνCharges m).Charges →ₗ[ℚ] (SMνCharges n).Charges :=
   chargesMapOfSpeciesMap (speciesFamilyProj h)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- For species, the embedding of the `m`-family charges onto the `n`-family charges, with all
 other charges zero. -/
 @[simps!]
@@ -114,6 +115,7 @@ lemma sum_familyUniversal {n : ℕ} (m : ℕ) (S : (SMνCharges 1).Charges) (j :
     simp
   erw [h1]
   refine Finset.sum_congr rfl (fun i _ => ?_)
+  erw [toSpeciesEquiv_apply_eq_toSpecies]
   erw [toSpecies_familyUniversal]
 
 lemma sum_familyUniversal_one {n : ℕ} (S : (SMνCharges 1).Charges) (j : Fin 6) :
@@ -127,7 +129,7 @@ lemma sum_familyUniversal_two {n : ℕ} (S : (SMνCharges 1).Charges)
   simp only [SMνSpecies_numberCharges, toSpecies_apply, Fin.zero_eta, Fin.isValue]
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl (fun i _ => ?_)
-  erw [toSpecies_familyUniversal]
+  erw [toSpeciesEquiv_apply_eq_toSpecies, toSpecies_familyUniversal]
   rfl
 
 lemma sum_familyUniversal_three {n : ℕ} (S : (SMνCharges 1).Charges)
@@ -139,7 +141,7 @@ lemma sum_familyUniversal_three {n : ℕ} (S : (SMνCharges 1).Charges)
   apply Finset.sum_congr
   · rfl
   · intro i _
-    erw [toSpecies_familyUniversal]
+    erw [toSpeciesEquiv_apply_eq_toSpecies, toSpecies_familyUniversal]
     simp only [SMνSpecies_numberCharges, Fin.zero_eta, Fin.isValue, toSpecies_apply]
     ring
 

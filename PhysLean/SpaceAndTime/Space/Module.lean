@@ -233,6 +233,7 @@ noncomputable instance : NormedAddCommGroup (Space d) where
 instance {d} : Inner ℝ (Space d) where
   inner p q := ∑ i, p i * q i
 
+set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma inner_vadd_zero {d} (v1 v2 : EuclideanSpace ℝ (Fin d)) :
     inner ℝ (v1 +ᵥ (0 : Space d)) (v2 +ᵥ (0 : Space d)) = Inner.inner ℝ v1 v2 := by
@@ -275,7 +276,7 @@ instance {d} : InnerProductSpace ℝ (Space d) where
 
 -/
 
-instance {d : ℕ} : MeasurableSpace (Space d) := borel (Space d)
+noncomputable instance {d : ℕ} : MeasurableSpace (Space d) := borel (Space d)
 
 instance {d : ℕ} : BorelSpace (Space d) where
   measurable_eq := by rfl
@@ -467,7 +468,7 @@ lemma eval_contDiff {d n} (i : Fin d) :
   simp [coordCLM_apply, coord]
 
 /-- The continuous linear equivalence between `Space d` and the corresponding `Pi` type. -/
-def equivPi (d : ℕ) :
+noncomputable def equivPi (d : ℕ) :
     Space d ≃L[ℝ] Π (_ : Fin d), ℝ := LinearEquiv.toContinuousLinearEquiv <|
   {
     toFun := fun p i => p i
@@ -652,6 +653,7 @@ lemma oneEquiv_symm_measurePreserving : MeasurePreserving oneEquiv.symm volume v
 
 -/
 
+set_option backward.isDefEq.respectTransparency false in
 open Manifold in
 /-- A diffeomorphism between the two different manifold structures on `Space d`,
   that equivalent to `manifoldStructure d` and that equivalent to `𝓘(ℝ, Space d)` -/

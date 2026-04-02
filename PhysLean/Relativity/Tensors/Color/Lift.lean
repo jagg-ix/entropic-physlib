@@ -82,26 +82,28 @@ lemma toRep_ρ_tprod (f : OverColor C) (M : G) (x : (i : f.left) → F.obj (Disc
   rw [PiTensorProduct.map_tprod]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma toRep_ρ_empty (g : G) : (toRep F (𝟙_ (OverColor C))).ρ g = LinearMap.id := by
   rw [toRep_ρ]
   ext x
   refine PiTensorProduct.induction_on' x (fun r x => ?_) <| fun x y hx hy => by
-    simp_all
-  simp only [Functor.id_obj, PiTensorProduct.tprodCoeff_eq_smul_tprod, map_smul,
+    simp_all [LinearMap.map_add]
+  simp only [Functor.id_obj, PiTensorProduct.tprodCoeff_eq_smul_tprod, LinearMap.map_smul,
     PiTensorProduct.map_tprod, LinearMap.id_coe, id_eq]
   apply congrArg
   apply congrArg
   funext i
   exact Empty.elim i
 
+set_option backward.isDefEq.respectTransparency false in
 lemma toRep_ρ_from_fin0 (c : Fin 0 → C) (g : G) :
     (toRep F (OverColor.mk c)).ρ g = LinearMap.id := by
   rw [toRep_ρ]
   ext x
   refine PiTensorProduct.induction_on' x (fun r x => ?_) <| fun x y hx hy => by
-    simp_all
+    simp_all [LinearMap.map_add]
   simp only [Functor.id_obj, PiTensorProduct.tprodCoeff_eq_smul_tprod,
-    _root_.map_smul, PiTensorProduct.map_tprod, LinearMap.id_coe, id_eq]
+    LinearMap.map_smul, PiTensorProduct.map_tprod, LinearMap.id_coe, id_eq]
   apply congrArg
   apply congrArg
   funext i
@@ -126,6 +128,7 @@ tensor product.
 
 -/
 
+set_option backward.isDefEq.respectTransparency false in
 /-- For a function `F : Discrete C ⥤ Rep k G`, the linear equivalence
   `(F.obj c1).V ≃ₗ[k] (F.obj c2).V` induced by an equality of `c1` and `c2`. -/
 def linearIsoOfEq {c1 c2 : Discrete C} (h : c1.as = c2.as) :
@@ -164,6 +167,7 @@ lemma linearIsoOfHom_tprod {f g : OverColor C} (m : f ⟶ g)
   rw [PiTensorProduct.reindex_tprod, PiTensorProduct.congr_tprod]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Given a morphism in `OverColor C`, `m : f ⟶ g` and a functor `F : Discrete C ⥤ Rep k G`,
   the morphism `(toRep F f) ⟶ (toRep F g)` formed by reindexing. -/
 def homToRepHom {f g : OverColor C} (m : f ⟶ g) : toRep F f ⟶ toRep F g where
@@ -199,6 +203,7 @@ lemma homToRepHom_tprod {X Y : OverColor C} (p : (i : X.left) → F.obj (Discret
     (fun i => linearIsoOfEq F (Hom.toEquiv_symm_apply f i))
     fun i => p ((Hom.toEquiv f).symm i)
 
+set_option backward.isDefEq.respectTransparency false in
 lemma homToRepHom_id (X : OverColor C) : homToRepHom F (𝟙 X) = 𝟙 _ := by
   ext x
   refine PiTensorProduct.induction_on' x (fun r x => ?_) (fun x y hx hy => by
@@ -211,6 +216,7 @@ lemma homToRepHom_id (X : OverColor C) : homToRepHom F (𝟙 X) = 𝟙 _ := by
     Iso.refl_hom, Action.id_hom, Iso.refl_inv, LinearEquiv.ofLinear_apply]
   exact congrArg _ (funext (fun i => rfl))
 
+set_option backward.isDefEq.respectTransparency false in
 lemma homToRepHom_comp {X Y Z : OverColor C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     homToRepHom F (f ≫ g) = homToRepHom F f ≫ homToRepHom F g := by
   ext x
@@ -296,6 +302,7 @@ def μModEquiv (X Y : OverColor C) :
     ((toRep F X).V ⊗[k] (toRep F Y).V) ≃ₗ[k] toRep F (X ⊗ Y) :=
   PhysLean.PiTensorProduct.tmulEquiv ≪≫ₗ PiTensorProduct.congr (discreteSumEquiv F)
 
+set_option backward.isDefEq.respectTransparency false in
 lemma μModEquiv_tmul_tprod {X Y : OverColor C}
     (p : (i : X.left) → F.obj (Discrete.mk (X.hom i)))
     (q : (i : Y.left) → F.obj (Discrete.mk (Y.hom i))) :
@@ -310,6 +317,7 @@ lemma μModEquiv_tmul_tprod {X Y : OverColor C}
     (PiTensorProduct.tprod k (PhysLean.PiTensorProduct.elimPureTensor p q)) = _
   rw [PiTensorProduct.congr_tprod]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The natural isomorphism corresponding to the tensor. -/
 def μ (X Y : OverColor C) : toRep F X ⊗ toRep F Y ≅ toRep F (X ⊗ Y) :=
   Action.mkIso (μModEquiv F X Y).toModuleIso
@@ -349,6 +357,7 @@ lemma μ_tmul_tprod_mk {X Y : Type} {cX : X → C} {cY : Y → C}
     discreteSumEquiv F i (PhysLean.PiTensorProduct.elimPureTensor p q i) :=
   μModEquiv_tmul_tprod F _ _
 
+set_option backward.isDefEq.respectTransparency false in
 lemma μ_natural_left {X Y : OverColor C} (f : X ⟶ Y) (Z : OverColor C) :
     MonoidalCategory.whiskerRight (homToRepHom F f) (toRep F Z) ≫ (μ F Y Z).hom =
     (μ F X Z).hom ≫ homToRepHom F (MonoidalCategory.whiskerRight f Z) := by
@@ -384,6 +393,7 @@ lemma μ_natural_left {X Y : OverColor C} (f : X ⟶ Y) (Z : OverColor C) :
       Functor.mapIso_refl, Iso.refl_hom, Action.id_hom, Iso.refl_inv]
     rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma μ_natural_right {X Y : OverColor C} (X' : OverColor C) (f : X ⟶ Y) :
     MonoidalCategory.whiskerLeft (toRep F X') (homToRepHom F f) ≫ (μ F X' Y).hom =
     (μ F X' X).hom ≫ homToRepHom F (MonoidalCategory.whiskerLeft X' f) := by
@@ -417,6 +427,7 @@ lemma μ_natural_right {X Y : OverColor C} (X' : OverColor C) (f : X ⟶ Y) :
     rfl
   | Sum.inr i => rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma associativity (X Y Z : OverColor C) :
     whiskerRight (μ F X Y).hom (toRep F Z) ≫
     (μ F (X ⊗ Y) Z).hom ≫ homToRepHom F (associator X Y Z).hom =
@@ -458,6 +469,7 @@ lemma associativity (X Y Z : OverColor C) :
       Iso.refl_inv, LinearEquiv.ofLinear_apply, Sum.elim_inr]
     rfl
 
+set_option backward.isDefEq.respectTransparency false in
 open TensorProduct in
 lemma left_unitality (X : OverColor C) : (leftUnitor (toRep F X)).hom =
     whiskerRight (toRepUnitIso F).hom (toRep F X) ≫
@@ -487,6 +499,7 @@ lemma left_unitality (X : OverColor C) : (leftUnitor (toRep F X)).hom =
     Iso.refl_hom, Action.id_hom, Iso.refl_inv, LinearEquiv.ofLinear_apply]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 open TensorProduct in
 lemma right_unitality (X : OverColor C) : (rightUnitor (toRep F X)).hom =
     whiskerLeft (toRep F X) (toRepUnitIso F).hom ≫
@@ -512,6 +525,7 @@ lemma right_unitality (X : OverColor C) : (rightUnitor (toRep F X)).hom =
     Functor.mapIso_refl, Iso.refl_hom, Action.id_hom, Iso.refl_inv, LinearEquiv.ofLinear_apply]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma braided' (X Y : OverColor C) : (μ F X Y).hom ≫ (homToRepHom F) (β_ X Y).hom =
     (β_ (toRep F X) (toRep F Y)).hom ≫ (μ F Y X).hom := by
   ext1
@@ -578,6 +592,7 @@ by taking the tensor product of the corresponding morphisms in `η`.
 
 variable {F F' : Discrete C ⥤ Rep k G} (η : F ⟶ F')
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Given two functors `F F' : Discrete C ⥤ Rep k G` and a natural transformation `η : F ⟶ F'`,
   and an `X : OverColor C`, the `(toRepFunc F).obj X ⟶ (toRepFunc F').obj X` in `Rep k G`
   constructed by the tensor product of the morphisms in `η` with corresponding color. -/
@@ -619,6 +634,7 @@ lemma repNatTransOfColorApp_tprod (X : OverColor C)
   erw [PiTensorProduct.map_tprod]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma repNatTransOfColorApp_naturality {X Y : OverColor C} (f : X ⟶ Y) :
     (toRepFunc F).map f ≫ repNatTransOfColorApp η Y =
     repNatTransOfColorApp η X ≫ (toRepFunc F').map f := by
@@ -661,6 +677,7 @@ which is made manifest in the results
 
 -/
 
+set_option backward.isDefEq.respectTransparency false in
 lemma repNatTransOfColorApp_unit : Functor.LaxMonoidal.ε (toRepFunc F) ≫
     repNatTransOfColorApp η (𝟙_ (OverColor C)) = Functor.LaxMonoidal.ε (toRepFunc F') := by
   ext
@@ -677,6 +694,7 @@ lemma repNatTransOfColorApp_unit : Functor.LaxMonoidal.ε (toRepFunc F) ≫
   funext i
   exact Empty.elim i
 
+set_option backward.isDefEq.respectTransparency false in
 lemma repNatTransOfColorApp_tensor (X Y : OverColor C) :
     (Functor.LaxMonoidal.μ (toRepFunc F)) X Y ≫ repNatTransOfColorApp η (X ⊗ Y) =
     (repNatTransOfColorApp η X ⊗ₘ repNatTransOfColorApp η Y) ≫
@@ -716,6 +734,7 @@ open lift
 
 -/
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The functor taking functors in `Discrete C ⥤ Rep k G` to monoidal functors in
   `BraidedFunctor (OverColor C) (Rep k G)`, built on the PiTensorProduct. -/
 noncomputable def lift : (Discrete C ⥤ Rep k G) ⥤ LaxBraidedFunctor (OverColor C) (Rep k G) where
@@ -810,6 +829,7 @@ lemma μIso_inv_tprod (F : Discrete C ⥤ Rep k G) (X Y : OverColor C)
   | Sum.inl i => rfl
   | Sum.inr i => rfl
 
+set_option backward.isDefEq.respectTransparency false in
 lemma inv_μ (X Y : OverColor C) : inv (Functor.LaxMonoidal.μ (lift.obj F).toFunctor X Y) =
     (lift.μ F X Y).inv := by
   change inv (lift.μ F X Y).hom = _
@@ -859,6 +879,7 @@ lemma forgetLiftAppV_symm_apply (c : C) (x : (F.obj (Discrete.mk c)).V) :
   fin_cases i
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The `forgetLiftAppV` function takes an object `c` of type `C` and returns a isomorphism
 between the objects obtained by applying the lift of `F` and that obtained by applying
 `F`. -/

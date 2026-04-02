@@ -222,6 +222,7 @@ def toSelfAdjoint : ContrMod 3 ≃ₗ[ℝ] selfAdjoint (Matrix (Fin 2) (Fin 2) �
   toFin1dℝEquiv ≪≫ₗ (Finsupp.linearEquivFunOnFinite ℝ ℝ (Fin 1 ⊕ Fin 3)).symm ≪≫ₗ
   PauliMatrix.pauliBasis'.repr.symm
 
+set_option backward.isDefEq.respectTransparency false in
 open PauliMatrix in
 lemma toSelfAdjoint_apply (x : ContrMod 3) : toSelfAdjoint x =
     x.toFin1dℝ (Sum.inl 0) • ⟨pauliMatrix (Sum.inl 0), pauliMatrix_selfAdjoint _⟩

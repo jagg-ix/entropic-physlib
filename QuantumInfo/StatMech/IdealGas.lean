@@ -31,6 +31,7 @@ open NVEHamiltonian
 variable (n : ℕ) {V β T : ℝ}
 
 open MeasureTheory in
+set_option backward.isDefEq.respectTransparency false in
 /-- The partition function Z for an ideal gas. -/
 theorem PartitionZ_eq (hV : 0 < V) (hβ : 0 < β) :
     IdealGas.PartitionZ (n,V) β = V^n * (2 * Real.pi / β)^(3 * n / 2 : ℝ) := by
@@ -111,6 +112,7 @@ theorem PartitionZ_eq (hV : 0 < V) (hβ : 0 < β) :
   dsimp
   conv =>
     enter [1, 1, 2, x]
+    simp only [not_exists]
     rw [MeasureTheory.lintegral_const_mul' _ _ (ENNReal.ofReal_ne_top)]
 
 
@@ -129,15 +131,13 @@ theorem PartitionZ_eq (hV : 0 < V) (hβ : 0 < β) :
   · apply Measurable.aestronglyMeasurable
     apply Measurable.ite
     · rw [measurableSet_setOf]
-      apply Measurable.not
-      exact h_measurable_box
+      fun_prop
     · fun_prop
     · fun_prop
   · apply Measurable.comp ENNReal.measurable_ofReal
     apply Measurable.ite
     · rw [measurableSet_setOf]
-      apply Measurable.not
-      exact h_measurable_box
+      fun_prop
     · fun_prop
     · fun_prop
 
@@ -150,6 +150,8 @@ theorem PartitionZ_eq (hV : 0 < V) (hβ : 0 < β) :
       push_neg
       simp_rw [← Prod.forall (p := fun xy ↦ |a xy| ≤ V ^ (3⁻¹ : ℝ) / 2)]
       exact Fintype.prod_boole.symm
+    simp only [not_exists, not_lt] at h_integrand_prod
+    simp only [not_lt]
     simp_rw [h_integrand_prod]; clear h_integrand_prod
     convert ← MeasureTheory.integral_fintype_prod_eq_prod (ι := Fin n × Fin 3) (𝕜 := ℝ)
       (f := fun _ r ↦ if |r| ≤ V ^ (3⁻¹ : ℝ) / 2 then 1 else 0); swap

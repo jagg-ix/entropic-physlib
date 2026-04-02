@@ -5,7 +5,7 @@ package «PhysLib»
 
 require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "v4.28.0"
 
-require "mathlib" from git "https://github.com/leanprover-community/mathlib4.git" @ "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+require "mathlib" from git "https://github.com/leanprover-community/mathlib4.git" @ "33a7291a345d718bca41f8ae8a9bae365d8f2a3e"
 
 
 @[default_target]

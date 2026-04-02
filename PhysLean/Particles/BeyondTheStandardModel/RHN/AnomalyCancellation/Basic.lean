@@ -45,6 +45,10 @@ def toSpecies (i : Fin 6) : (SMνCharges n).Charges →ₗ[ℚ] (SMνSpecies n).
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
+lemma toSpeciesEquiv_apply_eq_toSpecies (S : (SMνCharges n).Charges) (i : Fin 6) :
+    toSpeciesEquiv S i = toSpecies i S := by
+  rfl
+
 lemma charges_eq_toSpecies_eq (S T : (SMνCharges n).Charges) :
     S = T ↔ ∀ i, toSpecies i S = toSpecies i T := by
   refine Iff.intro (fun h => ?_) (fun h => ?_)
