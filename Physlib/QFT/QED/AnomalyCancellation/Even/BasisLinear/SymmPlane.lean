@@ -5,25 +5,50 @@ Authors: Joseph Tooby-Smith
 -/
 module
 
-public import Physlib.QFT.QED.AnomalyCancellation.Even.BasisLinear.ChargeSplits
+public import Physlib.QFT.QED.AnomalyCancellation.BasisLinear
+public import Physlib.QFT.QED.AnomalyCancellation.VectorLike
 /-!
 
-# The symmetric plane for the even case basis
+# The symmetric plane for the even case
 
-The symmetric plane is the span of basis vectors `symmBasis`, each of which has charge `+1` at
-position `evenFst j` and charge `-1` at position `evenSnd j`. It is called "symmetric" because
-these positions come from the **symmetric (even) split** of the `2 * n.succ` charge indices into
-`n.succ + n.succ` (see `ChargeSplits`).
+## i. Overview
 
-## Key results
+This module defines the *symmetric plane* for the even case of anomaly cancellation
+in `PureU1 (2 * n.succ)`. It is called "symmetric" because these positions come from
+the symmetric (even) split `n.succ + n.succ`, where the first and second halves are
+paired symmetrically.
 
-- `symmBasisAsCharges` : The basis vectors as charge assignments.
+## ii. Key definitions and results
+
+- `symmBasisAsCharges` : The basis vectors of the symmetric plane as charges.
 - `symmBasis` : The basis vectors as `LinSols`.
-- `Psymm` : The inclusion of the symmetric plane into charges.
-- `Psymm_accCube` : Charges from the symmetric plane satisfy the cubic ACC.
-- `Psymm'` : The inclusion of the symmetric plane into linear solutions.
-- `vectorLikeEven_in_span` : Every vector-like even solution is in the span of the symmetric
-  plane.
+- `symmPlane` : A point in the span of the symmetric basis as a charge,
+    i.e., the inclusion of the symmetric plane into charges.
+- `symmPlaneLinSols` : The inclusion of the symmetric plane into linear solutions.
+- `symmPlane_accCube` : Charges from the symmetric plane satisfy the cubic ACC.
+- `symmBasis_linear_independent` : The symmetric basis vectors are linearly independent.
+- `vectorLikeEven_in_span` : Every vector-like even solution is in the span of the symmetric basis.
+
+## iii. Table of contents
+
+- A.1. The even split: Splitting the charges up via `n.succ + n.succ`
+- B. The first plane (symmetric plane)
+  - B.1. The basis vectors of the symmetric plane as charges
+  - B.2. Components of the basis vectors
+  - B.3. The basis vectors satisfy the linear ACCs
+  - B.4. The basis vectors satisfy the cubic ACC
+  - B.5. The basis vectors as linear solutions
+  - B.6. The inclusion of the symmetric plane into charges
+  - B.7. Components of the inclusion into charges
+  - B.8. The inclusion into charges satisfies the linear and cubic ACCs
+  - B.9. Kernel of the inclusion into charges
+  - B.10. The inclusion of the plane into linear solutions
+  - B.11. The basis vectors are linearly independent
+  - B.12. Every vector-like even solution is in the span of the basis of the symmetric plane
+
+## iv. References
+
+- https://arxiv.org/pdf/1912.04804.pdf
 
 -/
 
@@ -39,7 +64,50 @@ namespace VectorLikeEvenPlane
 
 /-!
 
-## B. The symmetric plane
+### A.1. The even split: Spltting the charges up via `n.succ + n.succ`
+
+-/
+
+/-- The inclusion of `Fin n.succ` into `Fin (n.succ + n.succ)` via the first `n.succ`,
+  casted into `Fin (2 * n.succ)`. -/
+def evenFst (j : Fin n.succ) : Fin (2 * n.succ) :=
+  Fin.cast (split_equal n.succ) (Fin.castAdd n.succ j)
+
+/-- The inclusion of `Fin n.succ` into `Fin (n.succ + n.succ)` via the second `n.succ`,
+  casted into `Fin (2 * n.succ)`. -/
+def evenSnd (j : Fin n.succ) : Fin (2 * n.succ) :=
+  Fin.cast (split_equal n.succ) (Fin.natAdd n.succ j)
+
+lemma ext_even (S T : Fin (2 * n.succ) → ℚ) (h1 : ∀ i, S (evenFst i) = T (evenFst i))
+    (h2 : ∀ i, S (evenSnd i) = T (evenSnd i)) : S = T := by
+  funext i
+  by_cases hi : i.val < n.succ
+  · let j : Fin n.succ := ⟨i, hi⟩
+    have h2 := h1 j
+    have h3 : evenFst j = i := rfl
+    rw [h3] at h2
+    exact h2
+  · let j : Fin n.succ := ⟨i - n.succ, by omega⟩
+    have h2 := h2 j
+    have h3 : evenSnd j = i := by
+      simp only [succ_eq_add_one, evenSnd, Fin.ext_iff, Fin.val_cast, Fin.val_natAdd, j]
+      omega
+    rw [h3] at h2
+    exact h2
+
+lemma sum_even (S : Fin (2 * n.succ) → ℚ) :
+    ∑ i, S i = ∑ i : Fin n.succ, ((S ∘ evenFst) i + (S ∘ evenSnd) i) := by
+  have h1 : ∑ i, S i = ∑ i : Fin (n.succ + n.succ), S (Fin.cast (split_equal n.succ) i) := by
+    rw [Finset.sum_equiv (Fin.castOrderIso (split_equal n.succ)).symm.toEquiv]
+    · intro i
+      simp only [mem_univ, Fin.symm_castOrderIso, RelIso.coe_fn_toEquiv]
+    · exact fun _ _=> rfl
+  rw [h1, Fin.sum_univ_add, Finset.sum_add_distrib]
+  rfl
+
+/-!
+
+## B. The first plane (symmetric plane)
 
 -/
 
@@ -66,10 +134,11 @@ def symmBasisAsCharges (j : Fin n.succ) : (PureU1 (2 * n.succ)).Charges :=
 
 -/
 
-lemma symmBasis_on_evenFst_self (j : Fin n.succ) : symmBasisAsCharges j (evenFst j) = 1 := by
+lemma symmBasisAsCharges_on_evenFst_self (j : Fin n.succ) :
+    symmBasisAsCharges j (evenFst j) = 1 := by
   simp [symmBasisAsCharges]
 
-lemma symmBasis_on_evenFst_other {k j : Fin n.succ} (h : k ≠ j) :
+lemma symmBasisAsCharges_on_evenFst_other {k j : Fin n.succ} (h : k ≠ j) :
     symmBasisAsCharges k (evenFst j) = 0 := by
   simp only [symmBasisAsCharges, succ_eq_add_one, PureU1_numberCharges, evenFst, evenSnd]
   split
@@ -87,12 +156,12 @@ lemma symmBasis_on_evenFst_other {k j : Fin n.succ} (h : k ≠ j) :
       omega
     · rfl
 
-lemma symmBasis_on_other {k : Fin n.succ} {j : Fin (2 * n.succ)} (h1 : j ≠ evenFst k)
+lemma symmBasisAsCharges_on_other {k : Fin n.succ} {j : Fin (2 * n.succ)} (h1 : j ≠ evenFst k)
     (h2 : j ≠ evenSnd k) : symmBasisAsCharges k j = 0 := by
   simp only [symmBasisAsCharges, succ_eq_add_one, PureU1_numberCharges]
   simp_all only [ne_eq, ↓reduceIte]
 
-lemma symmBasis_evenSnd_eq_neg_evenFst (j i : Fin n.succ) :
+lemma symmBasisAsCharges_evenSnd_eq_neg_evenFst (j i : Fin n.succ) :
     symmBasisAsCharges j (evenSnd i) = - symmBasisAsCharges j (evenFst i) := by
   simp only [symmBasisAsCharges, succ_eq_add_one, PureU1_numberCharges, evenSnd, evenFst]
   split <;> split
@@ -110,11 +179,13 @@ lemma symmBasis_evenSnd_eq_neg_evenFst (j i : Fin n.succ) :
     simp_all
   all_goals omega
 
-lemma symmBasis_on_evenSnd_self (j : Fin n.succ) : symmBasisAsCharges j (evenSnd j) = - 1 := by
-  rw [symmBasis_evenSnd_eq_neg_evenFst, symmBasis_on_evenFst_self]
+lemma symmBasisAsCharges_on_evenSnd_self (j : Fin n.succ) :
+    symmBasisAsCharges j (evenSnd j) = - 1 := by
+  rw [symmBasisAsCharges_evenSnd_eq_neg_evenFst, symmBasisAsCharges_on_evenFst_self]
 
-lemma symmBasis_on_evenSnd_other {k j : Fin n.succ} (h : k ≠ j) : symmBasisAsCharges k (evenSnd j) = 0 := by
-  rw [symmBasis_evenSnd_eq_neg_evenFst, symmBasis_on_evenFst_other h]
+lemma symmBasisAsCharges_on_evenSnd_other {k j : Fin n.succ} (h : k ≠ j) :
+    symmBasisAsCharges k (evenSnd j) = 0 := by
+  rw [symmBasisAsCharges_evenSnd_eq_neg_evenFst, symmBasisAsCharges_on_evenFst_other h]
   rfl
 
 /-!
@@ -123,22 +194,23 @@ lemma symmBasis_on_evenSnd_other {k j : Fin n.succ} (h : k ≠ j) : symmBasisAsC
 
 -/
 
-lemma symmBasis_linearACC (j : Fin n.succ) : (accGrav (2 * n.succ)) (symmBasisAsCharges j) = 0 := by
+lemma symmBasisAsCharges_linearACC (j : Fin n.succ) :
+    (accGrav (2 * n.succ)) (symmBasisAsCharges j) = 0 := by
   rw [accGrav]
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
   rw [sum_even]
-  simp [symmBasis_evenSnd_eq_neg_evenFst]
+  simp [symmBasisAsCharges_evenSnd_eq_neg_evenFst]
 /-!
 
 ### B.4. The basis vectors satisfy the cubic ACC
 
 -/
-lemma symmBasis_accCube (j : Fin n.succ) :
+lemma symmBasisAsCharges_accCube (j : Fin n.succ) :
     accCube (2 * n.succ) (symmBasisAsCharges j) = 0 := by
   rw [accCube_explicit, sum_even]
   apply Finset.sum_eq_zero
   intro i _
-  simp only [succ_eq_add_one, Function.comp_apply, symmBasis_evenSnd_eq_neg_evenFst]
+  simp only [succ_eq_add_one, Function.comp_apply, symmBasisAsCharges_evenSnd_eq_neg_evenFst]
   ring
 
 /-!
@@ -155,7 +227,7 @@ def symmBasis (j : Fin n.succ) : (PureU1 (2 * n.succ)).LinSols :=
     simp only [succ_eq_add_one, PureU1_numberLinear] at i
     match i with
     | 0 =>
-    exact symmBasis_linearACC j⟩
+    exact symmBasisAsCharges_linearACC j⟩
 
 /-!
 
@@ -163,8 +235,9 @@ def symmBasis (j : Fin n.succ) : (PureU1 (2 * n.succ)).LinSols :=
 
 -/
 
-/-- A point in the span of the symmetric plane basis as a charge. -/
-def Psymm (f : Fin n.succ → ℚ) : (PureU1 (2 * n.succ)).Charges := ∑ i, f i • symmBasisAsCharges i
+/-- A point in the span of the symmetric basis as a charge. -/
+def symmPlane (f : Fin n.succ → ℚ) : (PureU1 (2 * n.succ)).Charges :=
+  ∑ i, f i • symmBasisAsCharges i
 
 /-!
 
@@ -172,30 +245,33 @@ def Psymm (f : Fin n.succ → ℚ) : (PureU1 (2 * n.succ)).Charges := ∑ i, f i
 
 -/
 
-lemma Psymm_evenFst (f : Fin n.succ → ℚ) (j : Fin n.succ) : Psymm f (evenFst j) = f j := by
-  rw [Psymm, sum_of_charges]
+lemma symmPlane_evenFst (f : Fin n.succ → ℚ) (j : Fin n.succ) :
+    symmPlane f (evenFst j) = f j := by
+  rw [symmPlane, sum_of_charges]
   simp only [succ_eq_add_one, HSMul.hSMul, SMul.smul]
   rw [Finset.sum_eq_single j]
-  · rw [symmBasis_on_evenFst_self]
+  · rw [symmBasisAsCharges_on_evenFst_self]
     exact Rat.mul_one (f j)
   · intro k _ hkj
-    rw [symmBasis_on_evenFst_other hkj]
+    rw [symmBasisAsCharges_on_evenFst_other hkj]
     exact Rat.mul_zero (f k)
   · simp only [mem_univ, not_true_eq_false, _root_.mul_eq_zero, IsEmpty.forall_iff]
 
-lemma Psymm_evenSnd (f : Fin n.succ → ℚ) (j : Fin n.succ) : Psymm f (evenSnd j) = - f j := by
-  rw [Psymm, sum_of_charges]
+lemma symmPlane_evenSnd (f : Fin n.succ → ℚ) (j : Fin n.succ) :
+    symmPlane f (evenSnd j) = - f j := by
+  rw [symmPlane, sum_of_charges]
   simp only [succ_eq_add_one, HSMul.hSMul, SMul.smul]
   rw [Finset.sum_eq_single j]
-  · simp only [symmBasis_on_evenSnd_self, mul_neg, mul_one]
+  · simp only [symmBasisAsCharges_on_evenSnd_self, mul_neg, mul_one]
   · intro k _ hkj
-    simp only [symmBasis_on_evenSnd_other hkj, mul_zero]
+    simp only [symmBasisAsCharges_on_evenSnd_other hkj, mul_zero]
   · simp
 
-lemma Psymm_evenSnd_evenFst (f : Fin n.succ → ℚ) : Psymm f ∘ evenSnd = - Psymm f ∘ evenFst := by
+lemma symmPlane_evenSnd_evenFst (f : Fin n.succ → ℚ) :
+    symmPlane f ∘ evenSnd = - symmPlane f ∘ evenFst := by
   funext j
   simp only [PureU1_numberCharges, Function.comp_apply, Pi.neg_apply]
-  rw [Psymm_evenFst, Psymm_evenSnd]
+  rw [symmPlane_evenFst, symmPlane_evenSnd]
 
 /-!
 
@@ -203,17 +279,19 @@ lemma Psymm_evenSnd_evenFst (f : Fin n.succ → ℚ) : Psymm f ∘ evenSnd = - P
 
 -/
 
-lemma Psymm_linearACC (f : Fin n.succ → ℚ) : (accGrav (2 * n.succ)) (Psymm f) = 0 := by
+lemma symmPlane_linearACC (f : Fin n.succ → ℚ) :
+    (accGrav (2 * n.succ)) (symmPlane f) = 0 := by
   rw [accGrav]
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
   rw [sum_even]
-  simp [Psymm_evenSnd, Psymm_evenFst]
+  simp [symmPlane_evenSnd, symmPlane_evenFst]
 
-lemma Psymm_accCube (f : Fin n.succ → ℚ) : accCube (2 * n.succ) (Psymm f) = 0 := by
+lemma symmPlane_accCube (f : Fin n.succ → ℚ) :
+    accCube (2 * n.succ) (symmPlane f) = 0 := by
   rw [accCube_explicit, sum_even]
   apply Finset.sum_eq_zero
   intro i _
-  simp only [succ_eq_add_one, Function.comp_apply, Psymm_evenFst, Psymm_evenSnd]
+  simp only [succ_eq_add_one, Function.comp_apply, symmPlane_evenFst, symmPlane_evenSnd]
   ring
 
 /-!
@@ -222,9 +300,9 @@ lemma Psymm_accCube (f : Fin n.succ → ℚ) : accCube (2 * n.succ) (Psymm f) = 
 
 -/
 
-lemma Psymm_zero (f : Fin n.succ → ℚ) (h : Psymm f = 0) : ∀ i, f i = 0 := by
+lemma symmPlane_zero (f : Fin n.succ → ℚ) (h : symmPlane f = 0) : ∀ i, f i = 0 := by
   intro i
-  erw [← Psymm_evenFst f]
+  erw [← symmPlane_evenFst f]
   rw [h]
   rfl
 
@@ -234,11 +312,13 @@ lemma Psymm_zero (f : Fin n.succ → ℚ) (h : Psymm f = 0) : ∀ i, f i = 0 := 
 
 -/
 
-/-- A point in the span of the symmetric plane basis. -/
-def Psymm' (f : Fin n.succ → ℚ) : (PureU1 (2 * n.succ)).LinSols := ∑ i, f i • symmBasis i
+/-- A point in the span of the symmetric basis as a linear solution. -/
+def symmPlaneLinSols (f : Fin n.succ → ℚ) : (PureU1 (2 * n.succ)).LinSols :=
+  ∑ i, f i • symmBasis i
 
-lemma Psymm'_val (f : Fin n.succ → ℚ) : (Psymm' f).val = Psymm f := by
-  simp only [succ_eq_add_one, Psymm', Psymm]
+lemma symmPlaneLinSols_val (f : Fin n.succ → ℚ) :
+    (symmPlaneLinSols f).val = symmPlane f := by
+  simp only [succ_eq_add_one, symmPlaneLinSols, symmPlane]
   funext i
   rw [sum_of_anomaly_free_linear, sum_of_charges]
   rfl
@@ -252,13 +332,13 @@ lemma Psymm'_val (f : Fin n.succ → ℚ) : (Psymm' f).val = Psymm f := by
 theorem symmBasis_linear_independent : LinearIndependent ℚ (@symmBasis n) := by
   apply Fintype.linearIndependent_iff.mpr
   intro f h
-  change Psymm' f = 0 at h
-  have h1 : (Psymm' f).val = 0 :=
+  change symmPlaneLinSols f = 0 at h
+  have h1 : (symmPlaneLinSols f).val = 0 :=
     (AddSemiconjBy.eq_zero_iff (ACCSystemLinear.LinSols.val 0)
     (congrFun (congrArg HAdd.hAdd (congrArg ACCSystemLinear.LinSols.val (id (Eq.symm h))))
     (ACCSystemLinear.LinSols.val 0))).mp rfl
-  rw [Psymm'_val] at h1
-  exact Psymm_zero f h1
+  rw [symmPlaneLinSols_val] at h1
+  exact symmPlane_zero f h1
 
 /-!
 
@@ -268,7 +348,8 @@ theorem symmBasis_linear_independent : LinearIndependent ℚ (@symmBasis n) := b
 
 lemma vectorLikeEven_in_span (S : (PureU1 (2 * n.succ)).LinSols)
     (hS : VectorLikeEven S.val) : ∃ (M : (FamilyPermutations (2 * n.succ)).group),
-      (FamilyPermutations (2 * n.succ)).linSolRep M S ∈ Submodule.span ℚ (Set.range symmBasis) := by
+      (FamilyPermutations (2 * n.succ)).linSolRep M S ∈
+        Submodule.span ℚ (Set.range symmBasis) := by
   use (Tuple.sort S.val).symm
   change sortAFL S ∈ Submodule.span ℚ (Set.range symmBasis)
   rw [Submodule.mem_span_range_iff_exists_fun ℚ]
@@ -276,13 +357,13 @@ lemma vectorLikeEven_in_span (S : (PureU1 (2 * n.succ)).LinSols)
   use f
   apply ACCSystemLinear.LinSols.ext
   rw [sortAFL_val]
-  erw [Psymm'_val]
+  erw [symmPlaneLinSols_val]
   apply ext_even
   · intro i
-    rw [Psymm_evenFst]
+    rw [symmPlane_evenFst]
     rfl
   · intro i
-    rw [Psymm_evenSnd]
+    rw [symmPlane_evenSnd]
     have ht := hS i
     change sort S.val (evenFst i) = - sort S.val (evenSnd i) at ht
     have h : sort S.val (evenSnd i) = - sort S.val (evenFst i) := by
