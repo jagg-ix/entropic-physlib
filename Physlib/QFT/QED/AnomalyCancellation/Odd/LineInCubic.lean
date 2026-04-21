@@ -6,7 +6,7 @@ Authors: Joseph Tooby-Smith
 module
 
 public import Physlib.QFT.QED.AnomalyCancellation.LineInPlaneCond
-public import Physlib.QFT.QED.AnomalyCancellation.Odd.BasisLinear
+public import Physlib.QFT.QED.AnomalyCancellation.Odd.Basis
 /-!
 
 # Line In Cubic Odd case
@@ -35,30 +35,30 @@ open VectorLikeOddPlane
 /-- A property on `LinSols`, satisfied if every point on the line between the two planes
 in the basis through that point is in the cubic. -/
 def LineInCubic (S : (PureU1 (2 * n + 1)).LinSols) : Prop :=
-  ∀ (g f : Fin n → ℚ) (_ : S.val = Pa g f) (a b : ℚ),
-  accCube (2 * n + 1) (a • symmPlane g + b • shiftPlane f) = 0
+  ∀ (g f : Fin n → ℚ) (_ : S.val = basisCharge g f) (a b : ℚ),
+  accCube (2 * n + 1) (a • symmPlaneAsCharges g + b • shiftPlaneAsCharges f) = 0
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The condition that a linear solution sits on a line between the two planes
   within the cubic expands into a on `accCubeTriLinSymm` applied to the points
   within the planes. -/
 lemma lineInCubic_expand {S : (PureU1 (2 * n + 1)).LinSols} (h : LineInCubic S) :
-    ∀ (g : Fin n → ℚ) (f : Fin n → ℚ) (_ : S.val = symmPlane g + shiftPlane f) (a b : ℚ),
-    3 * a * b * (a * accCubeTriLinSymm (symmPlane g) (symmPlane g) (shiftPlane f)
-    + b * accCubeTriLinSymm (shiftPlane f) (shiftPlane f) (symmPlane g)) = 0 := by
+    ∀ (g : Fin n → ℚ) (f : Fin n → ℚ) (_ : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f) (a b : ℚ),
+    3 * a * b * (a * accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f)
+    + b * accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g)) = 0 := by
   intro g f hS a b
   have h1 := h g f hS a b
-  change accCubeTriLinSymm.toCubic (a • symmPlane g + b • shiftPlane f) = 0 at h1
+  change accCubeTriLinSymm.toCubic (a • symmPlaneAsCharges g + b • shiftPlaneAsCharges f) = 0 at h1
   simp only [TriLinearSymm.toCubic_add] at h1
   simp only [HomogeneousCubic.map_smul,
     accCubeTriLinSymm.map_smul₁, accCubeTriLinSymm.map_smul₂, accCubeTriLinSymm.map_smul₃] at h1
-  erw [symmPlane_accCube, shiftPlane_accCube] at h1
+  erw [symmPlaneAsCharges_accCube, shiftPlaneAsCharges_accCube] at h1
   rw [← h1]
   ring
 
 lemma line_in_cubic_symmPlane_symmPlane_shiftPlane {S : (PureU1 (2 * n + 1)).LinSols} (h : LineInCubic S) :
-    ∀ (g : Fin n → ℚ) (f : Fin n → ℚ) (_ : S.val = symmPlane g + shiftPlane f),
-    accCubeTriLinSymm (symmPlane g) (symmPlane g) (shiftPlane f) = 0 := by
+    ∀ (g : Fin n → ℚ) (f : Fin n → ℚ) (_ : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f),
+    accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) = 0 := by
   intro g f hS
   linear_combination 2 / 3 * (lineInCubic_expand h g f hS 1 1) -
       (lineInCubic_expand h g f hS 1 2) / 6
@@ -81,9 +81,9 @@ lemma lineInCubicPerm_permute {S : (PureU1 (2 * n + 1)).LinSols}
 set_option backward.isDefEq.respectTransparency false in
 lemma lineInCubicPerm_swap {S : (PureU1 (2 * n.succ + 1)).LinSols}
     (LIC : LineInCubicPerm S) :
-    ∀ (j : Fin n.succ) (g f : Fin n.succ → ℚ) (_ : S.val = Pa g f),
+    ∀ (j : Fin n.succ) (g f : Fin n.succ → ℚ) (_ : S.val = basisCharge g f),
       (S.val (oddShiftSnd j) - S.val (oddShiftFst j))
-      * accCubeTriLinSymm (symmPlane g) (symmPlane g) (shiftBasisAsCharges j) = 0 := by
+      * accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftBasisAsCharges j) = 0 := by
   intro j g f h
   let S' := (FamilyPermutations (2 * n.succ + 1)).linSolRep
     (Equiv.swap (oddShiftFst j) (oddShiftSnd j)) S
@@ -98,19 +98,19 @@ lemma lineInCubicPerm_swap {S : (PureU1 (2 * n.succ + 1)).LinSols}
   simpa using h2
 
 lemma symmPlane_symmPlane_shiftBasisAsCharges_accCube' {S : (PureU1 (2 * n.succ.succ + 1)).LinSols}
-    (f g : Fin n.succ.succ → ℚ) (hS : S.val = Pa f g) :
-    accCubeTriLinSymm (symmPlane f) (symmPlane f) (shiftBasisAsCharges 0) =
+    (f g : Fin n.succ.succ → ℚ) (hS : S.val = basisCharge f g) :
+    accCubeTriLinSymm (symmPlaneAsCharges f) (symmPlaneAsCharges f) (shiftBasisAsCharges 0) =
     (S.val (oddShiftFst 0) + S.val (oddShiftSnd 0)) *
     (2 * S.val oddShiftZero + S.val (oddShiftFst 0) + S.val (oddShiftSnd 0)) := by
   rw [symmPlane_symmPlane_shiftBasisAsCharges_accCube f 0]
-  rw [← Pa_oddShiftShiftZero f g]
+  rw [← basisCharge_oddShiftShiftZero f g]
   rw [← hS]
   have ht : oddShiftFst (0 : Fin n.succ.succ) = oddFst 1 := rfl
   nth_rewrite 1 [ht]
-  rw [symmPlane_oddFst]
-  have h1 := Pa_oddShiftShiftZero f g
-  have h4 := Pa_oddShiftShiftSnd f g 0
-  have h2 := Pa_oddShiftShiftFst f g 0
+  rw [symmPlaneAsCharges_oddFst]
+  have h1 := basisCharge_oddShiftShiftZero f g
+  have h4 := basisCharge_oddShiftShiftSnd f g 0
+  have h2 := basisCharge_oddShiftShiftFst f g 0
   rw [← hS] at h1 h2 h4
   simp only [Nat.succ_eq_add_one, Fin.succ_zero_eq_one, Fin.castSucc_zero] at h2
   have h5 : f 1 = S.val (oddShiftShiftFst 0) + S.val oddShiftShiftZero +

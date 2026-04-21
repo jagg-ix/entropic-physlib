@@ -30,16 +30,16 @@ open VectorLikeOddPlane
   show that this can be extended to a complete solution. -/
 def parameterizationAsLinear (g f : Fin n → ℚ) (a : ℚ) :
     (PureU1 (2 * n + 1)).LinSols :=
-  a • ((accCubeTriLinSymm (P! f) (P! f) (P g)) • P' g +
-  (- accCubeTriLinSymm (P g) (P g) (P! f)) • P!' f)
+  a • ((accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g)) • symmPlane g +
+  (- accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f)) • shiftPlane f)
 
 lemma parameterizationAsLinear_val (g f : Fin n → ℚ) (a : ℚ) :
     (parameterizationAsLinear g f a).val =
-    a • ((accCubeTriLinSymm (P! f) (P! f) (P g)) • P g +
-    (- accCubeTriLinSymm (P g) (P g) (P! f)) • P! f) := by
+    a • ((accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g)) • symmPlaneAsCharges g +
+    (- accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f)) • shiftPlaneAsCharges f) := by
   rw [parameterizationAsLinear]
-  change a • (_ • (P' g).val + _ • (P!' f).val) = _
-  rw [P'_val, P!'_val]
+  change a • (_ • (symmPlane g).val + _ • (shiftPlane f).val) = _
+  rw [symmPlane_val, shiftPlane_val]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The parameterization satisfies the cubic ACC. -/
@@ -50,7 +50,7 @@ lemma parameterizationCharge_cube (g f : Fin n → ℚ) (a : ℚ) :
   rw [HomogeneousCubic.map_smul]
   rw [TriLinearSymm.toCubic_add]
   rw [HomogeneousCubic.map_smul, HomogeneousCubic.map_smul]
-  erw [P_accCube g, P!_accCube f]
+  erw [symmPlaneAsCharges_accCube g, shiftPlaneAsCharges_accCube f]
   rw [accCubeTriLinSymm.map_smul₁, accCubeTriLinSymm.map_smul₂,
     accCubeTriLinSymm.map_smul₃, accCubeTriLinSymm.map_smul₁, accCubeTriLinSymm.map_smul₂,
     accCubeTriLinSymm.map_smul₃]
@@ -63,54 +63,54 @@ def parameterization (g f : Fin n → ℚ) (a : ℚ) :
   parameterizationCharge_cube g f a⟩
 
 lemma anomalyFree_param {S : (PureU1 (2 * n + 1)).Sols}
-    (g f : Fin n → ℚ) (hS : S.val = P g + P! f) :
-    accCubeTriLinSymm (P g) (P g) (P! f) =
-    - accCubeTriLinSymm (P! f) (P! f) (P g) := by
+    (g f : Fin n → ℚ) (hS : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f) :
+    accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) =
+    - accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g) := by
   have hC := S.cubicSol
   rw [hS] at hC
-  change (accCube (2 * n + 1)) (P g + P! f) = 0 at hC
+  change (accCube (2 * n + 1)) (symmPlaneAsCharges g + shiftPlaneAsCharges f) = 0 at hC
   erw [TriLinearSymm.toCubic_add] at hC
-  erw [P_accCube] at hC
-  erw [P!_accCube] at hC
+  erw [symmPlaneAsCharges_accCube] at hC
+  erw [shiftPlaneAsCharges_accCube] at hC
   linear_combination hC / 3
 
-/-- A proposition on a solution which is true if `accCubeTriLinSymm (P g, P g, P! f) ≠ 0`.
+/-- A proposition on a solution which is true if `accCubeTriLinSymm (symmPlaneAsCharges g, symmPlaneAsCharges g, shiftPlaneAsCharges f) ≠ 0`.
 In this case our parameterization above will be able to recover this point. -/
 def GenericCase (S : (PureU1 (2 * n.succ + 1)).Sols) : Prop :=
-  ∀ (g f : Fin n.succ → ℚ) (_ : S.val = P g + P! f),
-  accCubeTriLinSymm (P g) (P g) (P! f) ≠ 0
+  ∀ (g f : Fin n.succ → ℚ) (_ : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f),
+  accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) ≠ 0
 
 lemma genericCase_exists (S : (PureU1 (2 * n.succ + 1)).Sols)
-    (hs : ∃ (g f : Fin n.succ → ℚ), S.val = P g + P! f ∧
-    accCubeTriLinSymm (P g) (P g) (P! f) ≠ 0) : GenericCase S := by
+    (hs : ∃ (g f : Fin n.succ → ℚ), S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f ∧
+    accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) ≠ 0) : GenericCase S := by
   intro g f hS hC
   obtain ⟨g', f', hS', hC'⟩ := hs
   rw [hS] at hS'
-  erw [Pa_eq] at hS'
+  erw [basisCharge_eq] at hS'
   rw [hS'.1, hS'.2] at hC
   exact hC' hC
 
-/-- A proposition on a solution which is true if `accCubeTriLinSymm (P g, P g, P! f) ≠ 0`.
+/-- A proposition on a solution which is true if `accCubeTriLinSymm (symmPlaneAsCharges g, symmPlaneAsCharges g, shiftPlaneAsCharges f) ≠ 0`.
 In this case we will show that S is zero if it is true for all permutations. -/
 def SpecialCase (S : (PureU1 (2 * n.succ + 1)).Sols) : Prop :=
-  ∀ (g f : Fin n.succ → ℚ) (_ : S.val = P g + P! f),
-  accCubeTriLinSymm (P g) (P g) (P! f) = 0
+  ∀ (g f : Fin n.succ → ℚ) (_ : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f),
+  accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) = 0
 
 lemma specialCase_exists (S : (PureU1 (2 * n.succ + 1)).Sols)
-    (hs : ∃ (g f : Fin n.succ → ℚ), S.val = P g + P! f ∧
-    accCubeTriLinSymm (P g) (P g) (P! f) = 0) : SpecialCase S := by
+    (hs : ∃ (g f : Fin n.succ → ℚ), S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f ∧
+    accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) = 0) : SpecialCase S := by
   intro g f hS
   obtain ⟨g', f', hS', hC'⟩ := hs
   rw [hS] at hS'
-  erw [Pa_eq] at hS'
+  erw [basisCharge_eq] at hS'
   rw [hS'.1, hS'.2]
   exact hC'
 
 lemma generic_or_special (S : (PureU1 (2 * n.succ + 1)).Sols) :
     GenericCase S ∨ SpecialCase S := by
   obtain ⟨g, f, h⟩ := span_basis S.1.1
-  have h1 : accCubeTriLinSymm (P g) (P g) (P! f) ≠ 0 ∨
-      accCubeTriLinSymm (P g) (P g) (P! f) = 0 := by
+  have h1 : accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) ≠ 0 ∨
+      accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) = 0 := by
     exact ne_or_eq _ _
   cases h1 <;> rename_i h1
   · exact Or.inl (genericCase_exists S ⟨g, f, h, h1⟩)
@@ -119,7 +119,7 @@ lemma generic_or_special (S : (PureU1 (2 * n.succ + 1)).Sols) :
 theorem generic_case {S : (PureU1 (2 * n.succ + 1)).Sols} (h : GenericCase S) :
     ∃ g f a, S = parameterization g f a := by
   obtain ⟨g, f, hS⟩ := span_basis S.1.1
-  use g, f, (accCubeTriLinSymm (P! f) (P! f) (P g))⁻¹
+  use g, f, (accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g))⁻¹
   rw [parameterization]
   apply ACCSystem.Sols.ext
   rw [parameterizationAsLinear_val]
@@ -135,14 +135,14 @@ lemma special_case_lineInCubic {S : (PureU1 (2 * n.succ + 1)).Sols}
   intro g f hS a b
   erw [TriLinearSymm.toCubic_add]
   rw [HomogeneousCubic.map_smul, HomogeneousCubic.map_smul]
-  erw [P_accCube, P!_accCube]
+  erw [symmPlaneAsCharges_accCube, shiftPlaneAsCharges_accCube]
   have h := h g f hS
   rw [accCubeTriLinSymm.map_smul₁, accCubeTriLinSymm.map_smul₂,
     accCubeTriLinSymm.map_smul₃, accCubeTriLinSymm.map_smul₁, accCubeTriLinSymm.map_smul₂,
     accCubeTriLinSymm.map_smul₃, h]
   rw [anomalyFree_param _ _ hS] at h
   simp only [Nat.succ_eq_add_one, accCubeTriLinSymm_toFun_apply_apply, neg_eq_zero] at h
-  change accCubeTriLinSymm (P! f) (P! f) (P g) = 0 at h
+  change accCubeTriLinSymm (shiftPlaneAsCharges f) (shiftPlaneAsCharges f) (symmPlaneAsCharges g) = 0 at h
   erw [h]
   simp
 

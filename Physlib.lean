@@ -227,7 +227,7 @@ public import Physlib.QFT.QED.AnomalyCancellation.LineInPlaneCond
 public import Physlib.QFT.QED.AnomalyCancellation.LowDim.One
 public import Physlib.QFT.QED.AnomalyCancellation.LowDim.Three
 public import Physlib.QFT.QED.AnomalyCancellation.LowDim.Two
-public import Physlib.QFT.QED.AnomalyCancellation.Odd.BasisLinear
+public import Physlib.QFT.QED.AnomalyCancellation.Odd.Basis
 public import Physlib.QFT.QED.AnomalyCancellation.Odd.LineInCubic
 public import Physlib.QFT.QED.AnomalyCancellation.Odd.Parameterization
 public import Physlib.QFT.QED.AnomalyCancellation.Permutations

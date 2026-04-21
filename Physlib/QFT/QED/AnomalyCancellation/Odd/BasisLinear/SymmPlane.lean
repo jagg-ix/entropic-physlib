@@ -18,14 +18,14 @@ symmetric split, which divides the charges into two groups of size `n` and a mid
 
 ## Main definitions
 
-- `symmPlane` : A point in the span of the symmetric basis as a charge assignment.
-- `symmPlaneLinSols` : A point in the span of the symmetric basis as a linear solution.
+- `symmPlaneAsCharges` : A point in the span of the symmetric basis as a charge assignment.
+- `symmPlane` : A point in the span of the symmetric basis as a linear solution.
 - `symmBasis` : The basis vectors of the symmetric plane as `LinSols`.
 - `symmBasisAsCharges` : The basis vectors of the symmetric plane as charges.
 
 ## Key results
 
-- `symmPlane_accCube` : Charges from the symmetric plane satisfy the cubic ACC.
+- `symmPlaneAsCharges_accCube` : Charges from the symmetric plane satisfy the cubic ACC.
 - `symmBasis_linear_independent` : The symmetric basis vectors are linearly independent.
 
 ## Table of contents
@@ -40,7 +40,8 @@ symmetric split, which divides the charges into two groups of size `n` and a mid
   - B.6. Components of the first plane
   - B.7. Points on the first plane satisfies the ACCs
   - B.8. Kernel of the inclusion into charges
-  - B.9. The basis vectors are linearly independent
+  - B.9. The inclusion of the first plane into `LinSols`
+  - B.10. The basis vectors are linearly independent
 
 -/
 
@@ -236,7 +237,7 @@ def symmBasis (j : Fin n) : (PureU1 (2 * n + 1)).LinSols :=
 -/
 
 /-- A point in the span of the first part of the basis as a charge. -/
-def symmPlane (f : Fin n → ℚ) : (PureU1 (2 * n + 1)).Charges :=
+def symmPlaneAsCharges (f : Fin n → ℚ) : (PureU1 (2 * n + 1)).Charges :=
   ∑ i, f i • symmBasisAsCharges i
 
 /-!
@@ -245,8 +246,8 @@ def symmPlane (f : Fin n → ℚ) : (PureU1 (2 * n + 1)).Charges :=
 
 -/
 
-lemma symmPlane_oddFst (f : Fin n → ℚ) (j : Fin n) : symmPlane f (oddFst j) = f j := by
-  rw [symmPlane, sum_of_charges]
+lemma symmPlaneAsCharges_oddFst (f : Fin n → ℚ) (j : Fin n) : symmPlaneAsCharges f (oddFst j) = f j := by
+  rw [symmPlaneAsCharges, sum_of_charges]
   simp only [HSMul.hSMul, SMul.smul]
   rw [Finset.sum_eq_single j]
   · rw [symmBasisAsCharges_on_oddFst_self]
@@ -256,8 +257,8 @@ lemma symmPlane_oddFst (f : Fin n → ℚ) (j : Fin n) : symmPlane f (oddFst j) 
     exact Rat.mul_zero (f k)
   · simp only [mem_univ, not_true_eq_false, _root_.mul_eq_zero, IsEmpty.forall_iff]
 
-lemma symmPlane_oddSnd (f : Fin n → ℚ) (j : Fin n) : symmPlane f (oddSnd j) = - f j := by
-  rw [symmPlane, sum_of_charges]
+lemma symmPlaneAsCharges_oddSnd (f : Fin n → ℚ) (j : Fin n) : symmPlaneAsCharges f (oddSnd j) = - f j := by
+  rw [symmPlaneAsCharges, sum_of_charges]
   simp only [HSMul.hSMul, SMul.smul]
   rw [Finset.sum_eq_single j]
   · rw [symmBasisAsCharges_on_oddSnd_self]
@@ -267,8 +268,8 @@ lemma symmPlane_oddSnd (f : Fin n → ℚ) (j : Fin n) : symmPlane f (oddSnd j) 
     exact Rat.mul_zero (f k)
   · simp
 
-lemma symmPlane_oddMid (f : Fin n → ℚ) : symmPlane f oddMid = 0 := by
-  rw [symmPlane, sum_of_charges]
+lemma symmPlaneAsCharges_oddMid (f : Fin n → ℚ) : symmPlaneAsCharges f oddMid = 0 := by
+  rw [symmPlaneAsCharges, sum_of_charges]
   simp [HSMul.hSMul, SMul.smul, symmBasisAsCharges_on_oddMid]
 
 /-!
@@ -277,20 +278,20 @@ lemma symmPlane_oddMid (f : Fin n → ℚ) : symmPlane f oddMid = 0 := by
 
 -/
 
-lemma symmPlane_linearACC (f : Fin n → ℚ) : (accGrav (2 * n + 1)) (symmPlane f) = 0 := by
+lemma symmPlaneAsCharges_linearACC (f : Fin n → ℚ) : (accGrav (2 * n + 1)) (symmPlaneAsCharges f) = 0 := by
   rw [accGrav]
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
   rw [sum_odd]
-  simp [symmPlane_oddSnd, symmPlane_oddFst, symmPlane_oddMid]
+  simp [symmPlaneAsCharges_oddSnd, symmPlaneAsCharges_oddFst, symmPlaneAsCharges_oddMid]
 
 set_option backward.isDefEq.respectTransparency false in
-lemma symmPlane_accCube (f : Fin n → ℚ) : accCube (2 * n +1) (symmPlane f) = 0 := by
-  rw [accCube_explicit, sum_odd, symmPlane_oddMid]
+lemma symmPlaneAsCharges_accCube (f : Fin n → ℚ) : accCube (2 * n +1) (symmPlaneAsCharges f) = 0 := by
+  rw [accCube_explicit, sum_odd, symmPlaneAsCharges_oddMid]
   simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, Function.comp_apply,
     zero_add]
   apply Finset.sum_eq_zero
   intro i _
-  simp only [symmPlane_oddFst, symmPlane_oddSnd]
+  simp only [symmPlaneAsCharges_oddFst, symmPlaneAsCharges_oddSnd]
   ring
 
 /-!
@@ -299,38 +300,44 @@ lemma symmPlane_accCube (f : Fin n → ℚ) : accCube (2 * n +1) (symmPlane f) =
 
 -/
 
-lemma symmPlane_zero (f : Fin n → ℚ) (h : symmPlane f = 0) : ∀ i, f i = 0 := by
+lemma symmPlaneAsCharges_zero (f : Fin n → ℚ) (h : symmPlaneAsCharges f = 0) : ∀ i, f i = 0 := by
   intro i
-  erw [← symmPlane_oddFst f]
+  erw [← symmPlaneAsCharges_oddFst f]
   rw [h]
   rfl
 
+/-!
+
+### B.9. The inclusion of the first plane into `LinSols`
+
+-/
+
 /-- A point in the span of the first part of the basis. -/
-def symmPlaneLinSols (f : Fin n → ℚ) : (PureU1 (2 * n + 1)).LinSols :=
+def symmPlane (f : Fin n → ℚ) : (PureU1 (2 * n + 1)).LinSols :=
   ∑ i, f i • symmBasis i
 
-lemma symmPlaneLinSols_val (f : Fin n → ℚ) : (symmPlaneLinSols f).val = symmPlane f := by
-  simp only [symmPlaneLinSols, symmPlane]
+lemma symmPlane_val (f : Fin n → ℚ) : (symmPlane f).val = symmPlaneAsCharges f := by
+  simp only [symmPlane, symmPlaneAsCharges]
   funext i
   rw [sum_of_anomaly_free_linear, sum_of_charges]
   rfl
 
 /-!
 
-### B.9. The basis vectors are linearly independent
+### B.10. The basis vectors are linearly independent
 
 -/
 
 theorem symmBasis_linear_independent : LinearIndependent ℚ (@symmBasis n) := by
   apply Fintype.linearIndependent_iff.mpr
   intro f h
-  change symmPlaneLinSols f = 0 at h
-  have h1 : (symmPlaneLinSols f).val = 0 :=
+  change symmPlane f = 0 at h
+  have h1 : (symmPlane f).val = 0 :=
     (AddSemiconjBy.eq_zero_iff (ACCSystemLinear.LinSols.val 0)
     (congrFun (congrArg HAdd.hAdd (congrArg ACCSystemLinear.LinSols.val (id (Eq.symm h))))
     (ACCSystemLinear.LinSols.val 0))).mp rfl
-  rw [symmPlaneLinSols_val] at h1
-  exact symmPlane_zero f h1
+  rw [symmPlane_val] at h1
+  exact symmPlaneAsCharges_zero f h1
 
 end VectorLikeOddPlane
 
