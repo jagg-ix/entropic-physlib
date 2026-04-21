@@ -89,7 +89,7 @@ lemma genericCase_exists (S : (PureU1 (2 * n.succ)).Sols)
   rw [hS'.1, hS'.2] at hC
   exact hC' hC
 
-/-- A proposition on a solution which is true if `accCubeTriLinSymm (P g, P g, P! f) = 0`. -/
+/-- A proposition on a solution which is true if `accCubeTriLinSymm (symmPlaneAsCharges g, symmPlaneAsCharges g, shiftPlaneAsCharges f) = 0`. -/
 def SpecialCase (S : (PureU1 (2 * n.succ)).Sols) : Prop :=
   ∀ (g : Fin n.succ → ℚ) (f : Fin n → ℚ) (_ : S.val = symmPlaneAsCharges g + shiftPlaneAsCharges f),
   accCubeTriLinSymm (symmPlaneAsCharges g) (symmPlaneAsCharges g) (shiftPlaneAsCharges f) = 0
