@@ -63,7 +63,7 @@ namespace VectorLikeEvenPlane
 
 /-!
 
-### A.1. The shifted even split: Spltting the charges up via `1 + (n + n + 1)`
+### A.1. The shifted even split: Splitting the charges up via `1 + (n + n + 1)`
 
 -/
 

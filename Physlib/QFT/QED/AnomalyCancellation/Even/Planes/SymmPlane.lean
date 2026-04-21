@@ -64,7 +64,7 @@ namespace VectorLikeEvenPlane
 
 /-!
 
-### A.1. The even split: Spltting the charges up via `n.succ + n.succ`
+### A.1. The even split: Splitting the charges up via `n.succ + n.succ`
 
 -/
 

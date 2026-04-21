@@ -63,7 +63,7 @@ section theDeltas
 
 /-!
 
-### A.1. The shifted split: Spltting the charges up via `1 + n + n`
+### A.1. The shifted split: Splitting the charges up via `1 + n + n`
 
 -/
 
@@ -96,7 +96,7 @@ lemma sum_oddShift (S : Fin (2 * n + 1) → ℚ) :
 
 /-!
 
-### A.2. The shifted shifted split: Spltting the charges up via `((1+n)+1) + n.succ`
+### A.2. The shifted shifted split: Splitting the charges up via `((1+n)+1) + n.succ`
 
 -/
 
