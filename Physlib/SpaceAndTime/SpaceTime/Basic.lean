@@ -73,7 +73,10 @@ noncomputable section
 
 -/
 
-TODO "6V2DR" "SpaceTime should be refactored into a structure, or similar, to prevent casting."
+TODO "6V2DR" "In `Physlib/SpaceAndTime/SpaceTime/Basic.lean`, `SpaceTime d` (Minkowski
+  spacetime in `d+1` dimensions, currently an `abbrev` for `Lorentz.Vector d`) should be
+  refactored into a `structure` (or similar wrapper) so that uses of it do not require
+  type casts to and from `Lorentz.Vector d`."
 
 /-- `SpaceTime d` corresponds to `d+1` dimensional space-time.
   This is equipped with an instance of the action of a Lorentz group,

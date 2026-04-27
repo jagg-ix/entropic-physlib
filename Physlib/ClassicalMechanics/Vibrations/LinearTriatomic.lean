@@ -17,4 +17,6 @@ public import Physlib.Meta.TODO.Basic
 
 @[expose] public section
 
-TODO "L7O4I" "Derive the frequencies of vibaration of a symmetric linear triatomic molecule."
+TODO "L7O4I" "In `Physlib/ClassicalMechanics/Vibrations/LinearTriatomic.lean` (currently a stub,
+  cf. Landau & Lifshitz, Mechanics, §24, Problem 1), derive the normal-mode vibration
+  frequencies of a symmetric linear triatomic molecule."

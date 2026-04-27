@@ -65,7 +65,9 @@ noncomputable def timeEvolutionMatrixStandard (t : ℝ) :
     let b : Basis (Fin n) ℂ H := Module.finBasisOfFinrankEq ℂ H A.hdim
     (timeEvolutionMatrix A t b)
 
-TODO "6VZGG" "Define a smooth structure on `FiniteTarget`."
+TODO "6VZGG" "In `Physlib/QuantumMechanics/FiniteTarget/Basic.lean`, define a smooth
+  structure on the `QuantumMechanics.FiniteTarget` type (finite-dimensional-Hilbert-space
+  quantum mechanical systems, e.g. spin systems and tight-binding chains)."
 
 end FiniteTarget
 

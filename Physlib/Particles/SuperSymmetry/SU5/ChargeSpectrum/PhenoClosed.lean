@@ -386,8 +386,11 @@ lemma completeness_of_isPhenoClosedQ5_isPhenoClosedQ10
 
 -/
 
-TODO "JGVOQ" "Make the result `viableChargesMultiset` a safe definition, that is to
-  say proof that the recursion terminates."
+TODO "JGVOQ" "In `Physlib/Particles/SuperSymmetry/SU5/ChargeSpectrum/PhenoClosed.lean`,
+  make the `unsafe` recursive definition `viableChargesMultiset (S5 S10 : Finset 𝓩)`
+  (the multiset of phenomenologically viable SU(5) SUSY GUT charge spectra over the
+  allowed `5`-bar and `10`-dimensional charge sets) into a safe definition by proving
+  that the recursion terminates."
 
 /-- All charges, for a given `S5 S10 : Finset 𝓩`,
   which permit a top Yukawa coupling, are not phenomenologically constrained,

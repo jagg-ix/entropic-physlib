@@ -29,8 +29,11 @@ electromagnetic potentials and fields around a circular coil.
 
 @[expose] public section
 
-TODO "TCGIW" "Copying the structure of the electrostatics of an infinite wire,
-  complete the definitions and proofs for a circular coil carrying a steady current."
+TODO "TCGIW" "In `Physlib/Electromagnetism/Current/CircularCoil.lean` (currently a stub for
+  the electromagnetism of a circular coil carrying a steady current), copy the structure of
+  the existing electrostatics-of-an-infinite-wire development and complete the definitions and
+  proofs (current density, electromagnetic potentials, fields) for a circular coil. See e.g.
+  https://ntrs.nasa.gov/api/citations/20140002333/downloads/20140002333.pdf"
 
 namespace Electromagnetism
 namespace DistElectromagneticPotential

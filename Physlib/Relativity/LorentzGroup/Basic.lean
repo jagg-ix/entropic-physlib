@@ -22,7 +22,8 @@ We define the Lorentz group.
 -/
 
 @[expose] public section
-TODO "6VZHM" "Define the Lie group structure on the Lorentz group."
+TODO "6VZHM" "In `Physlib/Relativity/LorentzGroup/Basic.lean`, equip the Lorentz group
+  `LorentzGroup d` (matrices preserving the Minkowski metric) with a Lie group structure."
 
 noncomputable section
 

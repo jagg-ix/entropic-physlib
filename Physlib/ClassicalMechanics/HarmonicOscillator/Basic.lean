@@ -95,12 +95,17 @@ open Real
 open Space
 open InnerProductSpace
 
-TODO "6VZHC" "Create a new folder for the damped harmonic oscillator, initially as a place-holder."
+TODO "6VZHC" "Create a new folder `Physlib/ClassicalMechanics/DampedHarmonicOscillator/` for
+  the damped classical harmonic oscillator (mass `m`, spring constant `k`, damping `γ`,
+  equation of motion `m ẍ + γ ẋ + k x = 0`), initially as a place-holder analogous to the
+  undamped `HarmonicOscillator` developed in `Physlib/ClassicalMechanics/HarmonicOscillator/`."
 
-TODO "4DK2M" "Create a new file for the geometric model which properly models the position as a
-    configuration space and velocity as its tangent space, then show explicitly how this
-    coordinate model is a simplification of the geometric model.
-    A nice reference for such an analysis is:
+TODO "4DK2M" "In `Physlib/ClassicalMechanics/HarmonicOscillator/`, create a new file for the
+  geometric model of the classical harmonic oscillator which properly models the position as
+  a configuration space (a 1-D manifold) and the velocity as its tangent space, then show
+  explicitly how the current coordinate model (with both position and velocity in
+  `EuclideanSpace ℝ (Fin 1)`) is a simplification of the geometric model. A nice reference
+  for such an analysis is:
     https://web.williams.edu/Mathematics/it3/texts/var_noether.pdf"
 
 /-!

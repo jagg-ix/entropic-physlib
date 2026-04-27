@@ -461,7 +461,11 @@ We define the Higgs bundle.
 
 -/
 
-TODO "6V2IS" "Make `HiggsBundle` an associated bundle."
+TODO "6V2IS" "In `Physlib/Particles/StandardModel/HiggsBoson/Basic.lean`, redefine
+  `StandardModel.HiggsBundle` (currently the trivial bundle `Bundle.Trivial SpaceTime
+  HiggsVec` over `SpaceTime` with fiber the 2-dimensional complex Higgs vector space
+  `HiggsVec`) as an associated bundle of an appropriate Standard Model gauge principal
+  bundle."
 
 /-- The `HiggsBundle` is defined as the trivial vector bundle with base `SpaceTime` and
   fiber `HiggsVec`. Thus as a manifold it corresponds to `ℝ⁴ × ℂ²`. -/
@@ -815,9 +819,16 @@ lemma const_normSq (φ : HiggsVec) (x : SpaceTime) :
 The results in this section are currently informal.
 -/
 
-TODO "6V2MV" "Define the global gauge action on HiggsField."
-TODO "6V2M3" "Prove `⟪φ1, φ2⟫_H` invariant under the global gauge action. (norm_map_of_mem_unitary)"
-TODO "6V2NA" "Prove invariance of potential under global gauge action."
+TODO "6V2MV" "In `Physlib/Particles/StandardModel/HiggsBoson/Basic.lean`, define the
+  global Standard Model gauge action on `StandardModel.HiggsField` (smooth sections of
+  `HiggsBundle`), formalizing the currently-informal `gaugeAction` (which acts pointwise
+  through `HiggsVec.rep`)."
+TODO "6V2M3" "In `Physlib/Particles/StandardModel/HiggsBoson/Basic.lean`, prove that the
+  Higgs-field inner product `⟪φ1, φ2⟫_H` on `StandardModel.HiggsField` is invariant
+  under the global Standard Model gauge action (cf. `norm_map_of_mem_unitary`)."
+TODO "6V2NA" "In `Physlib/Particles/StandardModel/HiggsBoson/Basic.lean`, prove
+  invariance of the Higgs potential on `StandardModel.HiggsField` under the global
+  Standard Model gauge action."
 
 /-- The action of `gaugeTransformI` on `HiggsField` acting pointwise through `HiggsVec.rep`. -/
 informal_definition gaugeAction where

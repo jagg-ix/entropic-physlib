@@ -290,11 +290,16 @@ noncomputable instance {d : ℕ} : MeasurableSpace (Space d) := borel (Space d)
 instance {d : ℕ} : BorelSpace (Space d) where
   measurable_eq := by rfl
 
-TODO "HB6YZ" "In the above documentation describe what an instance is, and why
-  it is useful to have instances for `Space d`."
+TODO "HB6YZ" "In the module docstring of `Physlib/SpaceAndTime/Space/Module.lean` (which
+  endows `Space d` with `Module`, `Norm`, `InnerProductSpace`, `MeasurableSpace`, ...
+  instances), describe what a Lean `instance` is and why it is useful to have these
+  instances on `Space d`."
 
-TODO "HB6WN" "After TODO 'HB6VC', give `Space d` the necessary instances
-  using `inferInstanceAs`."
+TODO "HB6WN" "In `Physlib/SpaceAndTime/Space/Module.lean`, after TODO 'HB6VC' (converting
+  `Space d` from an `abbrev` to a `def`), give `Space d` its algebraic and analytic
+  instances (e.g. `Add`, `Module`, `NormedAddCommGroup`, `InnerProductSpace`, `MeasurableSpace`,
+  `BorelSpace`) using `inferInstanceAs` from the corresponding instances on
+  `EuclideanSpace ℝ (Fin d)`, instead of redefining them by hand."
 /-!
 
 ## The norm on `Space`
@@ -331,8 +336,9 @@ lemma sum_apply {ι : Type} [Fintype ι] (f : ι → Space d) (i : Fin d) :
 
 -/
 
-TODO "HB6Z4" "In the above documentation describe the notion of a basis
-  in Lean."
+TODO "HB6Z4" "In the module docstring of `Physlib/SpaceAndTime/Space/Module.lean`, describe the
+  notion of a basis (e.g. `OrthonormalBasis`) in Lean/Mathlib, in preparation for the
+  definition of the standard `Space.basis : OrthonormalBasis (Fin d) ℝ (Space d)`."
 
 /-- The standard basis of Space based on `Fin d`. -/
 noncomputable def basis {d} : OrthonormalBasis (Fin d) ℝ (Space d) where

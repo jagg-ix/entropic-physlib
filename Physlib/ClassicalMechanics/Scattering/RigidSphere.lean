@@ -17,4 +17,6 @@ public import Physlib.Meta.TODO.Basic
 
 @[expose] public section
 
-TODO "L7OTP" "Derive the scattering cross section of a perfectly rigid sphere."
+TODO "L7OTP" "In `Physlib/ClassicalMechanics/Scattering/RigidSphere.lean` (currently a stub,
+  cf. Landau & Lifshitz, Mechanics, §18, Problem 1), derive the classical scattering cross
+  section of a perfectly rigid sphere."

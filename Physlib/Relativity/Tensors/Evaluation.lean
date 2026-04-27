@@ -135,7 +135,10 @@ lemma evalT_pure {n : ℕ} {c : Fin (n + 1) → C} (i : Fin (n + 1))
   conv_rhs => rw [← PiTensorProduct.lift.tprod]
   rfl
 
-TODO "6VZ6G" "Add lemmas related to the interaction of evalT and permT, prodT and contrT."
+TODO "6VZ6G" "In `Physlib/Relativity/Tensors/Evaluation.lean`, add lemmas describing the
+  interaction of the tensor index evaluation map `TensorSpecies.Tensor.evalT` with the
+  permutation map `permT`, the tensor product `prodT`, and the contraction `contrT` on
+  tensors of a `TensorSpecies`."
 
 end Tensor
 

@@ -157,6 +157,9 @@ lemma cast_scaleUnit {d d2 : Dimension} {M : Type} [MulAction ℝ≥0 M] (m : Wi
   subst h
   simp
 
-TODO "LPWE4" "Induce instances on `WithDim d M` from instances on `M`."
+TODO "LPWE4" "In `Physlib/Units/WithDim/Basic.lean`, induce algebraic instances (e.g. `Add`, `Mul`,
+  `Module`, `OrderedAddCommGroup`, ...) on `WithDim d M` (the structure wrapping a value of `M`
+  tagged with the physical dimension `d : Dimension`) from the corresponding instances on the
+  carrier type `M`."
 
 end WithDim

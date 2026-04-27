@@ -584,7 +584,9 @@ lemma dropPair_update_dropPairEmb {n : ℕ} [inst : DecidableEq (Fin (n + 1 +1))
     · simp [h]
     · simp [h]
 
-TODO "63B7X" "Prove lemmas relating to the commutation rules of `dropPair` and `prodP`."
+TODO "63B7X" "In `Physlib/Relativity/Tensors/Contraction/Pure.lean`, prove lemmas relating
+  to the commutation rules of the pair-dropping contraction `Tensor.dropPair` with the
+  pure-tensor product `prodP` for pure tensors of a `TensorSpecies`."
 
 @[simp]
 lemma dropPair_permP {n n1 : ℕ} {c : Fin (n + 1 + 1) → C}

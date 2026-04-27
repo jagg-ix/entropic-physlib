@@ -28,9 +28,10 @@ In this module we will define the basic properties of a rigid body, including
 
 open Manifold
 
-TODO "MEX5S" "The definition of a rigid body is currently defined via linear maps
-  from the space of smooth functions to ℝ. When possible, it should be change
-  to *continuous* linear maps. "
+TODO "MEX5S" "In `Physlib/ClassicalMechanics/RigidBody/Basic.lean`, the `RigidBody d`
+  structure currently encodes the mass distribution `ρ` as a (plain) linear map
+  `C^⊤⟮𝓘(ℝ, Space d), Space d; 𝓘(ℝ, ℝ), ℝ⟯ →ₗ[ℝ] ℝ` from smooth functions on `Space d`
+  to `ℝ`. When possible, this should be changed to a *continuous* linear map."
 
 /-- A Rigid body defined by its mass distribution. -/
 structure RigidBody (d : ℕ) where

@@ -18,7 +18,10 @@ quadratic and cubic equations.
 -/
 
 @[expose] public section
-TODO "6VZLZ" "Replace the definitions in this file with Mathlib definitions."
+TODO "6VZLZ" "In `Physlib/Mathematics/LinearMaps.lean`, replace the bespoke definitions of
+  `HomogeneousQuadratic`, `BiLinearSymm`, `HomogeneousCubic`, `TriLinearSymm` (and their API)
+  with the corresponding general Mathlib definitions for symmetric multilinear / homogeneous
+  polynomial maps."
 
 /-- The structure defining a homogeneous quadratic equation. -/
 @[simp]

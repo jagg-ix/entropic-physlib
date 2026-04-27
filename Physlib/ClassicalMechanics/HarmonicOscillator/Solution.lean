@@ -209,10 +209,12 @@ The correctness proofs showing that the conversion produces the expected traject
 are given later in section D.1, after the trajectory machinery has been defined.
 -/
 
-TODO "6VZME" "Implement other initial conditions (deferred to future PRs). For example:
+TODO "6VZME" "In `Physlib/ClassicalMechanics/HarmonicOscillator/Solution.lean`, implement
+  further kinds of initial-condition data for the classical harmonic oscillator and provide
+  conversions to the canonical `InitialConditions` type (initial position `x₀` and velocity
+  `v₀` at `t = 0`). For example:
 - Two positions at different times.
-- Two velocities at different times.
-And convert them into the type `InitialConditions` above."
+- Two velocities at different times."
 
 end InitialConditionsAtTime
 
@@ -880,11 +882,15 @@ We give some open TODOs for the classical harmonic oscillator.
 
 -/
 
-TODO "6VZI3" "For the classical harmonic oscillator find the time for which it returns to
-  it's initial position and velocity."
+TODO "6VZI3" "In `Physlib/ClassicalMechanics/HarmonicOscillator/Solution.lean`, for the
+  classical harmonic oscillator `HarmonicOscillator` (with trajectories `trajectories S IC`
+  given by `InitialConditions`), find the period — i.e. the time after which the trajectory
+  returns to its initial position and velocity."
 
-TODO "6VZJB" "For the classical harmonic oscillator find the times for
-  which it passes through zero."
+TODO "6VZJB" "In `Physlib/ClassicalMechanics/HarmonicOscillator/Solution.lean`, for the
+  classical harmonic oscillator `HarmonicOscillator` (with trajectories `trajectories S IC`
+  given by `InitialConditions`), find the times at which the trajectory passes through
+  zero position."
 
 end InitialConditions
 

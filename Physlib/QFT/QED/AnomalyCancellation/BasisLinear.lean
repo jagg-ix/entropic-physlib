@@ -80,8 +80,11 @@ lemma sum_of_vectors {n : ℕ} (f : Fin k → (PureU1 n).LinSols) (j : Fin n) :
     (∑ i : Fin k, (f i)).1 j = (∑ i : Fin k, (f i).1 j) :=
   sum_of_anomaly_free_linear (fun i => f i) j
 
-TODO "6VZO6" "The definition of `coordinateMap` here may be improved by replacing
-  `Finsupp.equivFunOnFinite` with `Finsupp.linearEquivFunOnFinite`. Investigate this."
+TODO "6VZO6" "In `Physlib/QFT/QED/AnomalyCancellation/BasisLinear.lean`, the definition of
+  `PureU1.BasisLinear.coordinateMap : (PureU1 n.succ).LinSols ≃ₗ[ℚ] Fin n →₀ ℚ`
+  (the coordinate map for the basis of linear ACC solutions of the pure U(1)
+  anomaly-cancellation system) may be improved by replacing `Finsupp.equivFunOnFinite`
+  with `Finsupp.linearEquivFunOnFinite`. Investigate this."
 /-- The coordinate map for the basis. -/
 noncomputable
 def coordinateMap : (PureU1 n.succ).LinSols ≃ₗ[ℚ] Fin n →₀ ℚ where

@@ -57,9 +57,12 @@ F-theory and All Things Rational: Surveying U(1) Symmetries with Rational Sectio
 
 @[expose] public section
 
-TODO "AETF6" "The results in this file are currently stated, but not proved.
-  They should should be proved following e.g. https://arxiv.org/pdf/1504.05593.
-  This is a large project."
+TODO "AETF6" "In `Physlib/StringTheory/FTheory/SU5/Charges/OfRationalSection.lean`, prove the
+  currently-stated-but-unproved results characterizing the allowed `FTheory.SU5` charge
+  assignments arising from the codimension-one configurations of the zero-section `σ₀`
+  relative to the additional rational section `σ₁` in F-theory with gauge group SU(5).
+  These should be proved following e.g. https://arxiv.org/pdf/1504.05593. This is a
+  large project."
 
 namespace FTheory
 

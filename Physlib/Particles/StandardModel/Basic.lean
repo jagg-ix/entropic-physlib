@@ -15,7 +15,10 @@ This file defines the basic properties of the standard model in particle physics
 -/
 
 @[expose] public section
-TODO "6V2FP" "Redefine the gauge group as a quotient of SU(3) x SU(2) x U(1) by a subgroup of ℤ₆."
+TODO "6V2FP" "In `Physlib/Particles/StandardModel/Basic.lean`, refactor the Standard Model
+  gauge group `StandardModel.GaugeGroup` so that it is defined as the quotient of
+  `SU(3) × SU(2) × U(1)` (currently `StandardModel.GaugeGroupI`) by a subgroup
+  isomorphic to `ℤ₆`, instead of using the unquotiented direct product."
 
 namespace StandardModel
 

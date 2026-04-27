@@ -152,8 +152,10 @@ lemma B₆_cubic (S T : (SM 3).Charges) : cubeTriLin B₆ S T =
     Nat.reduceAdd, one_mul, neg_mul, mul_neg]
   ring_nf
 
-TODO "7SQUT" "Remove the definitions of elements `(SM 3).Charges` B₀, B₁ etc, here are
-  use only `B : Fin 7 → (SM 3).Charges`. "
+TODO "7SQUT" "In `Physlib/Particles/BeyondTheStandardModel/RHN/AnomalyCancellation/Ordinary/DimSevenPlane.lean`,
+  remove the individual definitions of the basis charge assignments `B₀, B₁, …, B₆ :
+  (SM 3).Charges` of the 7-dimensional plane of anomaly-free charges in the three-family
+  Standard Model with right-handed neutrinos, and use only `B : Fin 7 → (SM 3).Charges`."
 /-- The charge assignments forming a basis of the plane. -/
 @[simp]
 abbrev B : Fin 7 → (SM 3).Charges := fun i =>

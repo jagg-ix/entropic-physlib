@@ -109,7 +109,9 @@ We provide a constructor `ACCSystemChargesMk` for `ACCSystemCharges` given the n
 
 -/
 
-TODO "NCRC5" "Replace `ACCSystemChargesMk` with `⟨n⟩` notation everywhere. "
+TODO "NCRC5" "In `Physlib/QFT/AnomalyCancellation/Basic.lean`, replace the constructor
+  `ACCSystemChargesMk n` for `ACCSystemCharges` (used throughout the anomaly
+  cancellation framework) with `⟨n⟩` notation everywhere."
 /--
   Creates an `ACCSystemCharges` object with the specified number of charges.
 -/
@@ -595,9 +597,13 @@ formalize this derivation in Lean, and instead take the resulting homogeneous fo
 
 -/
 
-TODO "6VZMW" "Anomaly cancellation conditions can be derived formally from the gauge group
-  and fermionic representations using e.g. topological invariants. Include such a
-  definition."
+TODO "6VZMW" "In `Physlib/QFT/AnomalyCancellation/Basic.lean`, the gauge anomaly
+  cancellation conditions (currently encoded as data via `ACCSystemLinear`,
+  `ACCSystemQuad`, `ACCSystemCubic`, etc.) can be derived formally from the gauge group
+  and fermionic representations using e.g. topological invariants (anomaly polynomials).
+  Include such a definition."
 
-TODO "6VZM3" "Anomaly cancellation conditions can be defined using algebraic varieties.
-  Link such an approach to the approach here."
+TODO "6VZM3" "In `Physlib/QFT/AnomalyCancellation/Basic.lean`, gauge anomaly cancellation
+  conditions can be defined using algebraic varieties (the homogeneous-form
+  zero loci over the rational charge space). Provide such an approach and link it to
+  the `ACCSystem*` formulation used here."

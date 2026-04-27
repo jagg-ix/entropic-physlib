@@ -41,10 +41,10 @@ structure EMSystem where
   /-- The permeability of free space. -/
   μ₀ : ℝ
 
-TODO "6V2UZ" "Charge density and current density should be generalized to signed measures,
-  in such a way
-  that they are still easy to work with and can be integrated with with tensor notation.
-  See here:
+TODO "6V2UZ" "In `Physlib/Electromagnetism/Basic.lean`, the abbreviations `ChargeDensity`
+  (`Time → Space → ℝ`) and `CurrentDensity` (`Time → Space → EuclideanSpace ℝ (Fin 3)`)
+  used in Maxwell's equations should be generalized to signed measures, in such a way that
+  they are still easy to work with and can be integrated with tensor notation. See:
   https://leanprover.zulipchat.com/#narrow/channel/479953-Physlib/topic/Maxwell's.20Equations"
 
 /-- The charge density. -/

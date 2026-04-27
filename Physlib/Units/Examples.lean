@@ -225,5 +225,7 @@ lemma cosDim_isDimensionallyCorrect : IsDimensionallyCorrect CosDim := by
 
 -/
 
-TODO "LCR7N" "Add an example involving derivatives."
+TODO "LCR7N" "In `Physlib/Units/Examples.lean` (the `UnitExamples` namespace demonstrating use
+  of `WithDim`, `Dimensionful`, and `IsDimensionallyCorrect`), add an example showing how
+  derivatives interact with the physical units / dimension system."
 end UnitExamples

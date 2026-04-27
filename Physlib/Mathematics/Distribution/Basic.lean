@@ -242,9 +242,11 @@ lemma fderivD_apply [FiniteDimensional ℝ E] (u : E →d[𝕜] F) (η : 𝓢(E,
     fderivD 𝕜 u η v = - u (SchwartzMap.evalCLM (𝕜 := 𝕜) E 𝕜 v (SchwartzMap.fderivCLM 𝕜 E 𝕜 η)) := by
   rfl
 
-TODO "01-09-25-JTS" "For distributions, prove that the derivative fderivD commutes with
-  integrals and sums. This may require defining the integral of families of distributions
-  although it is expected this will follow from the definition of a distribution."
+TODO "01-09-25-JTS" "In `Physlib/Mathematics/Distribution/Basic.lean`, for distributions
+  `u : E →d[𝕜] F`, prove that the distributional derivative `fderivD 𝕜 u` commutes with
+  integrals and sums. This may require first defining the integral of families of
+  distributions, although it is expected this will follow from the definition of a
+  distribution."
 
 end fderiv
 

@@ -119,9 +119,11 @@ lemma mdifferentiable_manifoldStructure_iff_differentiable {M d} [NormedAddCommG
     apply (mdifferentiableAt_iff_differentiableAt.mpr h).comp (I' := 𝓘(ℝ, Space d))
     exact (modelDiffeo.mdifferentiable (WithTop.top_ne_zero)).mdifferentiableAt
 
-TODO "3XMN6" "Make the version of the derivative described through
-  `deriv_eq_mfderiv_manifoldStructure` the definition of `deriv` and prove the
-  equivalence with the current definition, under suitable conditions."
+TODO "3XMN6" "In `Physlib/SpaceAndTime/Space/Derivatives/Basic.lean`, make the manifold-based
+  characterization of the spatial derivative given by `deriv_eq_mfderiv_manifoldStructure`
+  (i.e. `deriv μ f x = mfderiv (Space.manifoldStructure d) 𝓘(ℝ, M) f x (EuclideanSpace.single μ 1)`)
+  the actual definition of `Space.deriv`, and prove its equivalence with the current definition
+  under suitable conditions."
 
 open Manifold in
 set_option backward.isDefEq.respectTransparency false in

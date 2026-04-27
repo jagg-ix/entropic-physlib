@@ -31,10 +31,12 @@ open Finset
 namespace PureU1
 open BigOperators
 
-TODO "K3HYF" "The implementation of pure U(1) anomaly cancellation conditions is done
-  currently through the type `ACCSystemCharges`. This whole directory could be
-  simplified by refactoring to remove `ACCSystemCharges` defining `PureU1Charges` as
-  `Fin n → ℚ` directly, or this space quotiented by permutations and overall factors."
+TODO "K3HYF" "In `Physlib/QFT/QED/AnomalyCancellation/Basic.lean`, the implementation of
+  the pure U(1) gauge anomaly cancellation conditions (the linear ACC `∑ xᵢ = 0` and
+  cubic ACC `∑ xᵢ³ = 0` for `n` Weyl fermions of rational charges `xᵢ`) currently goes
+  through the type `ACCSystemCharges`. This whole directory could be simplified by
+  refactoring to remove `ACCSystemCharges` and defining `PureU1Charges` as `Fin n → ℚ`
+  directly, or as this space quotiented by permutations and overall factors."
 
 /-- The vector space of charges. -/
 @[simps!]

@@ -145,8 +145,10 @@ lemma distOfFunction_inner {d n : ℕ} (f : Space d → EuclideanSpace ℝ (Fin 
   rw [integral_inner, real_inner_comm]
   fun_prop
 
-TODO "LV5RM" "Add a general lemma specifying the derivative of
-  functions from distributions."
+TODO "LV5RM" "In `Physlib/SpaceAndTime/Space/DistOfFunction.lean`, add a general lemma
+  specifying the spatial derivative (`Space.distDeriv`) of a distribution of the form
+  `distOfFunction f hf` (the distribution on `Space d` constructed from a function
+  `f : Space d → F` satisfying `IsDistBounded f`)."
 
 /-!
 

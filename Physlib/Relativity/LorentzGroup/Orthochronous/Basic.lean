@@ -17,7 +17,10 @@ matrices.
 -/
 
 @[expose] public section
-TODO "6VZLO" "Prove topological properties of the Orthochronous Lorentz Group."
+TODO "6VZLO" "In `Physlib/Relativity/LorentzGroup/Orthochronous/Basic.lean`, prove
+  topological properties of the orthochronous Lorentz group (the subset of `LorentzGroup d`
+  consisting of `Λ` with `IsOrthochronous Λ`, i.e. `0 ≤ Λ (Sum.inl 0) (Sum.inl 0)`),
+  e.g. that it is a clopen subgroup of the Lorentz group."
 
 noncomputable section
 

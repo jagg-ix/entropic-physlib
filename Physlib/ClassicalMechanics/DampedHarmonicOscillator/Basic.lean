@@ -66,17 +66,33 @@ open Real
 open ContDiff
 open Time
 
-TODO "DHO05" "Derive solutions for the underdamped case (oscillatory with exponential decay)."
+TODO "DHO05" "For the damped harmonic oscillator (mass `m`, spring constant `k`, damping
+  coefficient `γ`, equation of motion `m ẍ + γ ẋ + k x = 0`) defined in
+  `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`, derive the solutions in the
+  underdamped regime `γ² < 4 m k`, where the motion is oscillatory with exponentially
+  decaying amplitude."
 
-TODO "DHO06" "Derive solutions for the critically damped case (fastest non-oscillatory return)."
+TODO "DHO06" "For the damped harmonic oscillator (mass `m`, spring constant `k`, damping
+  coefficient `γ`) defined in `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`,
+  derive the solutions in the critically damped regime `γ² = 4 m k` (fastest non-oscillatory
+  return to equilibrium)."
 
-TODO "DHO07" "Derive solutions for the overdamped case (slow non-oscillatory return)."
+TODO "DHO07" "For the damped harmonic oscillator (mass `m`, spring constant `k`, damping
+  coefficient `γ`) defined in `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`,
+  derive the solutions in the overdamped regime `γ² > 4 m k` (slow non-oscillatory
+  return to equilibrium)."
 
-TODO "DHO08" "Define and prove properties of the quality factor Q."
+TODO "DHO08" "For the damped harmonic oscillator defined in
+  `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`, define the quality factor `Q`
+  and prove its basic properties."
 
-TODO "DHO09" "Define and prove properties of the relaxation time τ."
+TODO "DHO09" "For the damped harmonic oscillator defined in
+  `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`, define the relaxation time `τ`
+  and prove its basic properties."
 
-TODO "DHO10" "Prove that the damped harmonic oscillator reduces to the undamped case when γ = 0."
+TODO "DHO10" "For the damped harmonic oscillator defined in
+  `Physlib/ClassicalMechanics/DampedHarmonicOscillator/`, prove that it reduces to the
+  undamped classical `HarmonicOscillator` when the damping coefficient `γ = 0`."
 
 /-!
 

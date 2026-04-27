@@ -400,7 +400,11 @@ lemma normalOrderF_ofFieldOpF_mul_ofFieldOpF (φ φ' : 𝓕.FieldOp) :
 
 -/
 
-TODO "6V2JJ" "Split the following two lemmas up into smaller parts."
+TODO "6V2JJ" "In `Physlib/QFT/PerturbationTheory/FieldOpFreeAlgebra/NormalOrder.lean`,
+  split the two long lemmas
+  `normalOrderF_superCommuteF_ofCrAnListF_create_create_ofCrAnListF` and its
+  companion (relating the normal ordering `𝓝ᶠ` of `FieldOpFreeAlgebra` with super
+  commutators of creation/annihilation operators) into smaller parts."
 
 set_option backward.isDefEq.respectTransparency false in
 lemma normalOrderF_superCommuteF_ofCrAnListF_create_create_ofCrAnListF

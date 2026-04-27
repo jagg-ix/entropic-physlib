@@ -152,16 +152,20 @@ The following properties are documented in the docstrings but not yet formally p
 These should be established in future PRs to complete the characterization of the generators.
 -/
 
-TODO "BOOST_SYM" "Prove that boost generators are symmetric: \
-  (boostGenerator i)ᵀ = boostGenerator i"
+TODO "BOOST_SYM" "In `Physlib/Relativity/LorentzAlgebra/Basis.lean`, prove that the boost \
+  generators `boostGenerator i : Matrix (Fin 1 ⊕ Fin 3) (Fin 1 ⊕ Fin 3) ℝ` of the \
+  Lorentz algebra so(1,3) are symmetric: (boostGenerator i)ᵀ = boostGenerator i"
 
-TODO "BOOST_TRACE" "Prove that boost generators are traceless: \
+TODO "BOOST_TRACE" "In `Physlib/Relativity/LorentzAlgebra/Basis.lean`, prove that the boost \
+  generators `boostGenerator i` of the Lorentz algebra so(1,3) are traceless: \
   Matrix.trace (boostGenerator i) = 0"
 
-TODO "ROT_ANTISYM" "Prove that rotation generators are antisymmetric: \
-  (rotationGenerator i)ᵀ = -(rotationGenerator i)"
+TODO "ROT_ANTISYM" "In `Physlib/Relativity/LorentzAlgebra/Basis.lean`, prove that the \
+  rotation generators `rotationGenerator i` of the Lorentz algebra so(1,3) are \
+  antisymmetric: (rotationGenerator i)ᵀ = -(rotationGenerator i)"
 
-TODO "ROT_TRACE" "Prove that rotation generators are traceless: \
-  Matrix.trace (rotationGenerator i) = 0"
+TODO "ROT_TRACE" "In `Physlib/Relativity/LorentzAlgebra/Basis.lean`, prove that the \
+  rotation generators `rotationGenerator i` of the Lorentz algebra so(1,3) are \
+  traceless: Matrix.trace (rotationGenerator i) = 0"
 
 end lorentzAlgebra

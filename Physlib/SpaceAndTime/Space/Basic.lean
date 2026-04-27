@@ -76,10 +76,14 @@ the `VAdd (EuclideanSpace ℝ (Fin d)) (Space d)` instance instead.
 
 -/
 
-TODO "HB6RR" "In the above documentation describe the notion of a type, and
-  introduce the type `Space d`."
+TODO "HB6RR" "In the module docstring of `Physlib/SpaceAndTime/Space/Basic.lean` (which defines
+  `Space d`, `d`-dimensional flat Euclidean space), describe the notion of a Lean type and
+  introduce the type `Space d` to a reader unfamiliar with Lean."
 
-TODO "HB6VC" "Convert `Space` from an `abbrev` to a `def`."
+TODO "HB6VC" "In `Physlib/SpaceAndTime/Space/Basic.lean`, reconsider the definition of
+  `Space d` (currently a `structure` wrapping `Fin d → ℝ`); historically this TODO asks
+  to convert `Space` from an `abbrev` of `EuclideanSpace ℝ (Fin d)` to a `def`, as discussed
+  in the trade-off table in the file's module docstring."
 
 /-- The type `Space d` is the world-volume which corresponds to
 `d` dimensional (flat) Euclidean space with a given (but arbitrary)

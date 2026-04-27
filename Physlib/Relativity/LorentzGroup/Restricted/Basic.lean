@@ -16,8 +16,10 @@ This file is currently a stub.
 
 @[expose] public section
 
-TODO "6VZNP" "Prove that every member of the restricted Lorentz group is
-  combination of a boost and a rotation."
+TODO "6VZNP" "In `Physlib/Relativity/LorentzGroup/Restricted/Basic.lean`, prove that every
+  element of the restricted Lorentz group `LorentzGroup.restricted d` (the proper,
+  orthochronous part of the Lorentz group) can be written as a combination of a boost
+  and a rotation."
 
 namespace LorentzGroup
 

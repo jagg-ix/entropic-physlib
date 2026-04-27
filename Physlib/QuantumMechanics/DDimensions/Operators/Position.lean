@@ -95,7 +95,11 @@ lemma positionOperator_apply (ψ : 𝓢(Space d, ℂ)) (x : Space d) : 𝐱 i ψ
 /-!
 ### A.2. Radius powers (regularized)
 -/
-TODO "ZGCNP" "Incorporate normRegularizedPow into Space.Norm"
+TODO "ZGCNP" "In `Physlib/QuantumMechanics/DDimensions/Operators/Position.lean`,
+  incorporate `normRegularizedPow d ε s : Space d → ℝ` (the smooth regularization
+  `(‖x‖² + ε²)^(s/2)` of `‖x‖ˢ` used to build the radius-power position operator
+  `radiusRegPowOperator` for quantum mechanics on `Space d`) into the `Space.Norm`
+  API."
 
 /-- Power of regularized norm, `(‖x‖² + ε²)^(s/2)`. -/
 def normRegularizedPow (d : ℕ) (ε s : ℝ) : Space d → ℝ :=
