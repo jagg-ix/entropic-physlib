@@ -63,13 +63,17 @@ at the location of the charge, and their product has no distributional meaning.
 Other constructions must be reformulated rather than abandoned. The flux of `E` out of a
 surface `S`, classically `∫_S E · dA`, is no longer well defined, but one can still speak of
 the flux weighted by a test function `φ`, notionally defined as `- ∫ E x · ∇ φ x dx`.
-Heuristically this comes from the divergence theorem: if `φ` were the indicator function
-of the region enclosed by `S`, then `- ∇ φ` would be a delta function supported on `S`
-pointing outward, recovering the surface integral. As `φ` approaches such an indicator
-function (equal to `1` inside and `0` outside), this weighted flux approaches the flux
-through `S`. The flux through `S` itself remains inaccessible inside the framework, since the
-indicator function is not a Schwartz map; but it can be recovered as a limit of weighted
-fluxes over progressively sharper test functions.
+The intuition is that `φ` plays the role of a smoothed-out version of the region `V`
+enclosed by `S`: imagine `φ` equal to `1` deep inside `V`, equal to `0` far outside, and
+transitioning smoothly across `S` over a thin layer. Its gradient `∇ φ` is then nonzero only
+in this transition layer, points inward (from `0` to `1`), and concentrates more sharply on
+`S` the thinner the layer is made. By the divergence theorem,
+`- ∫ E · ∇ φ dV = ∫ φ (∇ · E) dV`, which for a sharp `φ` is approximately the integral of
+`∇ · E` over `V`, i.e. the flux of `E` out of `S`. As `φ` is taken to be a sharper and sharper
+approximation of `V`, the weighted flux approaches the classical flux through `S`. The flux
+through `S` itself is not directly accessible in the framework, since a perfectly sharp `φ`
+(equal to `1` on `V` and `0` outside, with no smooth transition) is not a Schwartz map; but
+it can be recovered as a limit of weighted fluxes over progressively sharper test functions.
 
 In this setting, Gauss's law states precisely that the flux with weighting
 `φ` equals the charge measured with the same weighting `φ`. Notionally this is
