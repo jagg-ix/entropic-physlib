@@ -209,7 +209,7 @@ The correctness proofs showing that the conversion produces the expected traject
 are given later in section D.1, after the trajectory machinery has been defined.
 -/
 
-TODO "6VZME" "Implement other initial conditions (deferred to future PRs). For example:
+TODO "Implement other initial conditions (deferred to future PRs). For example:
 - Two positions at different times.
 - Two velocities at different times.
 And convert them into the type `InitialConditions` above."
@@ -854,7 +854,7 @@ lemma trajectory_velocity_eq_zero_iff (IC : InitialConditions) (t : Time) :
         _ = (1 / S.m) * (S.m * ‖IC.v₀‖ ^ 2 + S.k * ‖IC.x₀‖ ^ 2
           - S.k * ‖IC.x₀‖ ^ 2 - S.k * (‖IC.v₀‖ / S.ω) ^ 2) := by
           rw [mul_add S.k (‖IC.x₀‖ ^ 2) ((‖IC.v₀‖ /S.ω) ^2)]
-          rw [←sub_sub_sub_eq (S.m * ‖IC.v₀‖ ^ 2) (S.k * ‖IC.x₀‖ ^ 2)
+          rw [← sub_sub_sub_eq (S.m * ‖IC.v₀‖ ^ 2) (S.k * ‖IC.x₀‖ ^ 2)
           (S.k * (‖IC.v₀‖ / S.ω) ^ 2) (S.k * ‖IC.x₀‖ ^ 2)]
           simp only [one_div, sub_sub_sub_cancel_right, add_sub_cancel_right]
         _ = (1 / S.m) * (S.m * ‖IC.v₀‖ ^ 2 - S.k * (‖IC.v₀‖ / S.ω) ^ 2) := by simp
@@ -880,10 +880,10 @@ We give some open TODOs for the classical harmonic oscillator.
 
 -/
 
-TODO "6VZI3" "For the classical harmonic oscillator find the time for which it returns to
+TODO "For the classical harmonic oscillator find the time for which it returns to
   it's initial position and velocity."
 
-TODO "6VZJB" "For the classical harmonic oscillator find the times for
+TODO "For the classical harmonic oscillator find the times for
   which it passes through zero."
 
 end InitialConditions
