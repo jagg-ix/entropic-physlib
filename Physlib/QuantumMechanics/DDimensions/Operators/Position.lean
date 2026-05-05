@@ -6,7 +6,7 @@ Authors: Gregory J. Loges
 module
 
 public import Physlib.QuantumMechanics.DDimensions.Operators.Unbounded
-public import Physlib.QuantumMechanics.DDimensions.SpaceDHilbertSpace.SchwartzSubmodule
+public import Physlib.QuantumMechanics.DDimensions.SpaceDHilbertSpace.PolyBddSchwartzSubmodule
 public import Physlib.SpaceAndTime.Space.Integrals.NormPow
 public import Physlib.SpaceAndTime.Space.Derivatives.Basic
 /-!
@@ -46,6 +46,8 @@ Notation:
 - B. Unbounded operators
   - B.1. Position vector
   - B.2. Radius powers (regularized)
+  - B.3. Radius powers
+    - B.3.1. As limit of regularized operators
 
 ## iv. References
 
@@ -53,9 +55,13 @@ Notation:
 
 @[expose] public section
 
-open Physlib
-
 namespace QuantumMechanics
+
+open Filter
+open MeasureTheory
+open SchwartzMap
+open SpaceDHilbertSpace
+open SchwartzSubmodule PolyBddSchwartzSubmodule
 
 variable {d : ℕ} (i : Fin d)
 
@@ -65,7 +71,6 @@ variable {d : ℕ} (i : Fin d)
 
 noncomputable section
 open Space Function
-open SchwartzMap
 
 /-!
 ### A.1. Position vector
@@ -171,9 +176,6 @@ lemma positionOperatorSqr_eq {d : ℕ} (ε : ℝˣ) :
 ### A.3. Radius powers
 -/
 
-open MeasureTheory
-open SpaceDHilbertSpace
-
 set_option backward.isDefEq.respectTransparency false in
 /-- The radius operator to power `s` is the linear map from `𝓢(Space d, ℂ)` to `Space d → ℂ` that
   maps `ψ` to `x ↦ ‖x‖ˢψ(x)` (which is 'nearly' Schwartz for general `s`). -/
@@ -184,6 +186,9 @@ def radiusPowOperator {d : ℕ} (s : ℝ) : 𝓢(Space d, ℂ) →ₗ[ℂ] Space
 
 @[inherit_doc radiusPowOperator]
 notation "𝐫" => radiusPowOperator
+
+@[inherit_doc radiusPowOperator]
+notation "𝐫[" d' "]" => radiusPowOperator (d := d')
 
 lemma radiusPowOperator_apply_fun {d : ℕ} (s : ℝ) (ψ : 𝓢(Space d, ℂ)) :
     𝐫 s ψ = fun x ↦ ‖x‖ ^ s • ψ x := rfl
@@ -214,32 +219,44 @@ lemma radiusPowOperator_apply_stronglyMeasurable {d : ℕ} (s : ℝ) (ψ : 𝓢(
 
 set_option backward.isDefEq.respectTransparency false in
 /-- `x ↦ ‖x‖ˢψ(x)` is square-integrable provided `s` is not too negative. -/
-lemma radiusPowOperator_apply_memHS {d : ℕ} (s : ℝ) (h : 0 < d + 2 * s) (ψ : 𝓢(Space d, ℂ)) :
+lemma radiusPowOperator_apply_memHS {d : ℕ} (s : ℝ) (ψ : 𝓢(Space d, ℂ)) (a : ℕ)
+    (hψ : ψ ∈ polyBddSchwartzMap d a) (h : 0 < d + 2 * (a + s)) :
     MemHS (𝐫 s ψ) := by
   rcases Nat.eq_zero_or_pos d with (rfl | hd)
   · simp only [MemHS, MemLp.of_discrete]
-  · refine (MeasureTheory.memLp_two_iff_integrable_sq_norm (by fun_prop)).mpr ⟨by fun_prop, ?_⟩
-    suffices ∫⁻ (a : Space d), ‖‖ψ a‖ ^ 2 * ‖a‖ ^ (2 * s)‖ₑ < ⊤ by
+  · have : Nontrivial (Space d) := Nat.succ_pred_eq_of_pos hd ▸ Space.instNontrivialSucc
+    refine (memLp_two_iff_integrable_sq_norm (by fun_prop)).mpr ⟨by fun_prop, ?_⟩
+    suffices ∫⁻ (x : Space d), ‖‖ψ x‖ ^ 2 * ‖x‖ ^ (2 * s)‖ₑ < ⊤ by
       have hInt (x : Space d) : ‖𝐫 s ψ x‖ ^ 2 = ‖ψ x‖ ^ 2 * ‖x‖ ^ (2 * s) := by
         simp [radiusPowOperator, mul_pow, mul_comm, Real.rpow_mul]
       simpa only [HasFiniteIntegral, hInt]
     rw [← lintegral_add_compl _ (measurableSet_ball (x := 0) (ε := 1)), ENNReal.add_lt_top]
     constructor
-    · -- `‖x‖ < 1`: bound `‖ψ x‖` by a constant
-      obtain ⟨C, hC_pos, hC⟩ := ψ.decay 0 0
-      simp only [pow_zero, norm_iteratedFDeriv_zero, one_mul] at hC
-      suffices hBound : ∀ x, ‖‖ψ x‖ ^ 2 * ‖x‖ ^ (2 * s)‖ₑ ≤ ‖C ^ 2‖ₑ * ‖‖x‖ ^ (2 * s)‖ₑ by
+    · -- `‖x‖ < 1`: bound `‖ψ x‖` by `‖x‖ᵃ`
+      obtain ⟨C, hC_pos, hC⟩ := hψ a (le_refl _)
+      suffices hBound : ∀ᵐ x, ‖‖ψ x‖ ^ 2 * ‖x‖ ^ (2 * s)‖ₑ ≤ ‖C ^ 2‖ₑ * ‖‖x‖ ^ (2 * (a + s))‖ₑ by
         calc
-          _ ≤ ∫⁻ (x : Space d) in (Metric.ball 0 1), ‖C ^ 2‖ₑ * ‖‖x‖ ^ (2 * s)‖ₑ :=
-            setLIntegral_mono' measurableSet_ball (fun x _ ↦ hBound x)
-          _ = ‖C ^ 2‖ₑ * ∫⁻ (x : Space d) in (Metric.ball 0 1), ‖‖x‖ ^ (2 * s)‖ₑ :=
+          _ ≤ ∫⁻ (x : Space d) in (Metric.ball 0 1), ‖C ^ 2‖ₑ * ‖‖x‖ ^ (2 * (a + s))‖ₑ :=
+            setLIntegral_mono_ae' measurableSet_ball (Eventually.mono hBound fun _ h' _ ↦ h')
+          _ = ‖C ^ 2‖ₑ * ∫⁻ (x : Space d) in (Metric.ball 0 1), ‖‖x‖ ^ (2 * (a + s))‖ₑ :=
             lintegral_const_mul _ (by fun_prop)
         apply ENNReal.mul_lt_top enorm_lt_top
         exact ((integrableOn_norm_rpow_ball_iff hd Real.zero_lt_one _).mpr h).hasFiniteIntegral
-      intro x
-      simp_rw [← enorm_mul, enorm_le_iff_norm_le, norm_mul, norm_pow, Real.norm_eq_abs, sq_abs]
-      refine mul_le_mul_of_nonneg_right ?_ (abs_nonneg _)
-      exact (sq_le_sq₀ (norm_nonneg _) hC_pos.le).mpr (hC x)
+      apply ae_iff.mpr
+      refine measure_mono_null ?_ (measure_singleton 0)
+      intro x hx
+      by_contra hx'
+      apply hx
+      apply norm_pos_iff.mpr at hx'
+      simp_rw [← enorm_mul, enorm_le_iff_norm_le, mul_add, Real.rpow_add hx', norm_mul, ← mul_assoc]
+      refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+      simp_rw [← Nat.cast_two (R := ℝ), mul_comm, Real.rpow_mul_natCast hx'.le, norm_pow, ← mul_pow,
+        norm_norm, Real.norm_eq_abs, abs_of_pos hC_pos, abs_of_nonneg (Real.rpow_nonneg hx'.le _)]
+      apply (sq_le_sq₀ (norm_nonneg _) (by positivity)).mpr
+      apply (inv_mul_le_iff₀' (by positivity)).mp
+      rw [← Real.rpow_neg_one, ← Real.rpow_mul hx'.le, mul_comm _ (-1), neg_mul, one_mul,
+        Real.rpow_neg_natCast]
+      exact hC x
     · -- `1 ≤ ‖x‖`: bound `‖ψ x‖` by a suitable power of `‖x‖`
       obtain ⟨C, hC_pos, hC⟩ := ψ.decay (⌈s⌉.toNat + d) 0
       simp only [norm_iteratedFDeriv_zero, ← Real.rpow_natCast, Nat.cast_add] at hC
@@ -284,8 +301,6 @@ lemma radiusPowOperator_apply_memHS {d : ℕ} (s : ℝ) (h : 0 < d + 2 * s) (ψ 
 /-!
 #### A.3.1. As limit of regularized operators
 -/
-
-open Filter
 
 /-- Neighborhoods of "0" in the non-zero reals, i.e. those sets containing `(-ε,0) ∪ (0,ε) ⊆ ℝˣ`
   for some `ε > 0`. -/
@@ -363,8 +378,8 @@ end
 
 noncomputable section
 
-open SpaceDHilbertSpace
-open SchwartzSubmodule
+open UnboundedOperator
+open InnerProductSpace
 
 /-!
 ### B.1. Position vector
@@ -390,7 +405,7 @@ lemma positionOperatorSchwartz_isSymmetric : (positionOperatorSchwartz i).IsSymm
 /-- The symmetric position unbounded operators with domain the Schwartz submodule
   of the Hilbert space. -/
 def positionUnboundedOperator : UnboundedOperator (SpaceDHilbertSpace d) (SpaceDHilbertSpace d) :=
-  UnboundedOperator.ofSymmetric (SchwartzSubmodule.dense d) (positionOperatorSchwartz_isSymmetric i)
+  ofSymmetric' (SchwartzSubmodule.dense d) (positionOperatorSchwartz_isSymmetric i)
 
 /-!
 ### B.2. Radius powers (regularized)
@@ -419,8 +434,172 @@ lemma radiusRegPowOperatorSchwartz_isSymmetric {d : ℕ} (ε : ℝˣ) (s : ℝ) 
   of the Hilbert space. -/
 def radiusRegPowUnboundedOperator {d : ℕ} (ε : ℝˣ) (s : ℝ) :
     UnboundedOperator (SpaceDHilbertSpace d) (SpaceDHilbertSpace d) :=
-  UnboundedOperator.ofSymmetric (SchwartzSubmodule.dense d)
-    (radiusRegPowOperatorSchwartz_isSymmetric ε s)
+  ofSymmetric' (SchwartzSubmodule.dense d) (radiusRegPowOperatorSchwartz_isSymmetric ε s)
+
+@[inherit_doc radiusRegPowUnboundedOperator]
+notation "ℛ₀" => radiusRegPowUnboundedOperator
+
+@[inherit_doc radiusRegPowUnboundedOperator]
+notation "ℛ₀[" d' "]" => radiusRegPowUnboundedOperator (d := d')
+
+lemma radiusRegPowUnboundedOperator_apply_ae_eq {d : ℕ} (ε : ℝˣ) (s : ℝ) (ψ : schwartzSubmodule d) :
+    ℛ₀ ε s ψ =ᵐ[volume] 𝐫₀ ε s (schwartzEquiv.symm ψ) :=
+  schwartzEquiv_coe_ae _
+
+/-!
+### B.3. Radius powers
+-/
+
+open Complex
+
+private lemma add_floor_toNat_pos_aux (d : ℕ) (s : ℝ) :
+    0 < d + 2 * (⌊1 - d / 2 - s⌋.toNat + s) := by
+  let n : ℤ := ⌊1 - d / 2 - s⌋
+  have hn₁ : 1 - d / 2 - s < n + 1 := Int.lt_floor_add_one _
+  have hn₂ : (n : ℝ) ≤ n.toNat := Int.cast_le.mpr (Int.self_le_toNat _)
+  linarith
+
+lemma radiusPowOperator_apply_polyBddSchwartz_memHS {d : ℕ} {s : ℝ}
+    (ψ : polyBddSchwartzSubmodule d ⌊1 - d / 2 - s⌋.toNat) :
+    MemHS (𝐫[d] s (polyBddSchwartzEquiv.symm ψ)) :=
+  let f := polyBddSchwartzEquiv.symm ψ
+  radiusPowOperator_apply_memHS s f.1 ⌊1 - d / 2 - s⌋.toNat f.2 (add_floor_toNat_pos_aux d s)
+
+/-- Radius operator acting on a polynomially-bounded Schwartz submodule. -/
+def radiusPowOperatorSchwartz {d : ℕ} (s : ℝ) :
+    polyBddSchwartzSubmodule d ⌊1 - d / 2 - s⌋.toNat →ₗ[ℂ] SpaceDHilbertSpace d where
+  toFun ψ := mk (radiusPowOperator_apply_polyBddSchwartz_memHS ψ)
+  map_add' := by simp [← mk_add]
+  map_smul' := by simp [← mk_const_smul]
+
+lemma radiusPowOperatorSchwartz_apply_ae {d : ℕ} {s : ℝ}
+    (ψ : polyBddSchwartzSubmodule d ⌊1 - d / 2 - s⌋.toNat) :
+    radiusPowOperatorSchwartz s ψ =ᵐ[volume] 𝐫 s (polyBddSchwartzEquiv.symm ψ) := by
+  let f := polyBddSchwartzEquiv.symm ψ
+  exact coe_mk_ae <| radiusPowOperator_apply_memHS s f.1 _ f.2 (add_floor_toNat_pos_aux d s)
+
+lemma radiusPowOperatorSchwartz_isSymmetric (d : ℕ) (s : ℝ) :
+    ∀ ψ φ : polyBddSchwartzSubmodule d ⌊1 - d / 2 - s⌋.toNat,
+      ⟪radiusPowOperatorSchwartz s ψ, ↑φ⟫_ℂ = ⟪↑ψ, radiusPowOperatorSchwartz s φ⟫_ℂ := by
+  intro ψ φ
+  obtain ⟨f, hf⟩ := polyBddSchwartzEquiv.surjective ψ
+  obtain ⟨g, hg⟩ := polyBddSchwartzEquiv.surjective φ
+  refine integral_congr_ae ?_
+  filter_upwards [polyBddSchwartzEquiv_coe_ae f, radiusPowOperatorSchwartz_apply_ae ψ,
+    polyBddSchwartzEquiv_coe_ae g, radiusPowOperatorSchwartz_apply_ae φ] with x h₁ h₂ h₃ h₄
+  simp_rw [h₂, h₄, ← hf, ← hg, h₁, h₃, LinearEquiv.symm_apply_apply]
+  simp only [radiusPowOperator_apply, real_smul, RCLike.inner_apply, map_mul, conj_ofReal]
+  ring
+
+/-- The symmetric radius unbounded operators with domain a polynomially-bounded Schwartz submodule
+  of the Hilbert space. -/
+def radiusPowUnboundedOperator {d : ℕ} (s : ℝ) :
+    UnboundedOperator (SpaceDHilbertSpace d) (SpaceDHilbertSpace d) :=
+  ofSymmetric (PolyBddSchwartzSubmodule.dense d _) (radiusPowOperatorSchwartz_isSymmetric d s)
+
+@[inherit_doc radiusPowUnboundedOperator]
+notation "ℛ" => radiusPowUnboundedOperator
+
+@[inherit_doc radiusPowUnboundedOperator]
+notation "ℛ[" d' "]" => radiusPowUnboundedOperator (d := d')
+
+lemma radiusPowUnboundedOperator_apply_ae {d : ℕ} (s : ℝ) (ψ : (ℛ[d] s).domain) :
+    ℛ s ψ =ᵐ[volume] 𝐫 s (polyBddSchwartzEquiv.symm ψ) :=
+  radiusPowOperatorSchwartz_apply_ae ψ
+
+/-!
+### B.3.1. As limit of regularized operators
+-/
+
+open ENNReal in
+lemma radiusRegPowUnbounded_tendsto_radiusPowUnbounded {d : ℕ} (hd : 0 < d) {s : ℝ}
+    {ψ : schwartzSubmodule d} (hψ : ↑ψ ∈ polyBddSchwartzSubmodule d ⌊1 - d / 2 - s⌋.toNat) :
+    Tendsto (fun ε ↦ ℛ₀ ε s ψ) nhdsZeroUnits (nhds (ℛ s ⟨ψ, hψ⟩)) := by
+  have : Nontrivial (Space d) := Nat.succ_pred_eq_of_pos hd ▸ Space.instNontrivialSucc
+  apply tendsto_sub_nhds_zero_iff.mp
+  apply tendsto_zero_iff_tendsto_zero_lintegral_enorm_sq.mpr
+  obtain ⟨f, hf⟩ := polyBddSchwartzEquiv.surjective ⟨ψ.1, hψ⟩
+  have hf' := (polyBddSchwartzEquiv.symm_apply_eq.mpr hf.symm).symm
+  have h_int : ∀ ε,
+      ∫⁻ x, ‖(ℛ₀ ε s ψ - ℛ s ⟨ψ, hψ⟩).1 x‖ₑ ^ 2 = ∫⁻ x, ‖𝐫₀ ε s f x - 𝐫 s f.1 x‖ₑ ^ 2 := by
+    intro ε
+    refine lintegral_congr_ae ?_
+    filter_upwards [radiusRegPowUnboundedOperator_apply_ae_eq ε s ψ,
+      radiusPowUnboundedOperator_apply_ae s ⟨ψ, hψ⟩,
+      AEEqFun.coeFn_sub (ℛ₀ ε s ψ).val (ℛ s ⟨ψ, hψ⟩).val] with x h₁ h₂ h₃
+    simp only [h₁, h₂, h₃, AddSubgroupClass.coe_sub, Pi.sub_apply, hf']
+    congr
+    exact (polyBddSchwartzEquiv_symm_apply_coe hψ).symm
+  simp_rw [h_int]
+  rw [(lintegral_zero (α := Space d) (μ := volume)).symm] -- change `0` to `∫⁻ x, 0` for dom.convg.
+  have h_meas : ∀ᶠ ε in nhdsZeroUnits, Measurable fun x ↦ ‖𝐫₀ ε s f x - 𝐫 s f.1 x‖ₑ ^ 2 :=
+    Eventually.of_forall (fun _ ↦ by fun_prop)
+  have h_lim : ∀ᵐ x, Tendsto (fun ε ↦ ‖𝐫₀ ε s f x - 𝐫 s f.1 x‖ₑ ^ 2) nhdsZeroUnits (nhds 0) := by
+    filter_upwards [radiusRegPow_ae_tendsto_radiusPow hd s f] with x h
+    apply tendsto_sub_nhds_zero_iff.mpr at h
+    have := h.enorm.ennrpow_const 2
+    simp_all
+  have hpow : ∀ x : Space d, ‖x‖ ^ s = (‖x‖ ^ 2) ^ (s / 2) := by
+    simp [← Real.rpow_natCast_mul (norm_nonneg _), mul_div_cancel₀]
+  -- Use dominated convergence theorem with different bounds for `s` positive vs. negative
+  rcases le_or_gt 0 s with (hs | hs)
+  · let bound : Space d → ℝ≥0∞ := fun x ↦ ‖𝐫₀ 1 s f x‖ₑ ^ 2
+    refine tendsto_lintegral_filter_of_dominated_convergence bound h_meas ?_ ?_ h_lim
+    · apply eventually_iff_exists_mem.mpr
+      use {ε : ℝˣ | ε.1 ^ 2 ≤ 1}
+      refine ⟨?_, fun ε hε ↦ ?_⟩
+      · use Metric.ball (0 : ℝ) 1
+        refine ⟨IsOpen.mem_nhds Metric.isOpen_ball (by norm_num), ?_⟩
+        simp only [Metric.ball, dist_zero_right, Real.norm_eq_abs, Set.preimage_setOf_eq,
+          Units.coeHom_apply, sq_le_one_iff_abs_le_one, Set.setOf_subset_setOf]
+        exact fun _ ↦ Std.le_of_lt
+      · refine Eventually.of_forall (fun x ↦ ?_)
+        simp_rw [bound, ENNReal.pow_le_pow_left_iff two_ne_zero, enorm_le_iff_norm_le]
+        calc
+          _ = |(‖x‖ ^ 2 + ε ^ 2) ^ (s / 2) - ‖x‖ ^ s| * ‖f x‖ := by
+            simp [← sub_mul, ← Complex.ofReal_sub]
+          _ ≤ |(‖x‖ ^ 2 + ε ^ 2) ^ (s / 2)| * ‖f x‖ := by
+            refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+            refine abs_le_abs_of_nonneg ?_ ?_
+            · rw [hpow, sub_nonneg]
+              exact Real.rpow_le_rpow (by positivity) (by nlinarith) (by linarith)
+            · exact sub_le_self _ (Real.rpow_nonneg (norm_nonneg x) _)
+          _ ≤ |(‖x‖ ^ 2 + 1 ^ 2) ^ (s / 2)| * ‖f x‖ := by
+            refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+            refine abs_le_abs_of_nonneg ?_ ?_
+            · exact Real.rpow_nonneg (norm_sq_add_unit_sq_pos _ _).le (s / 2)
+            · exact Real.rpow_le_rpow (norm_sq_add_unit_sq_pos _ _).le (by simp_all) (by linarith)
+          _ = ‖𝐫₀ 1 s f x‖ := by simp
+    · have := pow_ne_top (n := 2) ((𝐫₀ 1 s f.1).memLp 2).2.ne
+      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ofNat_ne_top] at this
+      simp_all [bound]
+  · let bound : Space d → ℝ≥0∞ := fun x ↦ ‖𝐫 s f x‖ₑ ^ 2
+    refine tendsto_lintegral_filter_of_dominated_convergence bound h_meas ?_ ?_ h_lim
+    · refine Eventually.of_forall (fun ε ↦ ?_)
+      apply ae_iff.mpr
+      refine measure_mono_null ?_ (measure_singleton 0)
+      intro x hx
+      by_contra hx'
+      apply hx
+      simp_rw [bound, ENNReal.pow_le_pow_left_iff two_ne_zero, enorm_le_iff_norm_le]
+      calc
+        _ = |‖x‖ ^ s - (‖x‖ ^ 2 + ε ^ 2) ^ (s / 2)| * ‖f x‖ := by
+          simp [← sub_mul, ← Complex.ofReal_sub, abs_sub_comm]
+        _ ≤ |‖x‖ ^ s| * ‖f x‖ := by
+          refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+          refine abs_le_abs_of_nonneg ?_ ?_
+          · rw [hpow, sub_nonneg]
+            refine (Real.rpow_le_rpow_iff_of_neg ?_ ?_ (by linarith)).mpr ?_
+            · exact norm_sq_add_unit_sq_pos ε x
+            · exact sq_pos_of_ne_zero (norm_ne_zero_iff.mpr hx')
+            · exact (le_add_iff_nonneg_right _).mpr (pow_two_nonneg _)
+          · rw [tsub_le_iff_right, le_add_iff_nonneg_right]
+            exact (normRegularizedPow_pos d ε s x).le
+        _ = ‖𝐫 s f x‖ := by simp
+    · have hrf := radiusPowOperator_apply_memHS s f.1 _ f.2 (add_floor_toNat_pos_aux d s)
+      have := pow_ne_top (n := 2) hrf.2.ne
+      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ofNat_ne_top] at this
+      simp_all [bound]
 
 end
 end QuantumMechanics
