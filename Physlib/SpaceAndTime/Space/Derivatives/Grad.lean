@@ -102,6 +102,12 @@ lemma grad_add (f1 f2 : Space d → ℝ)
   exact hf1
   exact hf2
 
+@[simp]
+lemma grad_fun_add_const (f : Space d → ℝ) (c : ℝ) :
+    ∇ (fun x => f x + c) = ∇ f := by
+  ext x i
+  simp [grad, deriv]
+
 /-!
 
 ### A.3. Gradient of a constant function
@@ -312,6 +318,66 @@ lemma grad_inner_space {d} (x : Space d) (f : Space d → ℝ) (hd : Differentia
     simp
   have hx : ‖x‖ ≠ 0 := norm_ne_zero_iff.mpr hx
   field_simp
+
+lemma grad_smul_inner_space {d} (x : Space d) (f : Space d → ℝ) (hd : Differentiable ℝ f) (t : ℝ)
+    (ht : 0 < t) :
+    ⟪∇ f (t • x), basis.repr x⟫_ℝ =  _root_.deriv (fun r => f (r • x)) t := by
+  by_cases hx : ‖x‖ = 0
+  · simp at hx
+    simp [hx]
+  calc _
+    _ = ‖x‖ * ⟪∇ f (t • x), ‖x‖⁻¹ • basis.repr x⟫_ℝ := by
+      simp [inner_smul_right]
+      grind
+    _ = ‖x‖ *  ⟪∇ f (t • x), ‖t • x‖⁻¹ • basis.repr (t • x)⟫_ℝ  := by
+      simp [norm_smul, smul_smul]
+      grind
+    _ = ‖x‖ * _root_.deriv (fun r => f (r • ‖t • x‖⁻¹ • t • x)) ‖t • x‖ := by
+      rw [grad_inner_space_unit_vector _ _ hd]
+    _ = ‖x‖ * _root_.deriv (fun r => f (r • ‖x‖⁻¹ • x)) (t * ‖x‖) := by
+      simp [smul_smul, norm_smul]
+      grind
+    _ = ‖x‖ *  _root_.deriv ((fun r => f (r • x)) ∘ (fun r => ‖x‖⁻¹ * r)) (t * ‖x‖) := by
+      congr
+      funext r
+      simp [smul_smul]
+      grind
+    _ = _root_.deriv (fun r => f (r • x)) t := by
+      rw [deriv_comp _ (by fun_prop) (by fun_prop)]
+      rw [deriv_const_mul _ (by fun_prop)]
+      simp only [deriv_id'', mul_one]
+      grind
+
+
+open MeasureTheory
+lemma eq_integral_grad {f : Space → ℝ} (hf : ContDiff ℝ 1 f) :
+    f = (fun x => ∫ t in (0 : ℝ)..1, ⟪∇ f (t • x), basis.repr x⟫_ℝ ∂(volume)
+      + f 0) := by
+  ext x
+  have h' := (hf.differentiable (by simp))
+  by_cases hx : ‖x‖ = 0
+  · simp at hx
+    subst hx
+    simp
+  symm
+  calc _
+    _ = ∫ (t : ℝ) in 0..1, (_root_.deriv (fun r => f (r • x)) t) ∂volume + f 0 := by
+      congr 1
+      refine intervalIntegral.integral_congr_ae_restrict ?_
+      refine (ae_eq_restrict_iff_indicator_ae_eq measurableSet_uIoc).mpr ?_
+      filter_upwards with p
+      simp only [Set.indicator, zero_le_one, Set.uIoc_of_le, Set.mem_Ioc]
+      split_ifs
+      rw [grad_smul_inner_space]
+      · exact h'
+      · grind
+      · grind
+    _ =  (f (1 • x) - f 0) + f 0 := by
+      rw [intervalIntegral.integral_deriv_eq_sub (by fun_prop)]
+      simp only [one_smul, zero_smul, sub_add_cancel]
+      · apply Continuous.intervalIntegrable
+        fun_prop
+  simp
 
 /-!
 
