@@ -77,6 +77,7 @@ Main results
     - D.2.2. Residual spectrum
     - D.2.3. Continuous spectrum
   - D.3. Spectrum decomposition
+- E. Resolvent identities
 
 ## iv. References
 
@@ -764,6 +765,71 @@ lemma pointSpectrum_inter_residualSpectrum (T : H →ₗ.[ℂ] H) : σᵖ T ∩ 
   ext
   simp only [mem_inter_iff, mem_empty_iff_false, iff_false, not_and]
   exact fun h h' ↦ h h'.1
+
+/-!
+## E. Resolvent identities
+-/
+
+lemma resolvent_sub
+    {T₁ T₂ : H →ₗ.[ℂ] H} (hT : T₂.domain ≤ T₁.domain) {z : ℂ} (hz₁ : z ∈ ρ T₁) (hz₂ : z ∈ ρ T₂) :
+    𝑅 T₁ z - 𝑅 T₂ z = 𝑅 T₁ z * (T₂ - T₁) * 𝑅 T₂ z := by
+  symm
+  calc
+    _ = 𝑅 T₁ z ∘ᵣ ((T₂ - z • 1 - (T₁ - z • 1)) ∘ᵣ 𝑅 T₂ z) := by
+      rw [mul_assoc]
+      congr 2
+      exact (eq_of_le_of_domain_eq (sub_sub_sub_le_cancel_right _ _ _) (by simp [sub_domain])).symm
+    _ = 𝑅 T₁ z ∘ᵣ ((T₂ - z • 1) ∘ᵣ 𝑅 T₂ z - (T₁ - z • 1) ∘ᵣ 𝑅 T₂ z) := by
+      congr
+      exact sub_compRestricted _ _ _
+    _ = 𝑅 T₁ z ∘ᵣ (1 - (T₁ - z • 1) ∘ᵣ 𝑅 T₂ z) := by
+      congr
+      rw [compRestricted_inverse_eq hz₂.1, inverse_domain, hz₂.2.1]
+      simp [eq_of_le_of_domain_eq domRestrict_le]
+    _ = 𝑅 T₁ z - 𝑅 T₁ z ∘ᵣ ((T₁ - z • 1) ∘ᵣ 𝑅 T₂ z) := by
+      nth_rw 2 [← mul_one (𝑅 T₁ z)]
+      refine (eq_of_le_of_domain_eq (compRestricted_sub_ge _ _ _) ?_).symm
+      simp [sub_domain, compRestricted_domain, inverse_domain, hz₁.2]
+    _ = 𝑅 T₁ z - (domRestrict 1 T₁.domain) ∘ᵣ 𝑅 T₂ z := by
+      simp [← compRestricted_assoc, inverse_compRestricted_eq hz₁.1, sub_domain]
+    _ = 𝑅 T₁ z - 𝑅 T₂ z := by
+      ext x
+      · suffices 𝑅 T₂ z ⟨x, by simp [inverse_domain, hz₂.2]⟩ ∈ T₁.domain by
+          simp [sub_domain, mem_compRestricted_domain_iff, inverse_domain, hz₁.2, hz₂.2, this]
+        have hR₂ : (𝑅 T₂ z).toFun.range = T₂.domain := by simp [inverse_range hz₂.1, sub_domain]
+        exact hT (hR₂ ▸ mem_range_self _)
+      · rfl
+
+lemma resolvent_sub' {T : H →ₗ.[ℂ] H} (z₁ z₂ : ℂ) (hz₁ : z₁ ∈ ρ T) (hz₂ : z₂ ∈ ρ T) :
+    𝑅 T z₁ - 𝑅 T z₂ = (z₁ - z₂) • (𝑅 T z₁ * 𝑅 T z₂) := by
+  rcases eq_or_ne z₁ z₂ with rfl | hz
+  · ext
+    · simp [sub_domain, inverse_domain, hz₁.2, mul_def, compRestricted_domain]
+    · simp [sub_apply]
+  · let S := T + (z₁ - z₂) • 1
+    have h_domain : S.domain = T.domain := by simp [S, add_domain]
+    have hST : S - z₁ • 1 = T - z₂ • 1 := by
+      ext
+      · simp [sub_domain, h_domain]
+      · simp [S, sub_apply, add_apply, sub_smul, add_sub_assoc, ← sub_eq_add_neg]
+    have hR : 𝑅 T z₂ = 𝑅 S z₁ := by simp [resolvent, hST]
+    have hz₁' : z₁ ∈ ρ S := ⟨hST ▸ hz₂.1, hST ▸ hz₂.2.1, hR ▸ hz₂.2.2⟩
+    suffices (S - T) ∘ᵣ 𝑅 S z₁ = (z₁ - z₂) • 𝑅 S z₁ by
+      rw [hR, resolvent_sub h_domain.le hz₁ hz₁']
+      simp only [mul_def, compRestricted_assoc, this, compRestricted_smul (sub_ne_zero.mpr hz)]
+    calc
+      _ = ((z₁ - z₂) • domRestrict 1 (S - z₁ • 1).domain) ∘ᵣ 𝑅 S z₁ := by
+        congr
+        ext
+        · simp [h_domain, sub_domain]
+        · simp only [sub_apply, add_apply, add_sub_cancel_left, S]
+          rfl
+      _ = (z₁ - z₂) • (domRestrict 1 (S - z₁ • 1).domain ∘ᵣ 𝑅 S z₁) := smul_compRestricted _ _ _
+      _ = (z₁ - z₂) • 𝑅 S z₁ := by
+        congr
+        ext
+        · simp [mem_compRestricted_domain_iff, ← inverse_range hz₁'.1]
+        · rfl
 
 end
 
