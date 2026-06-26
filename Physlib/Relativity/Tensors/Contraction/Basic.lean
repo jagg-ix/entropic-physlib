@@ -91,7 +91,7 @@ lemma contrT_permT {n n1 : ℕ} {c : Fin (n + 1 + 1) → C}
     {c1 : Fin (n1 + 1 + 1) → C}
     (i j : Fin (n1 + 1 + 1)) (hij : i ≠ j ∧ S.τ (c1 i) = (c1 j))
     (σ : Fin (n1 + 1 + 1) → Fin (n + 1 + 1))
-    (hσ : PermCond c c1 σ) (t : Tensor S c) :
+    (hσ : IsReindexing c c1 σ) (t : Tensor S c) :
     contrT n1 i j hij (permT σ hσ t) = permT _ (hσ.succSuccAbove i j hij.1)
       (contrT n (σ i) (σ j) (by simp [hσ.2, hij, hσ.1.injective.eq_iff]) t) := by
   let P (t : Tensor S c) : Prop := contrT n1 i j hij (permT σ hσ t) =
@@ -137,7 +137,7 @@ lemma contrT_comm {n : ℕ} {c : Fin (n + 1 + 1 + 1 + 1) → C}
     let i1' := (predPredAbove i2' j2' hi2j2' i1 (by simp [i2', j2']));
     let j1' := (predPredAbove i2' j2' hi2j2' j1 (by simp [i2', j2']));
     contrT n i2 j2 hij2 (contrT (n + 1 + 1) i1 j1 hij1 t) =
-    permT id (PermCond.succSuccAbove_comm i1 j1 i2 j2 hij1.left hij2.left)
+    permT id (IsReindexing.succSuccAbove_comm i1 j1 i2 j2 hij1.left hij2.left)
       (contrT n i1' j1' (by simp [i1', j1', i2', j2', hij1])
       (contrT (n + 1 + 1) i2' j2' (by simp [i2', j2', hij2]) t)) := by
   let i2' := (succSuccAbove i1 j1 i2);
@@ -147,7 +147,7 @@ lemma contrT_comm {n : ℕ} {c : Fin (n + 1 + 1 + 1 + 1) → C}
   let j1' := (predPredAbove i2' j2' (by simp [i2', j2', hij2]) j1
     (by simp [i2', j2']));
   let P (t : Tensor S c) : Prop := contrT n i2 j2 hij2 (contrT (n + 1 + 1) i1 j1 hij1 t) =
-      permT id (PermCond.succSuccAbove_comm i1 j1 i2 j2 hij1.left hij2.left)
+      permT id (IsReindexing.succSuccAbove_comm i1 j1 i2 j2 hij1.left hij2.left)
         (contrT n i1' j1' (by simp [i1', j1', i2', j2', hij1])
         (contrT (n + 1 + 1) i2' j2' (by simp [i2', j2', hij2]) t))
   change P t
