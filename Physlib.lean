@@ -269,11 +269,13 @@ public import Physlib.QFT.QED.AnomalyCancellation.Permutations
 public import Physlib.QFT.QED.AnomalyCancellation.Sorts
 public import Physlib.QFT.QED.AnomalyCancellation.VectorLike
 public import Physlib.QuantumMechanics.DDimensions.Basic
+public import Physlib.QuantumMechanics.DDimensions.HarmonicOscillator.Basic
 public import Physlib.QuantumMechanics.DDimensions.Hydrogen.Basic
 public import Physlib.QuantumMechanics.DDimensions.Hydrogen.LaplaceRungeLenzVector
 public import Physlib.QuantumMechanics.DDimensions.Operators.AngularMomentum
 public import Physlib.QuantumMechanics.DDimensions.Operators.Commutation
 public import Physlib.QuantumMechanics.DDimensions.Operators.Covariance
+public import Physlib.QuantumMechanics.DDimensions.Operators.Examples
 public import Physlib.QuantumMechanics.DDimensions.Operators.Momentum
 public import Physlib.QuantumMechanics.DDimensions.Operators.Multiplication
 public import Physlib.QuantumMechanics.DDimensions.Operators.Position
