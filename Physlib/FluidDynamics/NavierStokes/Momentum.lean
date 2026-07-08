@@ -37,6 +37,10 @@ balance-law layer before specializing to a Newtonian stress law.
 
 ## iv. References
 
+- **Leray 1934** — *Sur le mouvement d'un liquide visqueux emplissant l'espace* [bib: `Leray1934`] (entropic-time/paper/references.bib)
+- **Temam 1984** — *Navier–Stokes equations: theory and numerical analysis* [bib: `Temam1984`] (entropic-time/paper/references.bib)
+- **Beale, Kato, Majda 1984** — *Remarks on the breakdown of smooth solutions for the 3-D Euler equations* [bib: `BealeKatoMajda1984`] (entropic-time/paper/references.bib)
+
 -/
 
 @[expose] public section
