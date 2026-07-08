@@ -39,6 +39,9 @@ public import QuantumInfo.Entropy.VonNeumann
 public import QuantumInfo.Entropy.SSA
 public import QuantumInfo.Entropy.Relative
 public import QuantumInfo.Entropy.DPI
+public import QuantumInfo.Entropy.EntropicProperTime.Basic
+public import QuantumInfo.Entropy.EntropicProperTime
+public import QuantumInfo.Entropy.EntropyProductionWorldline
 public import QuantumInfo.States.Mixed.MState
 public import QuantumInfo.Channels.Pinching
 public import QuantumInfo.Measurements.POVM
