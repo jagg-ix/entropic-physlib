@@ -7,7 +7,6 @@ module
 
 public import Physlib.QuantumMechanics.DDimensions.Hydrogen.Basic
 public import Physlib.QuantumMechanics.DDimensions.Operators.Commutation
-public import Physlib.Meta.Linters.Sorry
 /-!
 
 # Laplace-Runge-Lenz vector
@@ -26,6 +25,8 @@ The main results are
 
 @[expose] public section
 
+attribute [local instance] LieRing.ofAssociativeRing
+
 namespace QuantumMechanics
 namespace HydrogenAtom
 noncomputable section
@@ -34,8 +35,6 @@ open KroneckerDelta
 open ContinuousLinearMap SchwartzMap
 
 variable (H : HydrogenAtom)
-
-attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-- The (regularized) Laplace-Runge-Lenz vector operator for the `d`-dimensional hydrogen atom,
   `𝐀(ε)ᵢ ≔ ½(𝐩ⱼ𝐋ᵢⱼ + 𝐋ᵢⱼ𝐩ⱼ) - mk·𝐫(ε)⁻¹𝐱ᵢ`. -/
@@ -85,23 +84,48 @@ lemma lrlOperator_eq'' (ε : ℝˣ) (i : Fin H.d) : H.lrlOperator ε i =
   simp only [lrlOperator, smul_add, smul_sub, smul_smul]
   ring_nf
   ext
-  simp only [one_smul, one_div, sub_apply, add_apply, smul_apply, comp_apply, radiusRegPowCLM_apply,
-    positionCLM_apply, real_smul, ofReal_mul, ofReal_ofNat, momentumCLM_apply, neg_mul, smul_eq_mul,
-    mul_neg, sub_neg_eq_add]
+  simp only [one_smul, coe_sub', coe_smul', Pi.sub_apply, ContinuousLinearMap.add_apply,
+    Pi.smul_apply, SchwartzMap.sub_apply, SchwartzMap.add_apply, SchwartzMap.smul_apply, real_smul,
+    ofReal_mul, ofReal_ofNat]
   ring
 
 /-
 ## Angular momentum / LRL vector commutators
 -/
 
+private lemma schwartzMap_nsmul_apply {d : ℕ} (n : ℕ) (ψ : 𝓢(Space d, ℂ)) (x : Space d) :
+    (n • ψ) x = n • ψ x := rfl
+
+private lemma angularMomentum_commutation_positionDotMomentum {d : ℕ} (i j : Fin d) :
+    ⁅𝐋 i j, 𝐱[d] ⬝ᵥ 𝐩⁆ = 0 := by
+  simp only [dotProduct, mul_def, lie_sum, lie_leibniz, angularMomentum_commutation_momentum,
+    angularMomentum_commutation_position, comp_smul, smul_comp, smul_sub, sub_comp, comp_sub,
+    Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.smul_sum, sum_smul]
+  ext
+  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.sub_apply,
+    ContinuousLinearMap.smul_apply, ContinuousLinearMap.zero_apply, SchwartzMap.add_apply,
+    SchwartzMap.sub_apply, SchwartzMap.smul_apply, SchwartzMap.zero_apply, smul_eq_mul]
+  ring_nf
+
 /-- `⁅𝐋ᵢⱼ, 𝐀(ε)ₖ⁆ = iℏ(δᵢₖ𝐀(ε)ⱼ - δⱼₖ𝐀(ε)ᵢ)` -/
-@[sorryful]
 lemma angularMomentum_commutation_lrl (ε : ℝˣ) (i j k : Fin H.d) : ⁅𝐋 i j, H.lrlOperator ε k⁆ =
     (I * ℏ) • (δ[i,k] • H.lrlOperator ε j - δ[j,k] • H.lrlOperator ε i) := by
-  sorry
+  repeat rw [lrlOperator_eq]
+  simp only [lie_sub, lie_add, lie_smul, lie_leibniz, angularMomentum_commutation_position,
+    angularMomentum_commutation_momentumSqr, angularMomentum_commutation_positionDotMomentum,
+    angularMomentum_commutation_momentum, angularMomentum_commutation_radiusRegPow, comp_smul,
+    smul_comp, zero_comp, add_zero, smul_sub, sub_comp, comp_sub, ← Complex.coe_smul,
+    ofReal_mul]
+  ext
+  simp only [mul_add, mul_sub, mul_smul_comm, schwartzMap_nsmul_apply, nsmul_eq_mul, map_zero, coe_add', coe_sub',
+    coe_smul', Pi.add_apply, Pi.sub_apply, Pi.smul_apply, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.zero_apply,
+    FunLike.coe_mul, coe_comp', Function.comp_apply, ContinuousLinearMap.natCast_apply, SchwartzMap.add_apply,
+    SchwartzMap.sub_apply, SchwartzMap.smul_apply, SchwartzMap.zero_apply, smul_eq_mul]
+  ring_nf
 
 /-- `⁅𝐋ᵢⱼ, 𝐀(ε)²⁆ = 0` -/
-@[sorryful, simp]
+@[simp]
 lemma angularMomentum_commutation_lrlSqr (ε : ℝˣ) (i j : Fin H.d) :
     ⁅𝐋 i j, H.lrlOperator ε ⬝ᵥ H.lrlOperator ε⁆ = 0 := by
   simp only [dotProduct, mul_def, lie_sum, lie_leibniz, H.angularMomentum_commutation_lrl,
@@ -109,7 +133,7 @@ lemma angularMomentum_commutation_lrlSqr (ε : ℝˣ) (i j : Fin H.d) :
     Finset.sum_sub_distrib, sum_smul, sub_add_sub_cancel, sub_self, smul_zero]
 
 /-- `⁅𝐋², 𝐀(ε)²⁆ = 0` -/
-@[sorryful, simp]
+@[simp]
 lemma angularMomentumSqr_commutation_lrlSqr (ε : ℝˣ) :
     ⁅𝐋²[H.d], H.lrlOperator ε ⬝ᵥ H.lrlOperator ε⁆ = 0 := by
   simp [angularMomentumOperatorSqr, sum_lie, leibniz_lie]
@@ -283,14 +307,18 @@ lemma lrl_commutation_lrl (ε : ℝˣ) (i j : Fin H.d) :
       momentum_commutation_momentum, smul_zero, add_zero, ← Complex.coe_smul, ofReal_mul]
     subst c₁ c₂
     ext
-    simp only [sub_apply, add_apply, smul_apply, smul_eq_mul, smul_add]
+    simp only [coe_sub', coe_smul', Pi.sub_apply, ContinuousLinearMap.add_apply, Pi.smul_apply,
+      SchwartzMap.sub_apply, SchwartzMap.add_apply, SchwartzMap.smul_apply, smul_eq_mul]
     ring
-  rw [positionCompMomentumSqr_comm, positionDotMomentumCompMomentum_comm,
-    positionCompMomentumSqr_comm_positionDotMomentumCompMomentum_add,
-    positionCompMomentumSqr_comm_momentum_add, positionDotMomentumCompMomentum_comm_momentum_add,
-    positionCompMomentumSqr_comm_radiusRegInvCompPosition_add,
-    positionDotMomentumCompMomentum_comm_radiusRegInvCompPosition_add,
-    momentum_comm_radiusRegInvCompPosition_add, radiusRegInvCompPosition_comm]
+  rw [positionCompMomentumSqr_comm]
+  rw [positionDotMomentumCompMomentum_comm]
+  rw [positionCompMomentumSqr_comm_positionDotMomentumCompMomentum_add]
+  rw [positionCompMomentumSqr_comm_momentum_add]
+  rw [positionDotMomentumCompMomentum_comm_momentum_add]
+  rw [positionCompMomentumSqr_comm_radiusRegInvCompPosition_add]
+  rw [positionDotMomentumCompMomentum_comm_radiusRegInvCompPosition_add]
+  rw [momentum_comm_radiusRegInvCompPosition_add]
+  rw [radiusRegInvCompPosition_comm]
   subst c₁ c₂
   simp_rw [hamiltonianRegCLM_eq, smul_zero, add_zero, sub_zero, ← sub_smul, ← Complex.coe_smul,
     ofReal_inv, ofReal_mul, ofReal_ofNat, smul_sub, smul_smul, add_comp, sub_comp, smul_comp]
@@ -368,9 +396,17 @@ lemma hamiltonianReg_commutation_lrl (ε : ℝˣ) (i : Fin H.d) :
   trans (-2⁻¹ * H.k) • (⁅𝐩[H.d] ⬝ᵥ 𝐩, 𝐫₀ ε (-1) ∘L 𝐱 i⁆
       + ⁅𝐫₀[H.d] ε (-1), 𝐩 ⬝ᵥ 𝐋 i + 𝐋 i ⬝ᵥ 𝐩⁆)
   · have h : H.m * H.k * (H.m⁻¹ * 2⁻¹) = 2⁻¹ * H.k := by grind [H.m_ne_zero]
-    simp only [hamiltonianRegCLM_eq, lrlOperator, lie_sub, sub_lie, smul_lie, lie_smul,
-      pSqr_comm_pL_Lp]
+    have hps : ⁅𝐩[H.d] ⬝ᵥ 𝐩, 𝐋 i ⬝ᵥ 𝐩⁆ = -⁅𝐩[H.d] ⬝ᵥ 𝐩, 𝐩 ⬝ᵥ 𝐋 i⁆ := by
+      have h0 := pSqr_comm_pL_Lp (d := H.d) i
+      rw [lie_add] at h0
+      exact eq_neg_of_add_eq_zero_right h0
+    have hsk : ⁅𝐩[H.d] ⬝ᵥ 𝐋 i, 𝐩 ⬝ᵥ 𝐩⁆ = -⁅𝐩[H.d] ⬝ᵥ 𝐩, 𝐩 ⬝ᵥ 𝐋 i⁆ := (lie_skew _ _).symm
+    simp only [hamiltonianRegCLM_eq, lrlOperator, lie_sub, sub_lie, lie_add, add_lie, lie_neg,
+      neg_lie, smul_lie, lie_smul, hps, hsk]
     simp [r_comm_rx, h, smul_smul, sub_eq_neg_add, add_comm]
+    rw [hsk]
+    simp only [smul_neg]
+    abel
   simp_rw [pSqr_comm_rx, r_comm_pL_Lp, add_neg_cancel_comm, smul_add, sub_eq_add_neg, ← neg_smul,
     ← neg_mul, ← Complex.coe_smul, smul_smul, ofReal_mul, ofReal_neg, ofReal_inv, ofReal_div,
     ofReal_pow, ofReal_ofNat]
@@ -513,8 +549,8 @@ lemma lrlOperatorSqr_eq (ε : ℝˣ) : H.lrlOperator ε ⬝ᵥ H.lrlOperator ε 
     hamiltonianRegCLM_eq, ofReal_inv, ofReal_ofNat]
   ring_nf
   ext
-  simp only [add_apply, _root_.smul_apply, _root_.add_apply,
-    _root_.smul_apply, Function.comp_apply, coe_comp, coe_id', smul_eq_mul, ofReal_add,
+  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, SchwartzMap.add_apply,
+    SchwartzMap.smul_apply, Function.comp_apply, coe_comp', coe_id', smul_eq_mul, ofReal_add,
     ofReal_neg, ofReal_one, ofReal_natCast]
   grind [I_sq, H.m_ne_zero, mul_inv_cancel₀, ofReal_eq_zero]
 
