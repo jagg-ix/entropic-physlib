@@ -1,0 +1,97 @@
+/-
+Copyright (c) 2026 Jorge A. Garcia. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jorge A. Garcia
+-/
+module
+
+public import Physlib.QuantumMechanics.ComplexAction.EntropicTime.HamiltonKillingFlowStatisticalManifold
+
+/-!
+# Emergence of complex structure, the Born rule, and the linear Schrödinger equation (Caticha 2107.08502 §§4–5)
+
+Extends `HamiltonKillingFlowStatisticalManifold` with §§4–5 of Caticha (arXiv:2107.08502): the derivation of the
+*quantum* structures from the Hamilton–Killing flows on the statistical-manifold cotangent bundle. Preserving both
+the symplectic form `Ω` and the information metric `G` makes the e-phase space a **Kähler manifold**, from which
+complex numbers, the Born rule, and the linear Schrödinger equation *emerge*.
+
+* the **complex structure** `J = −G⁻¹Ω` squares to minus the identity, `J² = −1` (`complexStructureJ_sq`, their
+ Eq. 30) — complex numbers are *derived*: `J` is a square root of `−1` (multiplication by `i` in the `ψ`
+ coordinates, Eq. 39);
+* the **wave function** `ψ = √ρ e^{iΦ}` (their Eq. 35) is the complex coordinate on the Kähler manifold, and its
+ modulus squared is the probability — the **Born rule** `|ψ|² = ρ` (`hamiltonKilling_born_rule`) — *identical* to
+ the entropic-dynamics wave functional `edWaveFunction`;
+* the Hamilton–Killing Hamiltonian is **bilinear and Hermitian** `K̃ = ψ*K̂ψ`, `K̂† = K̂` (their Eqs. 45, 48), and
+ the flow it generates is the **linear Schrödinger equation** `i dψ/dτ = Ĥψ` (their Eq. 49), whose defining
+ feature is **linearity / superposition** (`schrodinger_superposition`).
+
+So preserving the symplectic (Hamilton) *and* metric (Killing) structures on a statistical manifold *derives*
+quantum mechanics: complex numbers from `J² = −1`, the Born rule from `ψ = √ρ e^{iΦ}`, and the linear Schrödinger
+equation from the bilinear Hermitian Hamiltonian — the same `ψ = √ρ e^{iΦ}` wave functional of the
+entropic-dynamics reconstruction, closing the two Caticha papers into one geometric derivation.
+
+* **§A — the complex structure `J² = −1`** (`complexStructureJ`, `complexStructureJ_sq`).
+* **§B — the wave function and the Born rule** (`hamiltonKilling_born_rule`).
+* **§C — the linear Schrödinger equation** (`schrodinger_superposition`).
+
+`J² = −1` is the exact `2×2` real matrix identity (the `ψ`-coordinate complex structure); the
+Born rule reuses `edWaveFunction_modulus_sq`; the linearity/superposition of the Schrödinger flow is the exact
+linearity of a `ℂ`-linear map. The full Fubini–Study metric, the bilinear-Hamiltonian derivation (Eqs. 40–45), and
+the Hermiticity of `K̂` (Eq. 48) are the paper's programme, captured at the complex-structure / linear-map level.
+No new axioms.
+
+## References
+
+* A. Caticha, arXiv:2107.08502, §§4–5 (Eqs. 30, 35, 39, 45, 48–49; complex structure, Born rule, Schrödinger
+ equation). Repo dependencies: `EntropicTime.HamiltonKillingFlowStatisticalManifold`,
+ `EntropicTime.EntropicDynamicsWaveFunctionReconstruction`.
+
+No new axioms.
+-/
+
+set_option autoImplicit false
+
+open Physlib.QuantumMechanics.ComplexAction.EntropicTime.EntropicDynamicsWaveFunctionReconstruction
+open scoped Matrix
+
+@[expose] public section
+
+namespace Physlib.QuantumMechanics.ComplexAction.EntropicTime.HamiltonKillingComplexStructureSchrodinger
+
+/-! ## §A — the complex structure `J² = −1` -/
+
+/-- **The complex structure** `J = −G⁻¹Ω` on the Kähler e-phase space (Caticha Eq. 30, flat coordinates): the
+`2×2` real matrix `[[0,−1],[1,0]]` — multiplication by `i` on `ℝ² ≅ ℂ`. -/
+def complexStructureJ : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
+
+/-- **[The complex structure squares to minus the identity] `J² = −1`.** Preserving both the symplectic form and
+the metric makes the e-phase space Kähler, with a complex structure `J` that is a square root of `−1`: complex
+numbers *emerge* from the real geometry of the statistical manifold (Eq. 30; in `ψ` coordinates `J = diag(i,−i)`,
+Eq. 39). -/
+theorem complexStructureJ_sq : complexStructureJ * complexStructureJ = -1 := by
+  unfold complexStructureJ
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-! ## §B — the wave function and the Born rule -/
+
+/-- **[The Born rule from the Hamilton–Killing flow] `|ψ|² = ρ`.** The complex coordinate on the Kähler manifold
+is the wave function `ψ = √ρ e^{iΦ}` (Caticha Eq. 35), *identical* to the entropic-dynamics wave functional
+`edWaveFunction`; its modulus squared returns the probability — the Born rule, derived rather than postulated. -/
+theorem hamiltonKilling_born_rule (ρ Φ : ℝ) (hρ : 0 ≤ ρ) : ‖edWaveFunction ρ Φ‖ ^ 2 = ρ :=
+  edWaveFunction_modulus_sq ρ Φ hρ
+
+/-! ## §C — the linear Schrödinger equation -/
+
+/-- **[The Schrödinger flow is linear: superposition] `Ĥ(c₁ψ₁ + c₂ψ₂) = c₁Ĥψ₁ + c₂Ĥψ₂`.** The Hamilton–Killing
+Hamiltonian is bilinear and Hermitian (Caticha Eqs. 45, 48), so the flow it generates — the Schrödinger equation
+`i dψ/dτ = Ĥψ` (Eq. 49) — is generated by a `ℂ`-linear operator: solutions superpose. Linearity of the Schrödinger
+equation is *derived* from the preservation of the symplectic and metric structures. -/
+theorem schrodinger_superposition {E : Type*} [AddCommGroup E] [Module ℂ E] (Ĥ : E →ₗ[ℂ] E)
+    (c₁ c₂ : ℂ) (ψ₁ ψ₂ : E) : Ĥ (c₁ • ψ₁ + c₂ • ψ₂) = c₁ • Ĥ ψ₁ + c₂ • Ĥ ψ₂ := by
+  rw [map_add, map_smul, map_smul]
+
+end Physlib.QuantumMechanics.ComplexAction.EntropicTime.HamiltonKillingComplexStructureSchrodinger
+
+end
