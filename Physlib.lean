@@ -403,6 +403,7 @@ public import Physlib.Relativity.Tensors.Reindexing
 public import Physlib.Relativity.Tensors.TensorSpecies.Basic
 public import Physlib.Relativity.Tensors.Tensorial
 public import Physlib.Relativity.Tensors.UnitTensor
+public import Physlib.SpaceAndTime.EntropicProperTime
 public import Physlib.SpaceAndTime.GalileanGroup.Basic
 public import Physlib.SpaceAndTime.Space.Basic
 public import Physlib.SpaceAndTime.Space.ConstantSliceDist
@@ -436,6 +437,7 @@ public import Physlib.SpaceAndTime.Space.Translations
 public import Physlib.SpaceAndTime.SpaceTime.Basic
 public import Physlib.SpaceAndTime.SpaceTime.Boosts
 public import Physlib.SpaceAndTime.SpaceTime.Derivatives
+public import Physlib.SpaceAndTime.SpaceTime.Lapse
 public import Physlib.SpaceAndTime.SpaceTime.LorentzAction
 public import Physlib.SpaceAndTime.SpaceTime.TimeSlice
 public import Physlib.SpaceAndTime.Time.Basic
@@ -448,6 +450,7 @@ public import Physlib.SpaceAndTime.TimeAndSpace.Basic
 public import Physlib.SpaceAndTime.TimeAndSpace.ConstantTimeDist
 public import Physlib.SpaceAndTime.TimeAndSpace.EuclideanGroup.Action
 public import Physlib.SpaceAndTime.TimeAndSpace.EuclideanGroup.SchwartzAction
+public import Physlib.SpaceAndTime.TolmanScaling
 public import Physlib.StatisticalMechanics.BoltzmannConstant
 public import Physlib.StatisticalMechanics.CanonicalEnsemble.Basic
 public import Physlib.StatisticalMechanics.CanonicalEnsemble.Finite
@@ -475,6 +478,8 @@ public import Physlib.Thermodynamics.Temperature.Basic
 public import Physlib.Thermodynamics.Temperature.TemperatureUnits
 public import Physlib.Units.Basic
 public import Physlib.Units.Dimension
+public import Physlib.Units.InformationDimensionCollision
+public import Physlib.Units.ComplexActionDimension
 public import Physlib.Units.Examples
 public import Physlib.Units.FDeriv
 public import Physlib.Units.Integral
