@@ -144,6 +144,21 @@ theorem Sᵥₙ_relabel (ρ : MState d₁) (e : d₂ ≃ d₁) :
     Sᵥₙ (ρ.relabel e) = Sᵥₙ ρ := by
   simp [Sᵥₙ_eq_neg_trace_log]
 
+/-- **Von Neumann entropy is invariant under unitary conjugation.**
+
+This is the operator form of Zhang (2008) Eq. (3) — *information
+conservation under unitary evolution*: `𝓘(U ρ U†) = 𝓘(ρ)`, hence
+`S(U ρ U†) = S(ρ)`.  Combined with sub-additivity of entropy under
+partial trace (`Sᵥₙ_subadditivity`), this is the key ingredient of
+the information-theoretic second law (Zhang 2008, Theorem 1).
+
+Proof: `Sᵥₙ ρ = Hₛ ρ.spectrum` and `U_conj_spectrum_eq` gives
+`(U ◃ ρ).spectrum = ρ.spectrum`, so the entropies coincide. -/
+@[simp]
+theorem Sᵥₙ_U_conj (ρ : MState d₁) (U : 𝐔[d₁]) :
+    Sᵥₙ (ρ.U_conj U) = Sᵥₙ ρ := by
+  simp [Sᵥₙ]
+
 /-- Von Neumann entropy is unchanged under SWAP. TODO: All unitaries-/
 @[simp]
 theorem Sᵥₙ_of_SWAP_eq (ρ : MState (d₁ × d₂)) : Sᵥₙ ρ.SWAP = Sᵥₙ ρ := by
