@@ -34,6 +34,7 @@ namespace SpecialRelativity
 open Matrix
 open Real
 open Lorentz
+open QuantumInfo.Finite
 open Vector
 
 /-- The twin paradox assuming instantaneous acceleration. -/
@@ -122,16 +123,13 @@ def example1 : InstantaneousTwinParadox where
 
 @[simp]
 lemma example1_properTimeTwinA : example1.properTimeTwinA = 15 := by
-  simp [properTimeTwinA, example1, properTime, minkowskiProduct_toCoord]
+  simp [properTimeTwinA, example1, properTime, geometricInterval, minkowskiProduct_toCoord]
 
 @[simp]
 lemma example1_properTimeTwinB : example1.properTimeTwinB = 9 := by
-  simp only [properTimeTwinB, properTime, example1, sub_zero, minkowskiProduct_toCoord,
+  simp only [properTimeTwinB, properTime, geometricInterval, example1, sub_zero, minkowskiProduct_toCoord,
     Fin.sum_univ_three, MulZeroClass.mul_zero, _root_.add_zero, map_sub,
     FunLike.coe_sub, Pi.sub_apply, Finset.sum_const_zero, MulZeroClass.zero_mul]
-  norm_num
-  rw [show √81 = 9 from sqrt_eq_cases.mpr (by norm_num)]
-  rw [show √4 = 2 from sqrt_eq_cases.mpr (by norm_num)]
   norm_num
 
 lemma example1_ageGap : example1.ageGap = 6 := by
