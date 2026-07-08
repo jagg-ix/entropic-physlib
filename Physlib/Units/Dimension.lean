@@ -1,40 +1,32 @@
 /-
-Copyright (c) 2026 Jorge A. Garcia. All rights reserved.
+Copyright (c) 2025 Joseph Tooby-Smith. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Jorge A. Garcia
+Authors: Joseph Tooby-Smith
 -/
 module
 
 public import Mathlib.Analysis.Normed.Field.Lemmas
-
 /-!
-# Physical dimensions with an information base `[I]`, and the scalar-action no-go
 
-The dimensional-analysis system extended with an independent **information dimension** `[I]` (bits / nats /
-qubits) beyond the ISO/ISQ basis `{L, T, M, C, Θ}`. A `Dimension` is a tuple of rational exponents forming a
-commutative group under multiplication (exponent addition).
+# Dimension
 
-**Why `[I]`.** The ISO basis has no slot to distinguish a *dimensionless count of information* from a generic
-dimensionless ratio — the Brillouin (1956) / Landauer (1961) / Bennett (1982) gap. With `I𝓭` an independent base,
-`[k_B] = E·Θ⁻¹·I⁻¹`, Boltzmann entropy `[S] = I`, and `S/ℏ` becomes a *typed* dimensionless ratio.
+In this module we define the type `Dimension` which carries the dimension
+of a physical quantity.
 
-**The no-go.** The information dimension is dimensionally **barred from a scalar action**: for a complex action
-`S = S_R + i S_I` read as an ordinary scalar (`[i]` dimensionless, `i² = −1`), homogeneity `[S_R] = [i·S_I]` forces
-`[S_I] = [S_R] = E·T`, which collides with angular momentum, and *no* dimensionless `[i]` can carry an
-informational imaginary part `[S_I] = E·T·I` (it would require `[i] = I⁻¹`, contradicting `[i] = 1`). Information
-can enter only the *graded* (non-scalar) action — the dimensional root of why the entropic/complex action is
-graded.
-
-References: L. Brillouin (1956); R. Landauer (1961); C.H. Bennett (1982). No new axioms.
 -/
-
-set_option autoImplicit false
-
-namespace Physlib.Units
 
 @[expose] public section
 
-/-- A physical **dimension**: rational exponents of the base dimensions, including an information base `[I]`. -/
+open NNReal
+
+/-!
+
+## Defining dimensions
+
+-/
+
+/-- The foundational dimensions.
+  Defined in the order ⟨length, time, mass, charge, temperature⟩ -/
 structure Dimension where
   /-- The length dimension. -/
   length : ℚ
@@ -46,130 +38,201 @@ structure Dimension where
   charge : ℚ
   /-- The temperature dimension. -/
   temperature : ℚ
-  /-- The information dimension (bits / nats / qubits). -/
-  information : ℚ := 0
 
 namespace Dimension
 
 @[ext]
-lemma ext {d1 d2 : Dimension} (h1 : d1.length = d2.length) (h2 : d1.time = d2.time)
-    (h3 : d1.mass = d2.mass) (h4 : d1.charge = d2.charge) (h5 : d1.temperature = d2.temperature)
-    (h6 : d1.information = d2.information) : d1 = d2 := by
-  cases d1; cases d2; congr
+lemma ext {d1 d2 : Dimension}
+    (h1 : d1.length = d2.length)
+    (h2 : d1.time = d2.time)
+    (h3 : d1.mass = d2.mass)
+    (h4 : d1.charge = d2.charge)
+    (h5 : d1.temperature = d2.temperature) :
+    d1 = d2 := by
+  cases d1
+  cases d2
+  congr
 
 instance : Mul Dimension where
-  mul d1 d2 := ⟨d1.length + d2.length, d1.time + d2.time, d1.mass + d2.mass, d1.charge + d2.charge,
-    d1.temperature + d2.temperature, d1.information + d2.information⟩
+  mul d1 d2 := ⟨d1.length + d2.length,
+    d1.time + d2.time,
+    d1.mass + d2.mass,
+    d1.charge + d2.charge,
+    d1.temperature + d2.temperature⟩
 
-@[simp] lemma length_mul (d1 d2 : Dimension) : (d1 * d2).length = d1.length + d2.length := rfl
-@[simp] lemma time_mul (d1 d2 : Dimension) : (d1 * d2).time = d1.time + d2.time := rfl
-@[simp] lemma mass_mul (d1 d2 : Dimension) : (d1 * d2).mass = d1.mass + d2.mass := rfl
-@[simp] lemma charge_mul (d1 d2 : Dimension) : (d1 * d2).charge = d1.charge + d2.charge := rfl
-@[simp] lemma temperature_mul (d1 d2 : Dimension) :
+@[simp]
+lemma time_mul (d1 d2 : Dimension) :
+    (d1 * d2).time = d1.time + d2.time := rfl
+
+@[simp]
+lemma length_mul (d1 d2 : Dimension) :
+    (d1 * d2).length = d1.length + d2.length := rfl
+
+@[simp]
+lemma mass_mul (d1 d2 : Dimension) :
+    (d1 * d2).mass = d1.mass + d2.mass := rfl
+
+@[simp]
+lemma charge_mul (d1 d2 : Dimension) :
+    (d1 * d2).charge = d1.charge + d2.charge := rfl
+
+@[simp]
+lemma temperature_mul (d1 d2 : Dimension) :
     (d1 * d2).temperature = d1.temperature + d2.temperature := rfl
-@[simp] lemma information_mul (d1 d2 : Dimension) :
-    (d1 * d2).information = d1.information + d2.information := rfl
 
-instance : One Dimension where one := ⟨0, 0, 0, 0, 0, 0⟩
+instance : One Dimension where
+  one := ⟨0, 0, 0, 0, 0⟩
 
-@[simp] lemma one_length : (1 : Dimension).length = 0 := rfl
-@[simp] lemma one_time : (1 : Dimension).time = 0 := rfl
-@[simp] lemma one_mass : (1 : Dimension).mass = 0 := rfl
-@[simp] lemma one_charge : (1 : Dimension).charge = 0 := rfl
-@[simp] lemma one_temperature : (1 : Dimension).temperature = 0 := rfl
-@[simp] lemma one_information : (1 : Dimension).information = 0 := rfl
+@[simp]
+lemma one_length : (1 : Dimension).length = 0 := rfl
+@[simp]
+lemma one_time : (1 : Dimension).time = 0 := rfl
+
+@[simp]
+lemma one_mass : (1 : Dimension).mass = 0 := rfl
+
+@[simp]
+lemma one_charge : (1 : Dimension).charge = 0 := rfl
+
+@[simp]
+lemma one_temperature : (1 : Dimension).temperature = 0 := rfl
 
 instance : CommGroup Dimension where
-  mul_assoc a b c := by ext <;> simp <;> ring
-  one_mul a := by ext <;> simp
-  mul_one a := by ext <;> simp
-  inv d := ⟨-d.length, -d.time, -d.mass, -d.charge, -d.temperature, -d.information⟩
-  inv_mul_cancel a := by ext <;> simp
-  mul_comm a b := by ext <;> simp <;> ring
+  mul_assoc a b c := by
+    ext
+    all_goals
+      simp only [length_mul, time_mul, mass_mul, charge_mul, temperature_mul]
+      ring
+  one_mul a := by
+    ext
+    all_goals
+      simp
+  mul_one a := by
+    ext
+    all_goals
+      simp
+  inv d := ⟨-d.length, -d.time, -d.mass, -d.charge, -d.temperature⟩
+  inv_mul_cancel a := by
+    ext
+    all_goals simp
+  mul_comm a b := by
+    ext
+    all_goals
+      simp only [length_mul, time_mul, mass_mul, charge_mul, temperature_mul]
+      ring
 
-/-! ## The base dimensions (including information `[I]`) -/
+@[simp]
+lemma inv_length (d : Dimension) : d⁻¹.length = -d.length := rfl
 
-/-- Length `[L]`. -/
-def L𝓭 : Dimension := ⟨1, 0, 0, 0, 0, 0⟩
-/-- Time `[T]`. -/
-def T𝓭 : Dimension := ⟨0, 1, 0, 0, 0, 0⟩
-/-- Mass `[M]`. -/
-def M𝓭 : Dimension := ⟨0, 0, 1, 0, 0, 0⟩
-/-- Charge `[C]`. -/
-def C𝓭 : Dimension := ⟨0, 0, 0, 1, 0, 0⟩
-/-- Temperature `[Θ]`. -/
-def Θ𝓭 : Dimension := ⟨0, 0, 0, 0, 1, 0⟩
-/-- **Information `[I]`** (bits / nats / qubits) — the independent base beyond the ISO/ISQ set. -/
-def I𝓭 : Dimension := ⟨0, 0, 0, 0, 0, 1⟩
+@[simp]
+lemma inv_time (d : Dimension) : d⁻¹.time = -d.time := rfl
 
-/-- Energy `[E] = M·L²·T⁻²`. -/
-def energy_dim : Dimension := ⟨2, -2, 1, 0, 0, 0⟩
-/-- Angular momentum `[M·L²·T⁻¹]`. -/
-def angularMomentum_dim : Dimension := ⟨2, -1, 1, 0, 0, 0⟩
+@[simp]
+lemma inv_mass (d : Dimension) : d⁻¹.mass = -d.mass := rfl
 
-/-- **The information dimension is not dimensionless** `I𝓭 ≠ 1`. -/
-theorem I𝓭_ne_one : I𝓭 ≠ 1 := by
-  intro h
-  have := congrArg Dimension.information h
-  simp [I𝓭] at this
+@[simp]
+lemma inv_charge (d : Dimension) : d⁻¹.charge = -d.charge := rfl
 
-/-- **A dimension with `d² = 1` is dimensionless** `d² = 1 ⟹ d = 1` — the exponents are torsion-free rationals, so
-`2·(exponent) = 0` forces every exponent to vanish. -/
-theorem dimensionless_of_sq_one (d : Dimension) (h : d * d = 1) : d = 1 := by
-  have hl : d.length + d.length = 0 := by simpa using congrArg Dimension.length h
-  have ht : d.time + d.time = 0 := by simpa using congrArg Dimension.time h
-  have hm : d.mass + d.mass = 0 := by simpa using congrArg Dimension.mass h
-  have hc : d.charge + d.charge = 0 := by simpa using congrArg Dimension.charge h
-  have hT : d.temperature + d.temperature = 0 := by simpa using congrArg Dimension.temperature h
-  have hi : d.information + d.information = 0 := by simpa using congrArg Dimension.information h
-  ext <;> simp only [one_length, one_time, one_mass, one_charge, one_temperature, one_information]
-  all_goals linarith
+@[simp]
+lemma inv_temperature (d : Dimension) : d⁻¹.temperature = -d.temperature := rfl
 
-/-! ## The scalar-action no-go: information is barred from a scalar action -/
+@[simp]
+lemma div_length (d1 d2 : Dimension) : (d1 / d2).length = d1.length - d2.length := by
+  simp [div_eq_mul_inv, sub_eq_add_neg]
 
-/-- **The scalar action collides with angular momentum** `[E·T] = M·L²·T⁻¹`. -/
-theorem scalarAction_collides_angularMomentum : energy_dim * T𝓭 = angularMomentum_dim := by
-  ext
-  all_goals simp only [energy_dim, T𝓭, angularMomentum_dim, length_mul, time_mul, mass_mul,
-    charge_mul, temperature_mul, information_mul]
-  all_goals norm_num
+@[simp]
+lemma div_time (d1 d2 : Dimension) : (d1 / d2).time = d1.time - d2.time := by
+  simp [div_eq_mul_inv, sub_eq_add_neg]
 
-/-- **The scalar imaginary action is forced to be mechanical** `[S_I] = E·T`. Homogeneity `[S_R] = [i·S_I]` with a
-mechanical real part `E·T` and a dimensionless imaginary unit (`i² = −1`, `[i]` dimensionless) forces
-`[S_I] = E·T`. -/
-theorem scalar_imaginary_inert {imag S_I : Dimension} (hi : imag * imag = 1)
-    (hhom : energy_dim * T𝓭 = imag * S_I) : S_I = energy_dim * T𝓭 := by
-  rw [dimensionless_of_sq_one imag hi, one_mul] at hhom
-  exact hhom.symm
+@[simp]
+lemma div_mass (d1 d2 : Dimension) : (d1 / d2).mass = d1.mass - d2.mass := by
+  simp [div_eq_mul_inv, sub_eq_add_neg]
 
-/-- **The scalar imaginary action carries zero information** `[S_I].information = 0` — information is dimensionally
-barred from a scalar action. -/
-theorem scalar_imaginary_information_zero {imag S_I : Dimension} (hi : imag * imag = 1)
-    (hhom : energy_dim * T𝓭 = imag * S_I) : S_I.information = 0 := by
-  rw [scalar_imaginary_inert hi hhom]
-  simp [energy_dim, T𝓭]
+@[simp]
+lemma div_charge (d1 d2 : Dimension) : (d1 / d2).charge = d1.charge - d2.charge := by
+  simp [div_eq_mul_inv, sub_eq_add_neg]
 
-/-- **No-go (the collision is unavoidable).** There is no scalar complex action with a mechanical real part `E·T`
-and a dimensionless imaginary unit that differs from angular momentum: homogeneity collapses the whole action onto
-`E·T = M·L²·T⁻¹`, identical to angular momentum. -/
-theorem scalar_action_noGo :
-    ¬ ∃ actionDim imag S_I : Dimension,
-        imag * imag = 1 ∧ actionDim = energy_dim * T𝓭 ∧ actionDim = imag * S_I
-          ∧ actionDim ≠ angularMomentum_dim := by
-  rintro ⟨actionDim, imag, S_I, _, hreal, _, hne⟩
-  exact hne (hreal.trans scalarAction_collides_angularMomentum)
+@[simp]
+lemma div_temperature (d1 d2 : Dimension) :
+    (d1 / d2).temperature = d1.temperature - d2.temperature := by
+  simp [div_eq_mul_inv, sub_eq_add_neg]
 
-/-- **No-go (information cannot enter a scalar action).** There is no dimensionless imaginary unit making the
-scalar action homogeneous with an *informational* imaginary part `[S_I] = E·T·I`: it would require `[i] = I⁻¹`,
-contradicting `[i] = 1`. The information dimension is available only to the graded (non-scalar) action. -/
-theorem scalar_no_informational_imaginary :
-    ¬ ∃ imag : Dimension, imag * imag = 1 ∧ imag * (energy_dim * T𝓭 * I𝓭) = energy_dim * T𝓭 := by
-  rintro ⟨imag, hsq, hhom⟩
-  rw [dimensionless_of_sq_one imag hsq, one_mul] at hhom
-  exact I𝓭_ne_one (mul_left_cancel (a := energy_dim * T𝓭) (by rw [mul_one]; exact hhom))
+@[simp]
+lemma npow_length (d : Dimension) (n : ℕ) : (d ^ n).length = n • d.length := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, length_mul, ih, succ_nsmul]
+
+@[simp]
+lemma npow_time (d : Dimension) (n : ℕ) : (d ^ n).time = n • d.time := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, time_mul, ih, succ_nsmul]
+
+@[simp]
+lemma npow_mass (d : Dimension) (n : ℕ) : (d ^ n).mass = n • d.mass := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, mass_mul, ih, succ_nsmul]
+
+@[simp]
+lemma npow_charge (d : Dimension) (n : ℕ) : (d ^ n).charge = n • d.charge := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, charge_mul, ih, succ_nsmul]
+
+@[simp]
+lemma npow_temperature (d : Dimension) (n : ℕ) : (d ^ n).temperature = n • d.temperature := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, temperature_mul, ih, succ_nsmul]
+
+instance : Pow Dimension ℚ where
+  pow d n := ⟨d.length * n, d.time * n, d.mass * n, d.charge * n, d.temperature * n⟩
+
+/-- The dimension corresponding to length. -/
+def L𝓭 : Dimension := ⟨1, 0, 0, 0, 0⟩
+
+@[simp]
+lemma L𝓭_length : L𝓭.length = 1 := by rfl
+
+@[simp]
+lemma L𝓭_time : L𝓭.time = 0 := by rfl
+
+@[simp]
+lemma L𝓭_mass : L𝓭.mass = 0 := by rfl
+
+@[simp]
+lemma L𝓭_charge : L𝓭.charge = 0 := by rfl
+
+@[simp]
+lemma L𝓭_temperature : L𝓭.temperature = 0 := by rfl
+
+/-- The dimension corresponding to time. -/
+def T𝓭 : Dimension := ⟨0, 1, 0, 0, 0⟩
+
+@[simp]
+lemma T𝓭_length : T𝓭.length = 0 := by rfl
+
+@[simp]
+lemma T𝓭_time : T𝓭.time = 1 := by rfl
+
+@[simp]
+lemma T𝓭_mass : T𝓭.mass = 0 := by rfl
+
+@[simp]
+lemma T𝓭_charge : T𝓭.charge = 0 := by rfl
+
+@[simp]
+lemma T𝓭_temperature : T𝓭.temperature = 0 := by rfl
+
+/-- The dimension corresponding to mass. -/
+def M𝓭 : Dimension := ⟨0, 0, 1, 0, 0⟩
+
+/-- The dimension corresponding to charge. -/
+def C𝓭 : Dimension := ⟨0, 0, 0, 1, 0⟩
+
+/-- The dimension corresponding to temperature. -/
+def Θ𝓭 : Dimension := ⟨0, 0, 0, 0, 1⟩
 
 end Dimension
-
-end
-
-end Physlib.Units
