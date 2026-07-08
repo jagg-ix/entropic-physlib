@@ -105,8 +105,12 @@ end SpatialGeometry
 Semiformal implementation note: It is possible that we should restrict
 `a(t)` to be smooth or at least twice differentiable.
 -/
-@[sorryful]
-def FLRW : Type := sorry
+structure FLRW where
+  /-- The scale factor `a(t)` as a function of cosmic time. -/
+  scaleFactor : Time → ℝ
+  /-- The spatial geometry of the homogeneous, isotropic slices
+    (spherical, flat, or saddle). -/
+  geometry : SpatialGeometry
 
 TODO "Replace the placeholder `FLRW` type with a concrete structure bundling a positive
   scale factor `a : Time → ℝ` (smooth, or at least twice differentiable) together with an

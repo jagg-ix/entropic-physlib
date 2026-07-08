@@ -6,8 +6,8 @@ Authors: Gregory J. Loges
 module
 
 public import Physlib.Mathematics.KroneckerDelta.Basic
-public import Physlib.Relativity.Tensors.RealTensor.Vector.Tensorial
 public import Physlib.QuantumMechanics.DDimensions.Operators.AngularMomentum
+public import Mathlib.Algebra.Lie.OfAssociative
 /-!
 
 # Commutation relations
@@ -48,6 +48,8 @@ Commutator lemmas come in three flavors:
 -/
 
 @[expose] public section
+
+attribute [local instance] LieRing.ofAssociativeRing
 
 namespace QuantumMechanics
 noncomputable section
@@ -135,11 +137,9 @@ lemma momentum_commutation_momentum : ⁅𝐩 i, 𝐩 j⁆ = 0 := by
 lemma momentum_comp_commute : 𝐩 i ∘L 𝐩 j = 𝐩 j ∘L 𝐩 i := by
   rw [comp_eq_comp_add_commute, momentum_commutation_momentum, add_zero]
 
-attribute [local instance 100] LieRing.ofAssociativeRing
-
 @[simp]
 lemma momentumSqr_commutation_momentum : ⁅𝐩[d] ⬝ᵥ 𝐩, 𝐩 i⁆ = 0 := by
-  simp  [dotProduct, mul_def, sum_lie, leibniz_lie]
+  simp [dotProduct, mul_def, sum_lie, leibniz_lie]
 
 lemma momentumSqr_comp_momentum_commute : (𝐩 ⬝ᵥ 𝐩) ∘L 𝐩 i = 𝐩 i ∘L (𝐩 ⬝ᵥ 𝐩) := by
   rw [comp_eq_comp_add_commute, momentumSqr_commutation_momentum, add_zero]
@@ -185,7 +185,7 @@ lemma position_commutation_momentumSqr : ⁅𝐱 i, 𝐩 ⬝ᵥ 𝐩⁆ = (2 * I
 lemma radiusRegPow_commutation_momentum :
     ⁅𝐫₀[d] ε s, 𝐩 i⁆ = (s * I * ℏ) • 𝐫₀ ε (s-2) ∘L 𝐱 i := by
   ext ψ x
-  have hne := Ne.symm (ne_of_lt <| Space.norm_sq_add_unit_sq_pos ε x)
+  have hne := Ne.symm (ne_of_lt <| norm_sq_add_unit_sq_pos ε x)
   have hdiff1 : DifferentiableAt ℝ (fun x => (‖x‖ ^ 2 + ↑ε ^ 2) ^ (s / 2)) x := by
     refine DifferentiableAt.rpow_const ?_ (Or.intro_left _ hne)
     exact Differentiable.differentiableAt (by fun_prop)
@@ -306,9 +306,11 @@ lemma angularMomentum_commutation_angularMomentum : ⁅𝐋 i j, 𝐋 k l⁆ =
     lie_sub, lie_leibniz, comp_smul, smul_comp, comp_sub, sub_comp, ← smul_add, ← smul_sub]
   dsimp [angularMomentumOperator]
   ext
-  simp only [nsmul_eq_mul, smul_apply, sub_apply, add_apply, mul_apply_eq_comp, comp_apply,
-    _root_.natCast_apply, positionCLM_apply, momentumCLM_apply, neg_mul, mul_neg, smul_neg,
-    sub_neg_eq_add, smul_eq_mul, smul_add]
+  simp only [mul_sub, nsmul_eq_mul, coe_smul', coe_sub', Pi.smul_apply, Pi.sub_apply,
+    ContinuousLinearMap.add_apply, FunLike.coe_mul, coe_comp', Function.comp_apply,
+    ContinuousLinearMap.natCast_apply,
+    SchwartzMap.smul_apply, SchwartzMap.sub_apply, SchwartzMap.add_apply, smul_eq_mul, smul_add,
+    map_comp_sub]
   ring
 
 @[simp]

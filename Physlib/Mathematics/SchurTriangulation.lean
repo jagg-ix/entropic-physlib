@@ -127,7 +127,7 @@ observes that the recursion from $\sideset{_\mathrm{bE}}{_\mathrm{bE}}{[f]}$ to
 $\sideset{_\mathrm{bW}}{_\mathrm{bW}}{[f]}$ is well-founded, as the dimension of `bW` is smaller
 than that of `bE` because `bV` is non-trivial.
 
-However, in order to leverage `DirectSum.IsInternal.collectedOrthonormalBasis`, the type
+However, in order to use `DirectSum.IsInternal.collectedOrthonormalBasis`, the type
 `Σ b, cond b (Fin m) (Fin n)` has to be used instead of the more natural `Fin m ⊕ Fin n` while their
 equivalence is propositionally established by `Equiv.sumEquivSigmalCond`.
 
