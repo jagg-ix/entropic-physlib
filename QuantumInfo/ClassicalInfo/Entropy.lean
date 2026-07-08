@@ -133,3 +133,95 @@ lemma Hₛ_eq_of_multiset_map_eq (d₁ : ProbDistribution α) (d₂ : ProbDistri
 --TODO:
 -- * Shannon entropy is concave under mixing distributions.
 -- * Shannon entropy as an expectation value
+
+/-! ## Classical relative entropy (Kullback–Leibler divergence)
+
+The classical relative entropy on finite probability distributions:
+
+  `H_rel(p ‖ q) = ∑ᵢ pᵢ · log(pᵢ / qᵢ)`,
+
+with Mathlib's `Real.log 0 = 0` convention.  We use the algebraic form
+`pᵢ log pᵢ − pᵢ log qᵢ` which handles the boundary cases cleanly.
+
+The non-negativity statement (**Gibbs' inequality**) holds under
+absolute continuity (`qᵢ = 0 ⇒ pᵢ = 0`) and is the classical foundation
+of the second law and Sanov's theorem.
+-/
+
+/-- **Classical relative entropy** (Kullback–Leibler divergence) between
+two finite probability distributions:
+`H_rel(p ‖ q) = ∑ᵢ pᵢ · log(pᵢ / qᵢ)`. -/
+noncomputable def Hₛ_rel (p q : ProbDistribution α) : ℝ :=
+  ∑ i, ((p i : ℝ) * Real.log (p i : ℝ) - (p i : ℝ) * Real.log (q i : ℝ))
+
+/-- `H_rel(p ‖ p) = 0`: relative entropy of a distribution against
+itself is zero. -/
+@[simp]
+theorem Hₛ_rel_self (p : ProbDistribution α) : Hₛ_rel p p = 0 := by
+  unfold Hₛ_rel
+  simp [sub_self]
+
+/-- **Gibbs' inequality / non-negativity of classical relative
+entropy** under absolute continuity.
+
+Under the absolute-continuity hypothesis `qᵢ = 0 → pᵢ = 0`, the
+classical Kullback–Leibler divergence is non-negative:
+
+  `H_rel(p ‖ q) ≥ 0`.
+
+The proof uses the pointwise inequality
+`pᵢ log(pᵢ / qᵢ) ≥ pᵢ − qᵢ` (from `Real.log x ≤ x − 1` applied at
+`x = qᵢ / pᵢ`), then sums and uses
+`∑ pᵢ = ∑ qᵢ = 1` for the cancellation. -/
+theorem Hₛ_rel_nonneg (p q : ProbDistribution α)
+    (h_ac : ∀ i, (q i : ℝ) = 0 → (p i : ℝ) = 0) :
+    0 ≤ Hₛ_rel p q := by
+  -- Show: 0 ≤ ∑ i, (p i log p i - p i log q i).
+  -- Pointwise key inequality: p log p - p log q ≥ p - q, when p, q ≥ 0 and (q = 0 → p = 0).
+  have hkey : ∀ i,
+      (p i : ℝ) - (q i : ℝ) ≤
+        (p i : ℝ) * Real.log (p i : ℝ) - (p i : ℝ) * Real.log (q i : ℝ) := by
+    intro i
+    set pi : ℝ := (p i : ℝ) with hpi
+    set qi : ℝ := (q i : ℝ) with hqi
+    have hpi_nn : 0 ≤ pi := (p i).2.1
+    have hqi_nn : 0 ≤ qi := (q i).2.1
+    -- Case on whether p i = 0.
+    by_cases hp0 : pi = 0
+    · -- p_i = 0 ⇒ the entropy term vanishes; we need 0 - q_i ≤ 0, i.e., q_i ≥ 0. ✓
+      rw [hp0]; simp; exact hqi_nn
+    · -- p_i > 0. By contrapositive of h_ac, q_i ≠ 0, hence q_i > 0.
+      have hp_pos : 0 < pi := lt_of_le_of_ne hpi_nn (Ne.symm hp0)
+      have hq_ne : qi ≠ 0 := by
+        intro hq0
+        exact hp0 (h_ac i hq0)
+      have hq_pos : 0 < qi := lt_of_le_of_ne hqi_nn (Ne.symm hq_ne)
+      -- Use log y ≤ y - 1 at y = q_i / p_i:
+      --   log(q_i / p_i) ≤ q_i/p_i - 1.
+      have hratio_pos : 0 < qi / pi := div_pos hq_pos hp_pos
+      have hlog_le :
+          Real.log (qi / pi) ≤ qi / pi - 1 :=
+        Real.log_le_sub_one_of_pos hratio_pos
+      -- Multiply by p_i > 0:
+      --   p_i log(q_i/p_i) ≤ q_i - p_i.
+      have hmul_le :
+          pi * Real.log (qi / pi) ≤ pi * (qi / pi - 1) :=
+        mul_le_mul_of_nonneg_left hlog_le hpi_nn
+      have hrhs : pi * (qi / pi - 1) = qi - pi := by
+        field_simp
+      rw [hrhs] at hmul_le
+      -- Convert log(q_i/p_i) = log q_i - log p_i:
+      rw [Real.log_div hq_ne (ne_of_gt hp_pos)] at hmul_le
+      -- pi * (log qi - log pi) ≤ qi - pi
+      -- Rearrange: pi * log pi - pi * log qi ≥ pi - qi.
+      linarith [hmul_le]
+  -- Sum the pointwise inequality.
+  have hsum : ∑ i, ((p i : ℝ) - (q i : ℝ)) ≤ Hₛ_rel p q := by
+    unfold Hₛ_rel
+    exact Finset.sum_le_sum (fun i _ => hkey i)
+  -- Cancellation: ∑(p i - q i) = 1 - 1 = 0.
+  have hcancel : ∑ i, ((p i : ℝ) - (q i : ℝ)) = 0 := by
+    rw [Finset.sum_sub_distrib]
+    rw [p.normalized, q.normalized]
+    ring
+  linarith
