@@ -275,6 +275,12 @@ public import Physlib.QFT.QED.AnomalyCancellation.Odd.Parameterization
 public import Physlib.QFT.QED.AnomalyCancellation.Permutations
 public import Physlib.QFT.QED.AnomalyCancellation.Sorts
 public import Physlib.QFT.QED.AnomalyCancellation.VectorLike
+public import Physlib.QuantumMechanics.ComplexAction.BCJDoubleCopy.GravitationalElectromagneticScreenDoubleCopy
+public import Physlib.QuantumMechanics.ComplexAction.ComptonClock.EntanglementScreenArea
+public import Physlib.QuantumMechanics.ComplexAction.ComptonClock.ScreenCouplingReductions
+public import Physlib.QuantumMechanics.ComplexAction.NewtonGScreen.CouplingCore
+public import Physlib.QuantumMechanics.ComplexAction.NewtonGScreen.KinematicsCore
+public import Physlib.QuantumMechanics.ComplexAction.NewtonGScreen.MuonAnomalyCore
 public import Physlib.QuantumMechanics.FiniteTarget
 public import Physlib.QuantumMechanics.HarmonicOscillator.Basic
 public import Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic
@@ -477,6 +483,7 @@ public import Physlib.Thermodynamics.Basic
 public import Physlib.Thermodynamics.IdealGas.Basic
 public import Physlib.Thermodynamics.Temperature.Basic
 public import Physlib.Thermodynamics.Temperature.TemperatureUnits
+public import Physlib.Thermodynamics.VerlindeNewtonGravityCore
 public import Physlib.Units.Basic
 public import Physlib.Units.Dimension
 public import Physlib.Units.Examples
