@@ -1,0 +1,172 @@
+MODULE physlib.quantum.open_systems.lindblad_driven_leads.
+
+// Orchestration graph for the Schwarz et al. LDDL formalization.
+// Lean remains the sole proof authority. A proof token names a declaration;
+// CI must confirm that declaration before its evidence state becomes checked.
+
+component:hilbert_schmidt_operator_space#kind@entity:component.
+component:hilbert_schmidt_operator_space#provided_by@api:HilbertSchmidtOperatorSpace.HSOp.
+component:hilbert_schmidt_left_right_mul#kind@entity:component.
+component:hilbert_schmidt_left_right_mul#provided_by@api:HilbertSchmidtOperatorSpace.leftMulHS_rightMulHS.
+component:banach_algebra_exponential#kind@entity:component.
+component:banach_algebra_exponential#provided_by@api:NormedSpace.exp.
+component:pointwise_mul_operator#kind@entity:component.
+component:pointwise_mul_operator#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.mulOperator.
+component:pointwise_closability#kind@entity:component.
+component:pointwise_closability#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.mulOperator_isClosable.
+component:dominated_convergence#kind@entity:component.
+component:dominated_convergence#provided_by@api:MeasureTheory.tendsto_integral_of_dominated_convergence.
+component:cauchy_distribution#kind@entity:component.
+component:cauchy_distribution#provided_by@api:ProbabilityTheory.cauchyPDFReal.
+component:cauchy_normalization#kind@entity:component.
+component:cauchy_normalization#provided_by@api:ProbabilityTheory.integral_cauchyPDFReal_eq_one.
+
+source:schwarz2016_eq34#kind@entity:source.
+source:schwarz2016_eq36#kind@entity:source.
+source:schwarz2016_eq37#kind@entity:source.
+source:schwarz2016_eq38#kind@entity:source.
+source:schwarz2016_eq39#kind@entity:source.
+source:schwarz2016_eq40#kind@entity:source.
+source:schwarz2016_eq42#kind@entity:source.
+source:schwarz2016_eq45#kind@entity:source.
+source:schwarz2016_eq55_eq56#kind@entity:source.
+source:schwarz2016_eq58_eq60#kind@entity:source.
+source:schwarz2016_eq65#kind@entity:source.
+source:schwarz2016_eq68#kind@entity:source.
+source:schwarz2016_eq70#kind@entity:source.
+
+claim:loss_gain_rates#kind@entity:theorem.
+claim:loss_gain_rates#supported_by@source:schwarz2016_eq39.
+claim:loss_gain_rates#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.totalRate_eq_gamma.
+claim:loss_gain_rates#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.imbalanceRate_eq.
+
+claim:occupation_relaxation#kind@entity:theorem.
+claim:occupation_relaxation#supported_by@source:schwarz2016_eq37.
+claim:occupation_relaxation#requires@claim:loss_gain_rates.
+claim:occupation_relaxation#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.occupationVectorField_eq.
+
+claim:unique_target_occupation#kind@entity:theorem.
+claim:unique_target_occupation#supported_by@source:schwarz2016_eq38.
+claim:unique_target_occupation#requires@claim:occupation_relaxation.
+claim:unique_target_occupation#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.occupationVectorField_eq_zero_iff.
+claim:unique_target_occupation#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.gainRate_div_totalRate.
+
+claim:finite_hs_lddl_generator#kind@entity:theorem.
+claim:finite_hs_lddl_generator#supported_by@source:schwarz2016_eq36.
+claim:finite_hs_lddl_generator#supported_by@source:schwarz2016_eq40.
+claim:finite_hs_lddl_generator#uses@component:hilbert_schmidt_operator_space.
+claim:finite_hs_lddl_generator#uses@component:hilbert_schmidt_left_right_mul.
+claim:finite_hs_lddl_generator#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.lindbladDissipatorHS_apply.
+
+claim:bounded_lddl_evolution#kind@entity:theorem.
+claim:bounded_lddl_evolution#requires@claim:finite_hs_lddl_generator.
+claim:bounded_lddl_evolution#uses@component:banach_algebra_exponential.
+claim:bounded_lddl_evolution#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.lddlEvolutionHS_zero.
+
+claim:one_level_green_broadening#kind@entity:theorem.
+claim:one_level_green_broadening#supported_by@source:schwarz2016_eq42.
+claim:one_level_green_broadening#requires@claim:loss_gain_rates.
+claim:one_level_green_broadening#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.keldyshLeadGreen_eq.
+claim:one_level_green_broadening#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.lorentzian_nonneg.
+
+claim:lorentzian_unit_spectral_weight#kind@entity:theorem.
+claim:lorentzian_unit_spectral_weight#supported_by@source:schwarz2016_eq34.
+claim:lorentzian_unit_spectral_weight#uses@component:cauchy_distribution.
+claim:lorentzian_unit_spectral_weight#uses@component:cauchy_normalization.
+claim:lorentzian_unit_spectral_weight#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.integral_lorentzian_eq_one.
+
+claim:continuum_resolution_criterion#kind@entity:theorem.
+claim:continuum_resolution_criterion#supported_by@source:schwarz2016_eq45.
+claim:continuum_resolution_criterion#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.matchedBroadening_resolved.
+
+claim:continuum_observable_dominated_convergence#kind@entity:theorem.
+claim:continuum_observable_dominated_convergence#supported_by@source:schwarz2016_eq55_eq56.
+claim:continuum_observable_dominated_convergence#supported_by@source:schwarz2016_eq58_eq60.
+claim:continuum_observable_dominated_convergence#uses@component:dominated_convergence.
+claim:continuum_observable_dominated_convergence#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.continuumObservable_tendsto_of_dominated_convergence.
+
+claim:transport_integral_convergence_from_hybridization#kind@entity:theorem.
+claim:transport_integral_convergence_from_hybridization#supported_by@source:schwarz2016_eq55_eq56.
+claim:transport_integral_convergence_from_hybridization#supported_by@source:schwarz2016_eq58_eq60.
+claim:transport_integral_convergence_from_hybridization#requires@claim:continuum_observable_dominated_convergence.
+claim:transport_integral_convergence_from_hybridization#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.transportObservable_tendsto_of_hybridization.
+
+claim:level_doubling_amplitudes#kind@entity:theorem.
+claim:level_doubling_amplitudes#supported_by@source:schwarz2016_eq65.
+claim:level_doubling_amplitudes#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.couplingWeight_sq.
+
+claim:level_doubling_hybridization#kind@entity:theorem.
+claim:level_doubling_hybridization#supported_by@source:schwarz2016_eq68.
+claim:level_doubling_hybridization#supported_by@source:schwarz2016_eq70.
+claim:level_doubling_hybridization#requires@claim:level_doubling_amplitudes.
+claim:level_doubling_hybridization#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.sum_doubledCoupling_normSq.
+claim:level_doubling_hybridization#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.sum_localRateMinus_mul_doubledNormSq.
+
+claim:local_rate_unitary_invariance#kind@entity:theorem.
+claim:local_rate_unitary_invariance#supported_by@source:schwarz2016_eq68.
+claim:local_rate_unitary_invariance#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.scalarRateMatrix_unitaryInvariant.
+
+claim:continuum_pointwise_closable#kind@entity:theorem.
+claim:continuum_pointwise_closable#uses@component:pointwise_mul_operator.
+claim:continuum_pointwise_closable#uses@component:pointwise_closability.
+claim:continuum_pointwise_closable#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.doubledSpacePointwiseOperator_isClosable.
+
+claim:lorentz_sum_converges_to_continuum_hybridization#kind@entity:theorem.
+claim:lorentz_sum_converges_to_continuum_hybridization#target_state@state:open.
+claim:lorentz_sum_converges_to_continuum_hybridization#requires@claim:one_level_green_broadening.
+claim:lorentz_sum_converges_to_continuum_hybridization#requires@claim:lorentzian_unit_spectral_weight.
+claim:lorentz_sum_converges_to_continuum_hybridization#requires@claim:continuum_resolution_criterion.
+
+claim:lddl_current_converges_to_continuum_current#kind@entity:theorem.
+claim:lddl_current_converges_to_continuum_current#target_state@state:open.
+claim:lddl_current_converges_to_continuum_current#requires@claim:lorentz_sum_converges_to_continuum_hybridization.
+claim:lddl_current_converges_to_continuum_current#requires@claim:transport_integral_convergence_from_hybridization.
+
+proof:QuantumMechanics.LindbladDrivenLeads.totalRate_eq_gamma#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.imbalanceRate_eq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.occupationVectorField_eq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.occupationVectorField_eq_zero_iff#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.gainRate_div_totalRate#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.lindbladDissipatorHS_apply#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.lddlEvolutionHS_zero#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.keldyshLeadGreen_eq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.lorentzian_nonneg#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.integral_lorentzian_eq_one#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.matchedBroadening_resolved#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.continuumObservable_tendsto_of_dominated_convergence#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.transportObservable_tendsto_of_hybridization#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.couplingWeight_sq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.sum_doubledCoupling_normSq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.sum_localRateMinus_mul_doubledNormSq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.scalarRateMatrix_unitaryInvariant#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.doubledSpacePointwiseOperator_isClosable#verification@state:pending_ci.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+RULE open_claim:
+IF ?claim#kind@entity:theorem AND ?claim#target_state@state:open
+THEN ?claim#status@status:weak.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY open_targets:
+FIND ?claim WHERE ?claim#target_state@state:open.

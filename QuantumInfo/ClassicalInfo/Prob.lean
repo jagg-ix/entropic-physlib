@@ -153,9 +153,11 @@ theorem ofNNReal_toNNReal : ENNReal.ofNNReal (toNNReal p) = ENNReal.ofReal (p : 
   simp [toNNReal, ENNReal.ofReal_eq_coe_nnreal]
   norm_cast
 
+/-- View a nonnegative real bounded by `1` as a probability. -/
 def NNReal.asProb (p : ℝ≥0) (hp : p ≤ 1) : Prob :=
   ⟨p, ⟨p.2, hp⟩⟩
 
+/-- View a nonnegative real whose underlying real value is bounded by `1` as a probability. -/
 def NNReal.asProb' (p : ℝ≥0) (hp : p.1 ≤ 1) : Prob :=
   ⟨p, ⟨p.2, hp⟩⟩
 
@@ -254,6 +256,7 @@ namespace Mixable
 
 variable {T U : Type*} [AddCommMonoid U] [Module ℝ U]
 
+/-- Binary convex mixture in a `Mixable` type, with explicit nonnegative weights summing to `1`. -/
 @[reducible]
 def mix_ab [inst : Mixable U T] {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) (x₁ x₂ : T) : T :=
   inst.mkT <| inst.convex

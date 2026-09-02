@@ -1,0 +1,69 @@
+MODULE physlib.quantum.open_systems.finite_hybridization.
+
+// Fixed-grid finite-family convergence for Cauchy-broadened lead levels.
+// Lean remains the proof authority; ZIL tracks the theorem dependency chain.
+
+component:probability_measure_weak_topology#kind@entity:component.
+component:probability_measure_weak_topology#provided_by@api:ProbabilityMeasure.
+component:rclike_integral_characterization#kind@entity:component.
+component:rclike_integral_characterization#provided_by@api:ProbabilityMeasure.tendsto_iff_forall_integral_rclike_tendsto.
+component:finite_sum_tendsto#kind@entity:component.
+component:finite_sum_tendsto#provided_by@api:tendsto_finset_sum.
+
+source:schwarz2016_eq42#kind@entity:source.
+source:schwarz2016_eq43_eq44#kind@entity:source.
+source:schwarz2016_continuum_limit#kind@entity:source.
+
+claim:affine_cauchy_probability_law#kind@entity:definition.
+claim:affine_cauchy_probability_law#uses@component:probability_measure_weak_topology.
+claim:affine_cauchy_probability_law#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.affineCauchyLaw.
+
+claim:single_level_test_integral_limit#kind@entity:theorem.
+claim:single_level_test_integral_limit#supported_by@source:schwarz2016_eq42.
+claim:single_level_test_integral_limit#requires@claim:affine_cauchy_probability_law.
+claim:single_level_test_integral_limit#uses@component:rclike_integral_characterization.
+claim:single_level_test_integral_limit#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.integral_affineCauchyLaw_tendsto.
+
+claim:finite_broadened_hybridization_limit#kind@entity:theorem.
+claim:finite_broadened_hybridization_limit#supported_by@source:schwarz2016_eq43_eq44.
+claim:finite_broadened_hybridization_limit#supported_by@source:schwarz2016_continuum_limit.
+claim:finite_broadened_hybridization_limit#requires@claim:single_level_test_integral_limit.
+claim:finite_broadened_hybridization_limit#uses@component:finite_sum_tendsto.
+claim:finite_broadened_hybridization_limit#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.finiteBroadenedObservable_tendsto_sharp.
+
+claim:grid_refinement_to_continuum_measure#kind@entity:theorem.
+claim:grid_refinement_to_continuum_measure#target_state@state:open.
+claim:grid_refinement_to_continuum_measure#requires@claim:finite_broadened_hybridization_limit.
+
+proof:QuantumMechanics.LindbladDrivenLeads.integral_affineCauchyLaw_tendsto#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.finiteBroadenedObservable_tendsto_sharp#verification@state:pending_ci.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+RULE open_claim:
+IF ?claim#kind@entity:theorem AND ?claim#target_state@state:open
+THEN ?claim#status@status:weak.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY open_targets:
+FIND ?claim WHERE ?claim#target_state@state:open.

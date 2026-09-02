@@ -122,13 +122,6 @@ def eigenstate : SchwartzSubmodule d := schwartzEquiv _ (Q.eigenfunction n)
 
 lemma eigenstate_eq : Q.eigenstate n = schwartzEquiv _ (Q.eigenfunction n) := rfl
 
-/-- The energy eigenstates are orthonormal. -/
-@[simp, sorryful]
-lemma eigenstates_orthonormal : ⟪(Q.eigenstate n : Q.HS), Q.eigenstate n'⟫_ℂ = δ[n,n'] :=
-  -- It might help to first prove an analogue of
-  -- `MeasureTheory.integral_fin_nat_prod_(volume_)eq_prod` for `Space d` in order to split
-  -- `∫ x : Space d, Π i : Fin d, fᵢ (x i) = ∏ i : Fin d, ∫ xᵢ : ℝ, fᵢ xᵢ`, using `Space.equivPi`.
-  sorry
 
 end HarmonicOscillator
 end QuantumMechanics

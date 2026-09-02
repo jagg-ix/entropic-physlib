@@ -1,0 +1,112 @@
+MODULE physlib.cat_ept.evidence_closure.
+
+// Canonical reconciliation graph for theorem evidence, rejected omissions,
+// and genuinely open CAT/EPT analytic obligations. Lean declarations remain
+// proof authority; ZIL supplies lifecycle, dependency, and omission queries.
+
+component:lean_registry#kind@entity:component.
+component:lean_registry#provided_by@api:Physlib.Meta.ZilEvidenceClosureRegistry.
+component:lean_registry#state@state:healthy.
+component:axiom_audit#kind@entity:component.
+component:axiom_audit#provided_by@api:Physlib.Meta.ZilEvidenceClosureRegistryAudit.
+component:axiom_audit#state@state:declared.
+
+claim:hartree_self_energy_continuity#kind@entity:theorem.
+claim:hartree_self_energy_continuity#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.NewtonianInteractionEnergy.newtonianSelfEnergy_tendsto_of_lsixFifths.
+claim:hartree_self_energy_continuity#requires@obligation:localized_strong_lsix_fifths_born_convergence.
+
+claim:h_one_hartree_interaction_continuity#kind@entity:theorem.
+claim:h_one_hartree_interaction_continuity#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.SelfBoundSchrodingerNewtonPDE.hOneAttractiveNewtonInteraction_tendsto_of_lsixFifths.
+claim:h_one_hartree_interaction_continuity#requires@claim:hartree_self_energy_continuity.
+
+claim:energy_split_no_loss#kind@entity:theorem.
+claim:energy_split_no_loss#formalized_by@proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.hOne_tendsto_of_minimizing_energySplit.
+claim:energy_split_no_loss#requires@claim:h_one_hartree_interaction_continuity.
+
+claim:born_normalization_strong_closure#kind@entity:theorem.
+claim:born_normalization_strong_closure#formalized_by@proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.hOneLTwoNormalized_of_tendsto.
+claim:born_normalization_strong_closure#requires@claim:energy_split_no_loss.
+
+claim:born_first_moment_minimizer#kind@entity:theorem.
+claim:born_first_moment_minimizer#formalized_by@proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.bounded_normalized_hOne_firstMoment_has_energyMinimizer.
+claim:born_first_moment_minimizer#requires@obligation:recentered_first_moment_bound.
+claim:born_first_moment_minimizer#requires@obligation:localized_strong_lsix_fifths_born_convergence.
+
+claim:compact_complete_minimizing_orbit#kind@entity:theorem.
+claim:compact_complete_minimizing_orbit#formalized_by@proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.isCompact_hOneBorn_energyMinimizers_of_interactionClosure.
+claim:compact_complete_minimizing_orbit#requires@claim:born_first_moment_minimizer.
+
+claim:born_law_orbital_stability#kind@entity:theorem.
+claim:born_law_orbital_stability#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.SelfBoundSchrodingerNewtonPDE.exists_hOneBorn_minimizingOrbit_uniformlyStable.
+claim:born_law_orbital_stability#requires@claim:compact_complete_minimizing_orbit.
+claim:born_law_orbital_stability#requires@obligation:global_mass_energy_preserving_flow.
+
+proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.NewtonianInteractionEnergy.newtonianSelfEnergy_tendsto_of_lsixFifths#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.SelfBoundSchrodingerNewtonPDE.hOneAttractiveNewtonInteraction_tendsto_of_lsixFifths#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.hOne_tendsto_of_minimizing_energySplit#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.hOneLTwoNormalized_of_tendsto#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.bounded_normalized_hOne_firstMoment_has_energyMinimizer#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.Schrodinger.EuclideanSobolevFrequencyLocalization.isCompact_hOneBorn_energyMinimizers_of_interactionClosure#verification@state:pending_kernel_check.
+proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.SelfBoundSchrodingerNewtonPDE.exists_hOneBorn_minimizingOrbit_uniformlyStable#verification@state:pending_kernel_check.
+
+omission:unit_mass_sphere_globally_weakly_closed#kind@entity:omission.
+omission:unit_mass_sphere_globally_weakly_closed#state@state:rejected.
+omission:unit_mass_sphere_globally_weakly_closed#discharged_by@counterexample:orthonormal_unit_mass_sequence_weakly_converges_to_zero.
+omission:unit_mass_sphere_globally_weakly_closed#supersedes@claim:normalized_mass_weak_closure_remains_open.
+
+omission:attractive_energy_unconditionally_weakly_lsc#kind@entity:omission.
+omission:attractive_energy_unconditionally_weakly_lsc#state@state:rejected.
+omission:attractive_energy_unconditionally_weakly_lsc#discharged_by@counterexample:negative_energy_translates_weakly_converge_to_zero.
+omission:attractive_energy_unconditionally_weakly_lsc#supersedes@claim:target_energy_unconditional_weak_lower_semicontinuity.
+
+omission:spatial_generator_bounded_h_one_to_h_one#kind@entity:omission.
+omission:spatial_generator_bounded_h_one_to_h_one#state@state:rejected.
+omission:spatial_generator_bounded_h_one_to_h_one#discharged_by@counterexample:laplacian_h_one_ratio_grows_like_frequency_squared.
+omission:spatial_generator_bounded_h_one_to_h_one#supersedes@claim:concrete_generator_h_one_to_h_one_c_one.
+
+obligation:localized_strong_lsix_fifths_born_convergence#kind@entity:obligation.
+obligation:localized_strong_lsix_fifths_born_convergence#state@state:open.
+obligation:recentered_first_moment_bound#kind@entity:obligation.
+obligation:recentered_first_moment_bound#state@state:open.
+obligation:concrete_energy_critical_duhamel_strichartz_flow#kind@entity:obligation.
+obligation:concrete_energy_critical_duhamel_strichartz_flow#state@state:open.
+obligation:global_mass_energy_preserving_flow#kind@entity:obligation.
+obligation:global_mass_energy_preserving_flow#state@state:open.
+obligation:global_mass_energy_preserving_flow#requires@obligation:concrete_energy_critical_duhamel_strichartz_flow.
+obligation:analytic_identification_of_m9_69_with_minimizing_orbit#kind@entity:obligation.
+obligation:analytic_identification_of_m9_69_with_minimizing_orbit#state@state:open.
+obligation:analytic_identification_of_m9_69_with_minimizing_orbit#requires@claim:compact_complete_minimizing_orbit.
+
+RULE implementation_declared:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof
+THEN ?claim#implementation_state@state:declared.
+
+RULE awaiting_kernel_check:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_kernel_check
+THEN ?claim#status@status:awaiting_kernel_check.
+
+RULE resolved_omission:
+IF ?omission#kind@entity:omission AND ?omission#state@state:rejected AND ?omission#discharged_by@?resolution
+THEN ?omission#status@status:resolved_negative.
+
+RULE genuine_open_obligation:
+IF ?obligation#kind@entity:obligation AND ?obligation#state@state:open
+THEN ?obligation#status@status:open.
+
+QUERY implementation_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY resolved_omissions:
+FIND ?omission ?resolution WHERE ?omission#discharged_by@?resolution.
+
+QUERY superseded_open_labels:
+FIND ?omission ?old_claim WHERE ?omission#supersedes@?old_claim.
+
+QUERY remaining_obligations:
+FIND ?obligation WHERE ?obligation#kind@entity:obligation AND ?obligation#state@state:open.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY awaiting_kernel_checks:
+FIND ?claim WHERE ?claim#status@status:awaiting_kernel_check.

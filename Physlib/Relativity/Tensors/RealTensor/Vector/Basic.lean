@@ -414,6 +414,36 @@ def ofSpatialComponent {d : ℕ} : EuclideanSpace ℝ (Fin d) →L[ℝ] Vector d
   map_smul' c xs := by
     simp [smul_smul, Finset.smul_sum]
 
+/-- Taking the temporal component recovers the scalar used to create a temporal vector. -/
+@[simp]
+lemma timeComponent_ofTemporalComponent {d : ℕ} (t : ℝ) :
+    timeComponent (ofTemporalComponent (d := d) t) = t := by
+  simp [ofTemporalComponent, timeComponent, basis_apply]
+
+/-- A purely temporal vector has zero spatial part. -/
+@[simp]
+lemma spatialPart_ofTemporalComponent {d : ℕ} (t : ℝ) :
+    spatialPart (ofTemporalComponent (d := d) t) = 0 := by
+  change spatialCLM d (ofTemporalComponent t) = 0
+  simp [ofTemporalComponent]
+
+/-- A purely spatial vector has zero temporal component. -/
+@[simp]
+lemma timeComponent_ofSpatialComponent {d : ℕ} (s : EuclideanSpace ℝ (Fin d)) :
+    timeComponent (ofSpatialComponent s) = 0 := by
+  change temporalCLM d (ofSpatialComponent s) = 0
+  rw [show ofSpatialComponent s = ∑ i, s i • basis (Sum.inr i) by rfl]
+  simp
+
+/-- Taking the spatial part recovers the Euclidean vector used to create a spatial vector. -/
+@[simp]
+lemma spatialPart_ofSpatialComponent {d : ℕ} (s : EuclideanSpace ℝ (Fin d)) :
+    spatialPart (ofSpatialComponent s) = s := by
+  change spatialCLM d (ofSpatialComponent s) = s
+  rw [show ofSpatialComponent s = ∑ i, s i • basis (Sum.inr i) by rfl]
+  simp only [map_sum, map_smul, spatialCLM_basis_sum_inr]
+  exact (EuclideanSpace.basisFun (Fin d) ℝ).sum_repr s
+
 /-!
 
 ## Smoothness

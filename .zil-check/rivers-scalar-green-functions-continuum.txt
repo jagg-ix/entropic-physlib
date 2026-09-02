@@ -1,0 +1,541 @@
+⚠ [12/66] Replayed Zil.Parser.Tuple
+warning: Zil/Parser/Tuple.lean:34:37: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Tuple.lean:34:37: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Tuple.lean:44:26: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:57:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:66:14: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Tuple.lean:66:14: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Tuple.lean:68:20: `String.mk` has been deprecated: Use `String.ofList` instead
+warning: Zil/Parser/Tuple.lean:72:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:80:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:82:32: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Tuple.lean:96:10: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:100:42: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:100:78: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:101:80: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:116:35: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:118:23: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:120:31: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:120:36: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Tuple.lean:121:22: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:127:34: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:131:17: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:137:23: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:137:55: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:150:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:153:19: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Tuple.lean:153:34: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:163:16: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:163:45: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:177:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Tuple.lean:180:29: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Tuple.lean:180:44: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Tuple.lean:193:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+⚠ [16/66] Replayed Zil.Parser.Program
+warning: Zil/Parser/Program.lean:26:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:28:32: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Program.lean:41:10: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:45:42: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:45:78: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:46:63: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:60:13: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:61:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:63:19: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:65:53: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:65:58: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Program.lean:65:17: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:69:18: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:70:43: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Program.lean:70:58: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:94:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:99:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:103:40: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Program.lean:127:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:130:41: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Program.lean:130:56: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Program.lean:139:28: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:142:32: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:148:67: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Program.lean:174:21: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:182:28: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:185:31: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Program.lean:185:46: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Program.lean:191:13: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:218:23: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:235:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Program.lean:241:31: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Program.lean:241:46: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+⚠ [17/66] Replayed Zil.Parser.Macro
+warning: Zil/Parser/Macro.lean:61:13: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Macro.lean:76:16: `String.mk` has been deprecated: Use `String.ofList` instead
+warning: Zil/Parser/Macro.lean:76:42: `String.mk` has been deprecated: Use `String.ofList` instead
+warning: Zil/Parser/Macro.lean:79:13: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Macro.lean:94:27: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:117:31: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:122:13: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Macro.lean:130:34: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:143:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:150:28: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Macro.lean:150:43: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Macro.lean:162:39: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:163:44: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Macro.lean:192:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:197:36: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Macro.lean:210:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:237:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:245:28: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Macro.lean:245:43: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/Macro.lean:257:39: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Macro.lean:258:39: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+⚠ [19/66] Replayed Zil.Parser.Declaration
+warning: Zil/Parser/Declaration.lean:19:37: `String.mk` has been deprecated: Use `String.ofList` instead
+warning: Zil/Parser/Declaration.lean:19:63: `String.mk` has been deprecated: Use `String.ofList` instead
+warning: Zil/Parser/Declaration.lean:21:13: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Declaration.lean:37:29: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:55:31: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:62:13: `String.data` has been deprecated: Use `String.toList` instead
+warning: Zil/Parser/Declaration.lean:69:20: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:72:41: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Declaration.lean:77:35: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Declaration.lean:83:35: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Declaration.lean:91:35: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/Declaration.lean:117:15: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:117:41: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:119:48: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:127:13: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:138:24: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:141:19: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Declaration.lean:141:34: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:144:49: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:145:77: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:148:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:150:25: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:152:63: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/Declaration.lean:152:68: `String.dropRight` has been deprecated: Use `String.dropEnd` instead
+
+Note: The updated constant has a different type:
+  String → Nat → String.Slice
+instead of
+  String → Nat → String
+warning: Zil/Parser/Declaration.lean:152:23: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+⚠ [21/66] Replayed Zil.Parser.DeclarationProgram
+warning: Zil/Parser/DeclarationProgram.lean:9:52: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/DeclarationProgram.lean:10:52: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/DeclarationProgram.lean:17:26: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+warning: Zil/Parser/DeclarationProgram.lean:20:34: `String.Slice.dropRight` has been deprecated: Use `String.Slice.dropEnd` instead
+warning: Zil/Parser/DeclarationProgram.lean:20:49: `String.Slice.trim` has been deprecated: Use `String.Slice.trimAscii` instead
+warning: Zil/Parser/DeclarationProgram.lean:33:42: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+⚠ [25/66] Replayed Zil.Codec.Revision
+warning: Zil/Codec/Revision.lean:19:13: `String.data` has been deprecated: Use `String.toList` instead
+ZIL-QUERY-CI	1
+status	pass
+module	physlib.qft.scalar_green_functions.rivers1987.continuum
+planner-hint	high_selectivity_first
+requested-profile	
+active-profiles	
+selected-profiles	
+selected-packs	
+selected-queries	claim_statuses,proof_registry,dependency_edges,reused_components,source_traceability
+missing-packs	
+missing-queries	
+facts	317
+query	claim_statuses	42
+query	proof_registry	45
+query	dependency_edges	20
+query	reused_components	35
+query	source_traceability	41

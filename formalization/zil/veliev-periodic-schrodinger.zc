@@ -1,0 +1,130 @@
+MODULE physlib.quantum.periodic_schrodinger.veliev.
+
+// Evidence graph for O. A. Veliev, arXiv:math-ph/0504023v3.
+// Lean declarations are proof witnesses; analytic asymptotic estimates remain
+// explicit requirements unless a witness is named below.
+
+source:veliev_periodic_schrodinger#kind@entity:source.
+source:veliev_periodic_schrodinger#title@text:"Perturbation Theory for the Multidimensional Schrodinger Operator with a Periodic Potential".
+source:veliev_periodic_schrodinger#arxiv@text:"math-ph/0504023v3".
+
+component:physlib_space_hilbert#kind@entity:component.
+component:physlib_space_hilbert#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.
+component:physlib_mul_operator#kind@entity:component.
+component:physlib_mul_operator#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.mulOperator.
+component:mathlib_matrix#kind@entity:component.
+component:mathlib_matrix#provided_by@api:Matrix.
+component:mathlib_hermitian#kind@entity:component.
+component:mathlib_hermitian#provided_by@api:Matrix.IsHermitian.
+component:mathlib_tsum#kind@entity:component.
+component:mathlib_tsum#provided_by@api:tsum.
+component:mathlib_intermediate_value#kind@entity:component.
+component:mathlib_intermediate_value#provided_by@api:IsPreconnected.intermediate_value₂.
+component:physlib_complex_action_weight#kind@entity:component.
+component:physlib_complex_action_weight#provided_by@api:Physlib.QFT.Wick.Consistency.complexActionWeight.
+
+claim:free_bloch_energy#kind@entity:definition.
+claim:free_bloch_energy#supported_by@source:veliev_periodic_schrodinger.
+claim:free_bloch_energy#formalized_by@lean:Physlib.QuantumMechanics.PeriodicSchrodinger.freeEnergy.
+
+claim:diffraction_hyperplane#kind@entity:theorem.
+claim:diffraction_hyperplane#supported_by@source:veliev_periodic_schrodinger.
+claim:diffraction_hyperplane#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.onDiffractionHyperplane_iff_affine.
+
+claim:resonance_nonresonance_disjoint#kind@entity:theorem.
+claim:resonance_nonresonance_disjoint#supported_by@source:veliev_periodic_schrodinger.
+claim:resonance_nonresonance_disjoint#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.finiteResonance_not_finiteNonresonance.
+
+claim:fourier_binding_formula#kind@entity:theorem.
+claim:fourier_binding_formula#supported_by@source:veliev_periodic_schrodinger.
+claim:fourier_binding_formula#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.coefficient_eq_convolution_div.
+
+claim:finite_binding_iteration#kind@entity:theorem.
+claim:finite_binding_iteration#requires@claim:fourier_binding_formula.
+claim:finite_binding_iteration#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.fixedPoint_eq_partialSum_add_remainder.
+
+claim:finite_resonance_matrix#kind@entity:definition.
+claim:finite_resonance_matrix#supported_by@source:veliev_periodic_schrodinger.
+claim:finite_resonance_matrix#uses@component:mathlib_matrix.
+claim:finite_resonance_matrix#formalized_by@lean:Physlib.QuantumMechanics.PeriodicSchrodinger.resonanceMatrix.
+
+claim:resonance_matrix_hermitian#kind@entity:theorem.
+claim:resonance_matrix_hermitian#requires@claim:finite_resonance_matrix.
+claim:resonance_matrix_hermitian#uses@component:mathlib_hermitian.
+claim:resonance_matrix_hermitian#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.resonanceMatrix_isHermitian.
+
+claim:simple_label_uniqueness#kind@entity:theorem.
+claim:simple_label_uniqueness#supported_by@source:veliev_periodic_schrodinger.
+claim:simple_label_uniqueness#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.unique_label_of_simple.
+
+claim:two_family_simplicity#kind@entity:theorem.
+claim:two_family_simplicity#requires@claim:simple_label_uniqueness.
+claim:two_family_simplicity#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.TwoFamilySimplicity.excludes_resonant.
+
+claim:directional_potential_split#kind@entity:theorem.
+claim:directional_potential_split#supported_by@source:veliev_periodic_schrodinger.
+claim:directional_potential_split#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.directionalPart_add_transverseRemainder.
+
+claim:directional_binding_formula#kind@entity:theorem.
+claim:directional_binding_formula#requires@claim:directional_potential_split.
+claim:directional_binding_formula#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.referenceCoefficient_eq.
+
+claim:finite_bloch_localization#kind@entity:theorem.
+claim:finite_bloch_localization#supported_by@source:veliev_periodic_schrodinger.
+claim:finite_bloch_localization#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.finiteTailMass_le_of_localized.
+
+claim:infinite_bloch_localization#kind@entity:theorem.
+claim:infinite_bloch_localization#supported_by@source:veliev_periodic_schrodinger.
+claim:infinite_bloch_localization#uses@component:mathlib_tsum.
+claim:infinite_bloch_localization#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.infiniteTailMass_le_of_localized.
+
+claim:periodic_potential_preserves_bloch#kind@entity:theorem.
+claim:periodic_potential_preserves_bloch#supported_by@source:veliev_periodic_schrodinger.
+claim:periodic_potential_preserves_bloch#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.periodic_mul_preserves_bloch.
+
+claim:continuum_periodic_potential_operator#kind@entity:theorem.
+claim:continuum_periodic_potential_operator#uses@component:physlib_space_hilbert.
+claim:continuum_periodic_potential_operator#uses@component:physlib_mul_operator.
+claim:continuum_periodic_potential_operator#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.periodicPotentialOperator_apply_ae.
+
+claim:arbitrary_order_known_parts#kind@entity:theorem.
+claim:arbitrary_order_known_parts#supported_by@source:veliev_periodic_schrodinger.
+claim:arbitrary_order_known_parts#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.recursiveKnownPart_succ.
+
+claim:arbitrary_order_error_estimates#kind@entity:requirement.
+claim:arbitrary_order_error_estimates#supported_by@source:veliev_periodic_schrodinger.
+claim:arbitrary_order_error_estimates#represented_by@lean:Physlib.QuantumMechanics.PeriodicSchrodinger.ArbitraryOrderSpectralExpansion.
+claim:arbitrary_order_error_estimates#status@state:external_analytic_proof.
+
+claim:isoenergetic_crossing#kind@entity:theorem.
+claim:isoenergetic_crossing#supported_by@source:veliev_periodic_schrodinger.
+claim:isoenergetic_crossing#uses@component:mathlib_intermediate_value.
+claim:isoenergetic_crossing#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.exists_isoenergetic_point.
+
+claim:high_energy_spectral_tail#kind@entity:theorem.
+claim:high_energy_spectral_tail#requires@claim:isoenergetic_crossing.
+claim:high_energy_spectral_tail#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.hasSpectralTail_of_crossing_branches.
+
+claim:bethe_sommerfeld_high_energy_conclusion#kind@entity:theorem.
+claim:bethe_sommerfeld_high_energy_conclusion#requires@claim:high_energy_spectral_tail.
+claim:bethe_sommerfeld_high_energy_conclusion#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.finiteHighEnergyGapRegion_of_crossings.
+
+claim:entropic_spectral_selection#kind@entity:theorem.
+claim:entropic_spectral_selection#uses@component:physlib_complex_action_weight.
+claim:entropic_spectral_selection#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.norm_spectralSelectionWeight.
+
+claim:diffraction_entropic_selection#kind@entity:theorem.
+claim:diffraction_entropic_selection#uses@component:physlib_complex_action_weight.
+claim:diffraction_entropic_selection#formalized_by@proof:Physlib.QuantumMechanics.PeriodicSchrodinger.norm_diffractionSelectionWeight_of_resonance.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY external_requirements:
+FIND ?claim WHERE ?claim#status@state:external_analytic_proof.

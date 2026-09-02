@@ -86,6 +86,22 @@ open spaceTime
 
 variable (μ ν : Fin 4)
 
+/-- The diagonal coefficients of the Dirac quadratic form in the canonical
+`(+,-,-,-)` gamma representation. -/
+def diracMetricDiagonal (μ : Fin 4) : ℂ := ![1, -1, -1, -1] μ
+
+/-- **The full Dirac Clifford relation**
+`γ^μ γ^ν + γ^ν γ^μ = 2 η^{μν} 1` in the canonical representation.
+This packages the four square identities and six pairwise anticommutation
+identities above into the indexed law consumed by curved coframes. -/
+lemma anticommutation (μ ν : Fin 4) :
+    γ μ * γ ν + γ ν * γ μ =
+      if μ = ν then
+        (2 * diracMetricDiagonal μ) • (1 : Matrix (Fin 4) (Fin 4) ℂ)
+      else 0 := by
+  fin_cases μ <;> fin_cases ν <;>
+    simp [diracMetricDiagonal, γ, two_smul]
+
 /-- The subset of `Matrix (Fin 4) (Fin 4) ℂ` formed by the gamma matrices in the Dirac
 representation. -/
 @[simp]

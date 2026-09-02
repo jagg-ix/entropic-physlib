@@ -10,6 +10,7 @@ public import Physlib.SpaceAndTime.Space.Module
 public import Physlib.SpaceAndTime.Time.Basic
 public import Mathlib.Analysis.Calculus.Deriv.Inv
 public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 /-!
 
 # Time Derivatives
@@ -261,5 +262,62 @@ lemma deriv_space {d : ℕ} {f : Time → Space d}
     (hf : Differentiable ℝ f) (t : Time) (i : Fin d) :
     deriv (fun s => f s i) t = deriv f t i :=
   (Space.fderiv_space_components i f hf t 1).symm
+
+
+
+/-! ## Scalar derivative algebra (fork additions)
+
+Pointwise `deriv` rules for real-valued signals used by the FLRW and
+entropic-time modules: products, squares, chain rule and real powers. -/
+
+/-- Constant-multiple rule for `Time.deriv` on real-valued functions. -/
+lemma deriv_const_mul {f : Time → ℝ} (C : ℝ) (t : Time)
+    (hf : DifferentiableAt ℝ f t) :
+    ∂ₜ (fun s => C * f s) t = C * ∂ₜ f t := by
+  simp only [Time.deriv_eq]
+  rw [show (fun s => C * f s) = fun s => C • f s from rfl,
+    fderiv_fun_const_smul hf C]
+  rfl
+
+/-- Product rule for `Time.deriv` on real-valued functions. -/
+lemma deriv_mul {f g : Time → ℝ} (t : Time)
+    (hf : DifferentiableAt ℝ f t) (hg : DifferentiableAt ℝ g t) :
+    ∂ₜ (fun s => f s * g s) t = ∂ₜ f t * g t + f t * ∂ₜ g t := by
+  simp only [Time.deriv_eq]
+  rw [fderiv_fun_mul hf hg]
+  show f t * fderiv ℝ g t 1 + g t * fderiv ℝ f t 1 = _
+  ring
+
+/-- Square rule for `Time.deriv` on real-valued functions. -/
+lemma deriv_sq {f : Time → ℝ} (t : Time) (hf : DifferentiableAt ℝ f t) :
+    ∂ₜ (fun s => f s ^ 2) t = 2 * f t * ∂ₜ f t := by
+  have h : (fun s => f s ^ 2) = fun s => f s * f s := by
+    funext s
+    ring
+  rw [h, deriv_mul t hf hf]
+  ring
+
+/-- Chain rule for `Time.deriv` through a real function with a known derivative:
+`∂ₜ (g ∘ f) t = g' (f t) · ∂ₜ f t`. -/
+lemma deriv_comp_hasDerivAt {f : Time → ℝ} {g : ℝ → ℝ} {g' : ℝ} (t : Time)
+    (hg : HasDerivAt g g' (f t)) (hf : DifferentiableAt ℝ f t) :
+    ∂ₜ (fun s => g (f s)) t = g' * ∂ₜ f t := by
+  have H := hg.hasFDerivAt.comp t hf.hasFDerivAt
+  simp only [Time.deriv_eq]
+  rw [show (fun s => g (f s)) = g ∘ f from rfl, H.fderiv]
+  simp [smul_eq_mul, mul_comm]
+
+/-- Real-power rule for `Time.deriv`: `∂ₜ (f ^ r) = r · f^(r−1) · ∂ₜ f` for a
+nonvanishing base (or `1 ≤ r`). -/
+lemma deriv_rpow_const {f : Time → ℝ} {r : ℝ} (t : Time)
+    (hf : DifferentiableAt ℝ f t) (h : f t ≠ 0 ∨ 1 ≤ r) :
+    ∂ₜ (fun s => f s ^ r) t = r * f t ^ (r - 1) * ∂ₜ f t := by
+  rw [deriv_comp_hasDerivAt t (Real.hasDerivAt_rpow_const h) hf]
+
+/-!
+
+## C. Derivative of constant functions
+
+-/
 
 end Time

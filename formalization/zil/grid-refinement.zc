@@ -1,0 +1,86 @@
+MODULE physlib.quantum.open_systems.grid_refinement.
+
+// Native PMF representation of discretized spectral grids and their weak
+// refinement to a continuum spectral law. Lean remains the proof authority.
+
+component:probability_mass_function#kind@entity:component.
+component:probability_mass_function#provided_by@api:PMF.
+component:pmf_probability_measure#kind@entity:component.
+component:pmf_probability_measure#provided_by@api:PMF.toMeasure.
+component:pmf_weighted_integral#kind@entity:component.
+component:pmf_weighted_integral#provided_by@api:PMF.integral_eq_sum.
+component:probability_measure_weak_topology#kind@entity:component.
+component:probability_measure_weak_topology#provided_by@api:ProbabilityMeasure.
+component:rclike_integral_characterization#kind@entity:component.
+component:rclike_integral_characterization#provided_by@api:ProbabilityMeasure.tendsto_iff_forall_integral_rclike_tendsto.
+
+source:schwarz2016_eq43_eq44#kind@entity:source.
+source:schwarz2016_eq55_eq56#kind@entity:source.
+source:schwarz2016_eq58_eq60#kind@entity:source.
+source:schwarz2016_continuum_limit#kind@entity:source.
+
+claim:native_discrete_spectral_grid#kind@entity:definition.
+claim:native_discrete_spectral_grid#uses@component:probability_mass_function.
+claim:native_discrete_spectral_grid#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.SpectralGrid.
+
+claim:spectral_grid_probability_law#kind@entity:definition.
+claim:spectral_grid_probability_law#requires@claim:native_discrete_spectral_grid.
+claim:spectral_grid_probability_law#uses@component:pmf_probability_measure.
+claim:spectral_grid_probability_law#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.SpectralGrid.law.
+
+claim:finite_grid_integral_equals_weighted_sum#kind@entity:theorem.
+claim:finite_grid_integral_equals_weighted_sum#supported_by@source:schwarz2016_eq43_eq44.
+claim:finite_grid_integral_equals_weighted_sum#requires@claim:spectral_grid_probability_law.
+claim:finite_grid_integral_equals_weighted_sum#uses@component:pmf_weighted_integral.
+claim:finite_grid_integral_equals_weighted_sum#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.SpectralGrid.observable_eq_sum.
+
+claim:grid_refinement_implies_observable_convergence#kind@entity:theorem.
+claim:grid_refinement_implies_observable_convergence#supported_by@source:schwarz2016_eq55_eq56.
+claim:grid_refinement_implies_observable_convergence#supported_by@source:schwarz2016_eq58_eq60.
+claim:grid_refinement_implies_observable_convergence#supported_by@source:schwarz2016_continuum_limit.
+claim:grid_refinement_implies_observable_convergence#requires@claim:spectral_grid_probability_law.
+claim:grid_refinement_implies_observable_convergence#uses@component:probability_measure_weak_topology.
+claim:grid_refinement_implies_observable_convergence#uses@component:rclike_integral_characterization.
+claim:grid_refinement_implies_observable_convergence#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.spectralGridObservable_tendsto_continuum.
+
+claim:observable_convergence_characterizes_grid_refinement#kind@entity:theorem.
+claim:observable_convergence_characterizes_grid_refinement#requires@claim:grid_refinement_implies_observable_convergence.
+claim:observable_convergence_characterizes_grid_refinement#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.spectralGridLaw_tendsto_iff_observables.
+
+claim:concrete_quadrature_grid_converges#kind@entity:theorem.
+claim:concrete_quadrature_grid_converges#target_state@state:open.
+claim:concrete_quadrature_grid_converges#requires@claim:observable_convergence_characterizes_grid_refinement.
+
+proof:QuantumMechanics.LindbladDrivenLeads.SpectralGrid.observable_eq_sum#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.spectralGridObservable_tendsto_continuum#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.spectralGridLaw_tendsto_iff_observables#verification@state:pending_ci.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+RULE open_claim:
+IF ?claim#kind@entity:theorem AND ?claim#target_state@state:open
+THEN ?claim#status@status:weak.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY open_targets:
+FIND ?claim WHERE ?claim#target_state@state:open.

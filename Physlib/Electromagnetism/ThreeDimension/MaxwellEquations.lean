@@ -40,6 +40,8 @@ boundary conditions, and constitutive laws for material media are outside the cu
 module.
 
 -/
+public section
+
 namespace Electromagnetism
 namespace ThreeDimension
 

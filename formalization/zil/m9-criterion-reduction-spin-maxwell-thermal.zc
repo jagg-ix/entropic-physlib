@@ -1,0 +1,64 @@
+MODULE physlib.m9.criterion_reduction_spin_maxwell_thermal.
+
+criterion:spin_half_statistics#kind@entity:criterion.
+criterion:em_waves#kind@entity:criterion.
+criterion:thermal_field#kind@entity:criterion.
+
+claim:fermion_exchange_phase_minus_one#kind@entity:theorem.
+claim:fermion_exchange_phase_minus_one#formalized_by@proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.fermionic_exchange_phase.
+claim:two_state_antisymmetry#kind@entity:theorem.
+claim:two_state_antisymmetry#formalized_by@proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.antisymmetrize_swap.
+claim:identical_fermion_exclusion#kind@entity:theorem.
+claim:identical_fermion_exclusion#formalized_by@proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.antisymmetrize_self.
+criterion:spin_half_statistics#supported_by@claim:fermion_exchange_phase_minus_one.
+criterion:spin_half_statistics#supported_by@claim:two_state_antisymmetry.
+criterion:spin_half_statistics#supported_by@claim:identical_fermion_exclusion.
+criterion:spin_half_statistics#requires@evidence:openwave_spin_double_cover.
+criterion:spin_half_statistics#boundary@obligation:derive_fermionic_assignment_for_specific_cat_ept_particle.
+
+claim:harmonic_vacuum_maxwell_plane_wave#kind@entity:theorem.
+claim:harmonic_vacuum_maxwell_plane_wave#formalized_by@proof:Electromagnetism.ElectromagneticPotential.harmonicWaveX_maxwell_planeWave.
+claim:harmonic_transverse_electric_component#kind@entity:theorem.
+claim:harmonic_transverse_electric_component#formalized_by@proof:Electromagnetism.ElectromagneticPotential.harmonicWaveX_transverse_electric_component.
+criterion:em_waves#supported_by@claim:harmonic_vacuum_maxwell_plane_wave.
+criterion:em_waves#supported_by@claim:harmonic_transverse_electric_component.
+criterion:em_waves#requires@evidence:openwave_exact_spectral_maxwell_controls.
+criterion:em_waves#boundary@obligation:photon_quantization_and_empirical_calibration.
+
+claim:finite_spectral_heat_semigroup#kind@entity:theorem.
+claim:finite_spectral_heat_semigroup#formalized_by@proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_add.
+claim:finite_spectral_heat_zero_mode#kind@entity:theorem.
+claim:finite_spectral_heat_zero_mode#formalized_by@proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_preserves_zero_mode.
+claim:finite_spectral_heat_zero_diffusivity#kind@entity:theorem.
+claim:finite_spectral_heat_zero_diffusivity#formalized_by@proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_zero_diffusivity.
+criterion:thermal_field#supported_by@claim:finite_spectral_heat_semigroup.
+criterion:thermal_field#supported_by@claim:finite_spectral_heat_zero_mode.
+criterion:thermal_field#supported_by@claim:finite_spectral_heat_zero_diffusivity.
+criterion:thermal_field#requires@evidence:openwave_entropy_dissipation_and_resolution_controls.
+criterion:thermal_field#boundary@obligation:microscopic_cat_ept_thermodynamics_and_material_calibration.
+
+proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.fermionic_exchange_phase#verification@state:pending_kernel_check.
+proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.antisymmetrize_swap#verification@state:pending_kernel_check.
+proof:Physlib.QFT.PerturbationTheory.FieldStatistics.PauliExchange.antisymmetrize_self#verification@state:pending_kernel_check.
+proof:Electromagnetism.ElectromagneticPotential.harmonicWaveX_maxwell_planeWave#verification@state:pending_kernel_check.
+proof:Electromagnetism.ElectromagneticPotential.harmonicWaveX_transverse_electric_component#verification@state:pending_kernel_check.
+proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_add#verification@state:pending_kernel_check.
+proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_preserves_zero_mode#verification@state:pending_kernel_check.
+proof:Physlib.Mathematics.HarmonicAnalysis.FiniteSpectralHeatFlow.flow_zero_diffusivity#verification@state:pending_kernel_check.
+
+RULE implementation_declared:
+IF ?claim#formalized_by@?proof
+THEN ?claim#implementation_state@state:declared.
+
+RULE awaiting_kernel_check:
+IF ?claim#formalized_by@?proof AND ?proof#verification@state:pending_kernel_check
+THEN ?claim#status@status:awaiting_kernel_check.
+
+QUERY criterion_support:
+FIND ?criterion ?claim WHERE ?criterion#supported_by@?claim.
+
+QUERY criterion_boundaries:
+FIND ?criterion ?obligation WHERE ?criterion#boundary@?obligation.
+
+QUERY awaiting_kernel_checks:
+FIND ?claim WHERE ?claim#status@status:awaiting_kernel_check.

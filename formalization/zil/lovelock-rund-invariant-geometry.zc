@@ -1,0 +1,128 @@
+MODULE physlib.mathematics.lovelock_rund.invariant_geometry.
+
+// Evidence graph for Lie differentiation, integral theorems, multi-Noether,
+// Hamilton--Jacobi, curvature contractions, and hypersurface geometry.
+// Lean remains the sole proof authority.
+
+component:mathlib_lie_bracket#kind@entity:component.
+component:mathlib_lie_bracket#provided_by@api:VectorField.lieBracket.
+component:mathlib_alternating_curry#kind@entity:component.
+component:mathlib_alternating_curry#provided_by@api:ContinuousAlternatingMap.curryLeft.
+component:mathlib_poincare_one_form#kind@entity:component.
+component:mathlib_poincare_one_form#provided_by@api:Convex.exists_forall_hasFDerivAt_of_fderiv_symmetric.
+component:mathlib_curve_integral#kind@entity:component.
+component:mathlib_curve_integral#provided_by@api:curveIntegral.
+component:mathlib_divergence_theorem#kind@entity:component.
+component:mathlib_divergence_theorem#provided_by@api:MeasureTheory.integral_divergence_of_hasFDerivAt_off_countable.
+component:mathlib_fundamental_calculus#kind@entity:component.
+component:mathlib_fundamental_calculus#provided_by@api:intervalIntegral.integral_eq_sub_of_hasDerivAt.
+component:mathlib_tsum#kind@entity:component.
+component:mathlib_tsum#provided_by@api:tsum.
+component:physlib_hamilton_equations#kind@entity:component.
+component:physlib_hamilton_equations#provided_by@api:ClassicalMechanics.hamiltonEqOp.
+component:physlib_complex_action_weight#kind@entity:component.
+component:physlib_complex_action_weight#provided_by@api:Physlib.QFT.Wick.Consistency.complexActionWeight.
+component:physlib_divergence#kind@entity:component.
+component:physlib_divergence#provided_by@api:divergence.
+component:physlib_second_bianchi#kind@entity:component.
+component:physlib_second_bianchi#provided_by@api:Physlib.QuantumMechanics.ComplexAction.Curvature.SecondBianchiCyclicFamily.SecondBianchi.
+
+source:lovelock_rund_section_4_3_normal_coordinates#kind@entity:source.
+source:lovelock_rund_section_4_4_lie_derivative#kind@entity:source.
+source:lovelock_rund_section_5_3_poincare#kind@entity:source.
+source:lovelock_rund_section_5_5_stokes#kind@entity:source.
+source:lovelock_rund_section_6_2_hamilton_jacobi#kind@entity:source.
+source:lovelock_rund_section_6_6_multi_noether#kind@entity:source.
+source:lovelock_rund_section_7_3_curvature#kind@entity:source.
+source:lovelock_rund_section_7_4_subspaces#kind@entity:source.
+source:lovelock_rund_section_7_5_hypersurfaces#kind@entity:source.
+source:lovelock_rund_section_7_6_divergence#kind@entity:source.
+
+claim:cartan_lie_derivative#kind@entity:definition.
+claim:cartan_lie_derivative#supported_by@source:lovelock_rund_section_4_4_lie_derivative.
+claim:cartan_lie_derivative#uses@component:mathlib_lie_bracket.
+claim:cartan_lie_derivative#uses@component:mathlib_alternating_curry.
+claim:cartan_lie_derivative#formalized_by@lean:Physlib.Mathematics.LovelockRund.cartanLieDerivative.
+
+claim:closed_form_lie_derivative_exact#kind@entity:theorem.
+claim:closed_form_lie_derivative_exact#requires@claim:cartan_lie_derivative.
+claim:closed_form_lie_derivative_exact#formalized_by@proof:Physlib.Mathematics.LovelockRund.cartanLieDerivative_of_closed.
+
+claim:poincare_closed_one_form_exact#kind@entity:theorem.
+claim:poincare_closed_one_form_exact#supported_by@source:lovelock_rund_section_5_3_poincare.
+claim:poincare_closed_one_form_exact#uses@component:mathlib_poincare_one_form.
+claim:poincare_closed_one_form_exact#formalized_by@proof:Physlib.Mathematics.LovelockRund.poincareLemma_oneForm.
+
+claim:closed_one_form_segment_path_independence#kind@entity:theorem.
+claim:closed_one_form_segment_path_independence#supported_by@source:lovelock_rund_section_5_3_poincare.
+claim:closed_one_form_segment_path_independence#uses@component:mathlib_curve_integral.
+claim:closed_one_form_segment_path_independence#formalized_by@proof:Physlib.Mathematics.LovelockRund.closedOneForm_segment_add.
+
+claim:interval_stokes#kind@entity:theorem.
+claim:interval_stokes#supported_by@source:lovelock_rund_section_5_5_stokes.
+claim:interval_stokes#uses@component:mathlib_fundamental_calculus.
+claim:interval_stokes#formalized_by@proof:Physlib.Mathematics.LovelockRund.intervalStokes.
+
+claim:box_divergence_theorem#kind@entity:theorem.
+claim:box_divergence_theorem#supported_by@source:lovelock_rund_section_7_6_divergence.
+claim:box_divergence_theorem#uses@component:mathlib_divergence_theorem.
+claim:box_divergence_theorem#formalized_by@proof:Physlib.Mathematics.LovelockRund.boxDivergenceTheorem.
+
+claim:multi_parameter_noether#kind@entity:theorem.
+claim:multi_parameter_noether#supported_by@source:lovelock_rund_section_6_6_multi_noether.
+claim:multi_parameter_noether#uses@component:physlib_divergence.
+claim:multi_parameter_noether#formalized_by@proof:Physlib.Mathematics.LovelockRund.MultiNoetherCurrentData.divergence_eq_zero.
+
+claim:infinite_dimensional_hamilton_jacobi#kind@entity:definition.
+claim:infinite_dimensional_hamilton_jacobi#supported_by@source:lovelock_rund_section_6_2_hamilton_jacobi.
+claim:infinite_dimensional_hamilton_jacobi#uses@component:physlib_hamilton_equations.
+claim:infinite_dimensional_hamilton_jacobi#formalized_by@lean:Physlib.Mathematics.LovelockRund.hamiltonJacobiResidual.
+
+claim:complex_hamilton_jacobi_stationarity#kind@entity:theorem.
+claim:complex_hamilton_jacobi_stationarity#requires@claim:infinite_dimensional_hamilton_jacobi.
+claim:complex_hamilton_jacobi_stationarity#uses@component:physlib_complex_action_weight.
+claim:complex_hamilton_jacobi_stationarity#formalized_by@proof:Physlib.Mathematics.LovelockRund.splitComplexHamiltonJacobiResidual_eq_zero_iff.
+
+claim:hamilton_jacobi_entropic_rate#kind@entity:theorem.
+claim:hamilton_jacobi_entropic_rate#requires@claim:complex_hamilton_jacobi_stationarity.
+claim:hamilton_jacobi_entropic_rate#uses@component:physlib_complex_action_weight.
+claim:hamilton_jacobi_entropic_rate#formalized_by@proof:Physlib.Mathematics.LovelockRund.norm_hamiltonJacobiComplexWeight.
+
+claim:normal_coordinate_connection_reduction#kind@entity:theorem.
+claim:normal_coordinate_connection_reduction#supported_by@source:lovelock_rund_section_4_3_normal_coordinates.
+claim:normal_coordinate_connection_reduction#formalized_by@proof:Physlib.Mathematics.LovelockRund.normal_coordinates_connection_zero_curvature_derivative.
+
+claim:infinite_ricci_contraction#kind@entity:theorem.
+claim:infinite_ricci_contraction#supported_by@source:lovelock_rund_section_7_3_curvature.
+claim:infinite_ricci_contraction#uses@component:mathlib_tsum.
+claim:infinite_ricci_contraction#formalized_by@proof:Physlib.Mathematics.LovelockRund.infiniteRicci_eq_finite.
+
+claim:infinite_scalar_curvature#kind@entity:theorem.
+claim:infinite_scalar_curvature#supported_by@source:lovelock_rund_section_7_3_curvature.
+claim:infinite_scalar_curvature#uses@component:mathlib_tsum.
+claim:infinite_scalar_curvature#formalized_by@proof:Physlib.Mathematics.LovelockRund.infiniteScalarCurvature_eq_finite.
+
+claim:einstein_tensor_components#kind@entity:definition.
+claim:einstein_tensor_components#supported_by@source:lovelock_rund_section_7_3_curvature.
+claim:einstein_tensor_components#uses@component:physlib_second_bianchi.
+claim:einstein_tensor_components#formalized_by@lean:Physlib.Mathematics.LovelockRund.einsteinTensorComponents.
+
+claim:gauss_equation#kind@entity:theorem.
+claim:gauss_equation#supported_by@source:lovelock_rund_section_7_4_subspaces.
+claim:gauss_equation#formalized_by@proof:Physlib.Mathematics.LovelockRund.GaussEquationData.intrinsicCurvature_of_flatAmbient.
+
+claim:codazzi_equation#kind@entity:theorem.
+claim:codazzi_equation#supported_by@source:lovelock_rund_section_7_5_hypersurfaces.
+claim:codazzi_equation#formalized_by@proof:Physlib.Mathematics.LovelockRund.CodazziEquationData.derivative_symm_iff_normalCurvature_zero.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.

@@ -1,0 +1,90 @@
+MODULE physlib.quantum.open_systems.one_level_channel.
+
+// Kraus/CPTP realization of the one-level finite-time LDDL dynamics.
+// Lean remains the proof authority; ZIL records reused APIs and evidence.
+
+component:qubit_matrix_expansion#kind@entity:component.
+component:qubit_matrix_expansion#provided_by@api:matrix_expand.
+component:kraus_cptp_constructor#kind@entity:component.
+component:kraus_cptp_constructor#provided_by@api:CPTPMap.of_kraus_CPTPMap.
+component:real_exponential#kind@entity:component.
+component:real_exponential#provided_by@api:Real.exp.
+
+source:schwarz2016_eq37#kind@entity:source.
+source:schwarz2016_eq38#kind@entity:source.
+source:schwarz2016_eq39#kind@entity:source.
+source:schwarz2016_eq40#kind@entity:source.
+
+claim:finite_time_damping_probability#kind@entity:definition.
+claim:finite_time_damping_probability#supported_by@source:schwarz2016_eq37.
+claim:finite_time_damping_probability#uses@component:real_exponential.
+claim:finite_time_damping_probability#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.RateData.dampingProbability.
+
+claim:generalized_amplitude_damping_kraus_family#kind@entity:definition.
+claim:generalized_amplitude_damping_kraus_family#supported_by@source:schwarz2016_eq39.
+claim:generalized_amplitude_damping_kraus_family#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.oneLevelKraus.
+
+claim:one_level_kraus_completeness#kind@entity:theorem.
+claim:one_level_kraus_completeness#supported_by@source:schwarz2016_eq40.
+claim:one_level_kraus_completeness#requires@claim:generalized_amplitude_damping_kraus_family.
+claim:one_level_kraus_completeness#uses@component:qubit_matrix_expansion.
+claim:one_level_kraus_completeness#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.oneLevelKraus_complete.
+
+claim:one_level_finite_time_cptp#kind@entity:theorem.
+claim:one_level_finite_time_cptp#supported_by@source:schwarz2016_eq40.
+claim:one_level_finite_time_cptp#requires@claim:one_level_kraus_completeness.
+claim:one_level_finite_time_cptp#uses@component:kraus_cptp_constructor.
+claim:one_level_finite_time_cptp#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.oneLevelChannel.
+
+claim:one_level_channel_matrix_action#kind@entity:theorem.
+claim:one_level_channel_matrix_action#supported_by@source:schwarz2016_eq37.
+claim:one_level_channel_matrix_action#requires@claim:one_level_finite_time_cptp.
+claim:one_level_channel_matrix_action#uses@component:qubit_matrix_expansion.
+claim:one_level_channel_matrix_action#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.oneLevelChannel_map_eq.
+
+claim:rate_derived_one_level_channel#kind@entity:definition.
+claim:rate_derived_one_level_channel#supported_by@source:schwarz2016_eq37.
+claim:rate_derived_one_level_channel#supported_by@source:schwarz2016_eq38.
+claim:rate_derived_one_level_channel#requires@claim:finite_time_damping_probability.
+claim:rate_derived_one_level_channel#requires@claim:one_level_finite_time_cptp.
+claim:rate_derived_one_level_channel#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.RateData.oneLevelChannelAt.
+
+claim:survival_factor_matches_rate_equation#kind@entity:theorem.
+claim:survival_factor_matches_rate_equation#supported_by@source:schwarz2016_eq37.
+claim:survival_factor_matches_rate_equation#requires@claim:rate_derived_one_level_channel.
+claim:survival_factor_matches_rate_equation#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.OneLevelChannelData.survival_ofRateTime.
+
+claim:finite_time_occupation_solution#kind@entity:theorem.
+claim:finite_time_occupation_solution#supported_by@source:schwarz2016_eq37.
+claim:finite_time_occupation_solution#supported_by@source:schwarz2016_eq38.
+claim:finite_time_occupation_solution#requires@claim:one_level_channel_matrix_action.
+claim:finite_time_occupation_solution#requires@claim:survival_factor_matches_rate_equation.
+claim:finite_time_occupation_solution#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.RateData.oneLevelChannelAt_excitedOccupation.
+
+proof:QuantumMechanics.LindbladDrivenLeads.oneLevelKraus_complete#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.oneLevelChannel_map_eq#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.OneLevelChannelData.survival_ofRateTime#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.RateData.oneLevelChannelAt_excitedOccupation#verification@state:pending_ci.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.

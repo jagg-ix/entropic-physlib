@@ -14,7 +14,7 @@ public import QuantumInfo.Channels.Unbundled
 public import QuantumInfo.ClassicalInfo.Entropy
 
 /-!
-Quantum notions of information and entropy.
+# A. Quantum Notions of Information and Entropy
 
 We start with quantities of _entropy_, namely the von Neumann entropy and its derived quantities:
  * Quantum conditional entropy, `qConditionalEnt`
@@ -96,21 +96,21 @@ def qcmi (ρ : MState (dA × dB × dC)) : ℝ :=
   qConditionalEnt ρ.assoc'.traceRight - qConditionalEnt ρ
 
 /-- von Neumman entropy is nonnegative. -/
-theorem Sᵥₙ_nonneg (ρ : MState d) : 0 ≤ Sᵥₙ ρ :=
+lemma Sᵥₙ_nonneg (ρ : MState d) : 0 ≤ Sᵥₙ ρ :=
   Hₛ_nonneg _
 
 /-- von Neumman entropy is at most log d. -/
-theorem Sᵥₙ_le_log_d (ρ : MState d) : Sᵥₙ ρ ≤ Real.log (Finset.card Finset.univ (α := d)):=
+lemma Sᵥₙ_le_log_d (ρ : MState d) : Sᵥₙ ρ ≤ Real.log (Finset.card Finset.univ (α := d)):=
   Hₛ_le_log_d _
 
 /-- von Neumman entropy of pure states is zero. -/
 @[simp]
-theorem Sᵥₙ_of_pure_zero (ψ : Ket d) : Sᵥₙ (MState.pure ψ) = 0 := by
+lemma Sᵥₙ_of_pure_zero (ψ : Ket d) : Sᵥₙ (MState.pure ψ) = 0 := by
   obtain ⟨i, hi⟩ := MState.spectrum_pure_eq_constant ψ
   rw [Sᵥₙ, hi, Hₛ_constant_eq_zero]
 
 set_option backward.isDefEq.respectTransparency false in
-theorem Sᵥₙ_eq_neg_trace_log (ρ : MState d) : Sᵥₙ ρ = -⟪ρ.M.log, ρ.M⟫ := by
+lemma Sᵥₙ_eq_neg_trace_log (ρ : MState d) : Sᵥₙ ρ = -⟪ρ.M.log, ρ.M⟫ := by
   open HermitianMat in
   rw [log, inner_eq_re_trace]
   nth_rw 2 [← cfc_id ρ.M]
@@ -122,7 +122,7 @@ theorem Sᵥₙ_eq_neg_trace_log (ρ : MState d) : Sᵥₙ ρ = -⟪ρ.M.log, ρ
   simp [MState.spectrum, ProbDistribution.mk', he, mul_comm]
 
 /-- Von Neumann entropy is the trace of the matrix function `x ↦ -x log x`. -/
-theorem Sᵥₙ_eq_trace_cfc_negMulLog (ρ : MState d) :
+lemma Sᵥₙ_eq_trace_cfc_negMulLog (ρ : MState d) :
     Sᵥₙ ρ = (ρ.M.cfc Real.negMulLog).trace := by
   open HermitianMat in
   unfold Real.negMulLog
@@ -134,47 +134,62 @@ theorem Sᵥₙ_eq_trace_cfc_negMulLog (ρ : MState d) :
   simp [mul_comm]
 
 @[simp]
-theorem Sᵥₙ_unit_zero [Unique d] (ρ : MState d) : Sᵥₙ ρ = 0 := by
+lemma Sᵥₙ_unit_zero [Unique d] (ρ : MState d) : Sᵥₙ ρ = 0 := by
   refine le_antisymm ?_ (Sᵥₙ_nonneg ρ)
   simpa using Sᵥₙ_le_log_d ρ
 
 /-- Von Neumann entropy is invariant under relabeling of the basis. -/
 @[simp]
-theorem Sᵥₙ_relabel (ρ : MState d₁) (e : d₂ ≃ d₁) :
+lemma Sᵥₙ_relabel (ρ : MState d₁) (e : d₂ ≃ d₁) :
     Sᵥₙ (ρ.relabel e) = Sᵥₙ ρ := by
   simp [Sᵥₙ_eq_neg_trace_log]
 
+/-- **Von Neumann entropy is invariant under unitary conjugation.**
+
+This is the operator form of Zhang (2008) Eq. (3) — *information
+conservation under unitary evolution*: `𝓘(U ρ U†) = 𝓘(ρ)`, hence
+`S(U ρ U†) = S(ρ)`.  Combined with sub-additivity of entropy under
+partial trace (`Sᵥₙ_subadditivity`), this is the key ingredient of
+the information-theoretic second law (Zhang 2008, Theorem 1).
+
+Proof: `Sᵥₙ ρ = Hₛ ρ.spectrum` and `U_conj_spectrum_eq` gives
+`(U ◃ ρ).spectrum = ρ.spectrum`, so the entropies coincide. -/
+@[simp]
+lemma Sᵥₙ_U_conj (ρ : MState d₁) (U : 𝐔[d₁]) :
+    Sᵥₙ (ρ.U_conj U) = Sᵥₙ ρ := by
+  simp [Sᵥₙ]
+
 /-- Von Neumann entropy is unchanged under SWAP. TODO: All unitaries-/
 @[simp]
-theorem Sᵥₙ_of_SWAP_eq (ρ : MState (d₁ × d₂)) : Sᵥₙ ρ.SWAP = Sᵥₙ ρ := by
+lemma Sᵥₙ_of_SWAP_eq (ρ : MState (d₁ × d₂)) : Sᵥₙ ρ.SWAP = Sᵥₙ ρ := by
   apply Hₛ_eq_of_multiset_map_eq
   exact ρ.multiset_spectrum_relabel_eq (Equiv.prodComm d₁ d₂).symm
 
 /-- Von Neumann entropy is unchanged under assoc. -/
 @[simp]
-theorem Sᵥₙ_of_assoc_eq (ρ : MState ((d₁ × d₂) × d₃)) : Sᵥₙ ρ.assoc = Sᵥₙ ρ := by
+lemma Sᵥₙ_of_assoc_eq (ρ : MState ((d₁ × d₂) × d₃)) : Sᵥₙ ρ.assoc = Sᵥₙ ρ := by
   apply Hₛ_eq_of_multiset_map_eq
   apply ρ.multiset_spectrum_relabel_eq
 
 /-- Von Neumann entropy is unchanged under assoc'. -/
 @[simp]
-theorem Sᵥₙ_of_assoc'_eq (ρ : MState (d₁ × (d₂ × d₃))) : Sᵥₙ ρ.assoc' = Sᵥₙ ρ := by
+lemma Sᵥₙ_of_assoc'_eq (ρ : MState (d₁ × (d₂ × d₃))) : Sᵥₙ ρ.assoc' = Sᵥₙ ρ := by
   rw [← Sᵥₙ_of_assoc_eq, ρ.assoc_assoc']
 
 @[fun_prop]
-theorem selfAdjointMap_Continuous {𝕜 : Type*} [RCLike 𝕜] :
+lemma selfAdjointMap_Continuous {𝕜 : Type*} [RCLike 𝕜] :
     Continuous (IsMaximalSelfAdjoint.selfadjMap : 𝕜 →+ ℝ) := by
   rw [IsMaximalSelfAdjoint.RCLike_selfadjMap]
   fun_prop
 
 @[fun_prop]
-theorem HermitianMat.trace_Continuous {d 𝕜 : Type*} [Fintype d] [RCLike 𝕜]  :
+lemma HermitianMat.trace_Continuous {d 𝕜 : Type*} [Fintype d] [RCLike 𝕜]  :
     Continuous (HermitianMat.trace : HermitianMat d 𝕜 → ℝ) := by
   rw [funext HermitianMat.trace_eq_re_trace]
   fun_prop
 
 @[fun_prop]
-theorem Sᵥₙ_continuous : Continuous (Sᵥₙ (d := d)) := by
+lemma Sᵥₙ_continuous : Continuous (Sᵥₙ (d := d)) := by
   rw [funext Sᵥₙ_eq_trace_cfc_negMulLog]
   fun_prop
 
@@ -315,7 +330,7 @@ private lemma Sᵥₙ_eq_of_charpoly_roots_eq (ρ₁ : MState d₁) (ρ₂ : MSt
 end partial_trace_pure
 
 /-- von Neumman entropies of the left- and right- partial trace of pure states are equal. -/
-theorem Sᵥₙ_of_partial_eq (ψ : Ket (d₁ × d₂)) :
+lemma Sᵥₙ_of_partial_eq (ψ : Ket (d₁ × d₂)) :
     Sᵥₙ (MState.pure ψ).traceLeft = Sᵥₙ (MState.pure ψ).traceRight := by
   apply Sᵥₙ_eq_of_charpoly_roots_eq
   rw [traceLeft_eq_transpose_conjTranspose_mul, traceRight_eq_mul_conjTranspose,
@@ -324,20 +339,20 @@ theorem Sᵥₙ_of_partial_eq (ψ : Ket (d₁ × d₂)) :
 
 /-- Quantum conditional entropy is symmetric for pure states. -/
 @[simp]
-theorem qConditionalEnt_of_pure_symm (ψ : Ket (d₁ × d₂)) :
+lemma qConditionalEnt_of_pure_symm (ψ : Ket (d₁ × d₂)) :
     qConditionalEnt (MState.pure ψ).SWAP = qConditionalEnt (MState.pure ψ) := by
   simp [qConditionalEnt, Sᵥₙ_of_partial_eq]
 
 /-- Quantum mutual information is symmetric. -/
 @[simp]
-theorem qMutualInfo_symm (ρ : MState (d₁ × d₂)) :
+lemma qMutualInfo_symm (ρ : MState (d₁ × d₂)) :
     qMutualInfo ρ.SWAP = qMutualInfo ρ := by
   simp [qMutualInfo, add_comm]
 
 /-- For a pure state, the entropy of one subsystem equals the entropy of its complement,
 even after relabeling. -/
 @[simp]
-theorem Sᵥₙ_pure_complement (ψ : Ket d₁) (e : d₂ × d₃ ≃ d₁) :
+lemma Sᵥₙ_pure_complement (ψ : Ket d₁) (e : d₂ × d₃ ≃ d₁) :
     Sᵥₙ ((MState.pure ψ).relabel e).traceLeft = Sᵥₙ ((MState.pure ψ).relabel e).traceRight := by
   obtain ⟨ψ', hψ'⟩ := MState.relabel_pure_exists ψ e
   simp only [hψ', Sᵥₙ_of_partial_eq]

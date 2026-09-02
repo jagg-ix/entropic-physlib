@@ -1,0 +1,67 @@
+MODULE physlib.quantum.open_systems.cauchy_weak_limit.
+
+// Weak zero-width limit of the LDDL Cauchy/Lorentz broadening.
+// Lean remains the proof authority; ZIL tracks dependencies and evidence.
+
+component:cauchy_probability_measure#kind@entity:component.
+component:cauchy_probability_measure#provided_by@api:ProbabilityTheory.cauchyMeasure.
+component:convergence_in_distribution#kind@entity:component.
+component:convergence_in_distribution#provided_by@api:MeasureTheory.TendstoInDistribution.
+component:ae_tendsto_distribution#kind@entity:component.
+component:ae_tendsto_distribution#provided_by@api:MeasureTheory.tendstoInDistribution_of_ae_tendsto.
+component:probability_measure_topology#kind@entity:component.
+component:probability_measure_topology#provided_by@api:ProbabilityMeasure.
+
+source:schwarz2016_eq33_eq34#kind@entity:source.
+source:schwarz2016_eq42#kind@entity:source.
+source:schwarz2016_continuum_limit#kind@entity:source.
+
+claim:standard_cauchy_reference_space#kind@entity:definition.
+claim:standard_cauchy_reference_space#uses@component:cauchy_probability_measure.
+claim:standard_cauchy_reference_space#formalized_by@lean:QuantumMechanics.LindbladDrivenLeads.standardCauchyMeasure.
+
+claim:affine_cauchy_sample_ae_limit#kind@entity:theorem.
+claim:affine_cauchy_sample_ae_limit#supported_by@source:schwarz2016_eq42.
+claim:affine_cauchy_sample_ae_limit#requires@claim:standard_cauchy_reference_space.
+claim:affine_cauchy_sample_ae_limit#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.affineCauchySample_ae_tendsto.
+
+claim:cauchy_broadening_distribution_limit#kind@entity:theorem.
+claim:cauchy_broadening_distribution_limit#supported_by@source:schwarz2016_continuum_limit.
+claim:cauchy_broadening_distribution_limit#requires@claim:affine_cauchy_sample_ae_limit.
+claim:cauchy_broadening_distribution_limit#uses@component:convergence_in_distribution.
+claim:cauchy_broadening_distribution_limit#uses@component:ae_tendsto_distribution.
+claim:cauchy_broadening_distribution_limit#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.affineCauchySample_tendstoInDistribution.
+
+claim:cauchy_broadening_law_tendsto_dirac#kind@entity:theorem.
+claim:cauchy_broadening_law_tendsto_dirac#supported_by@source:schwarz2016_eq33_eq34.
+claim:cauchy_broadening_law_tendsto_dirac#supported_by@source:schwarz2016_continuum_limit.
+claim:cauchy_broadening_law_tendsto_dirac#requires@claim:cauchy_broadening_distribution_limit.
+claim:cauchy_broadening_law_tendsto_dirac#uses@component:probability_measure_topology.
+claim:cauchy_broadening_law_tendsto_dirac#formalized_by@proof:QuantumMechanics.LindbladDrivenLeads.affineCauchyLaw_tendsto_dirac.
+
+proof:QuantumMechanics.LindbladDrivenLeads.affineCauchySample_ae_tendsto#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.affineCauchySample_tendstoInDistribution#verification@state:pending_ci.
+proof:QuantumMechanics.LindbladDrivenLeads.affineCauchyLaw_tendsto_dirac#verification@state:pending_ci.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.

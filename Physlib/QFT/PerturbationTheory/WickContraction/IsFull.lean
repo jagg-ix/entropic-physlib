@@ -30,6 +30,32 @@ open Nat
   of uncontracted fields is empty. -/
 def IsFull : Prop := c.uncontracted = ∅
 
+/-- A full Wick contraction of `n` fields contains exactly `n / 2`
+contracted pairs, stated without division as `2 * numberOfPairs = n`.
+This is the incidence-counting identity behind vacuum-graph edge counts. -/
+lemma pair_card_mul_two_eq_of_isFull (hfull : IsFull c) : c.1.card * 2 = n := by
+  classical
+  rw [IsFull] at hfull
+  have hdisjoint : (c.1 : Set (Finset (Fin n))).PairwiseDisjoint id := by
+    intro a ha b hb hab
+    exact (c.2.2 a ha b hb).resolve_left hab
+  have hcover : c.1.biUnion id = Finset.univ := by
+    ext i
+    simp only [Finset.mem_biUnion, Finset.mem_univ, iff_true]
+    have hi : i ∉ c.uncontracted := by simp [hfull]
+    rw [c.mem_uncontracted_iff_not_contracted] at hi
+    push Not at hi
+    exact hi
+  have hcard := Finset.card_biUnion hdisjoint
+  rw [hcover, Finset.card_univ, Fintype.card_fin] at hcard
+  calc
+    c.1.card * 2 = ∑ a ∈ c.1, 2 := by simp
+    _ = ∑ a ∈ c.1, a.card := by
+      apply Finset.sum_congr rfl
+      intro a ha
+      exact (c.2.1 a ha).symm
+    _ = n := hcard.symm
+
 /-- The condition on whether or not a contraction is full is decidable. -/
 instance : Decidable (IsFull c) := decEq c.uncontracted ∅
 

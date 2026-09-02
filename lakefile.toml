@@ -2,6 +2,11 @@ name = "Physlib"
 defaultTargets = ["Physlib", "QuantumInfo"]
 
 [[require]]
+name = "«zil-lean»"
+git = "https://github.com/jagg-ix/zil-lean.git"
+rev = "abfddd3d4466f24e81830c5f96b102938a832565"
+
+[[require]]
 name = "«doc-gen4»"
 git = "https://github.com/leanprover/doc-gen4"
 rev = "v4.33.0"
@@ -13,15 +18,15 @@ rev = "v4.33.0"
 
 [[lean_lib]]
 name = "Physlib"
-moreLeanArgs = ["-Dwarn.sorry=false", "-Dweak.says.verify=true"]
+moreLeanArgs = ["-Dweak.says.verify=true"]
 
 [[lean_lib]]
 name = "PhyslibAlpha"
-moreLeanArgs = ["-Dwarn.sorry=false", "-Dweak.says.verify=true"]
+moreLeanArgs = ["-Dweak.says.verify=true"]
 
 [[lean_lib]]
 name = "QuantumInfo"
-moreLeanArgs = ["-Dwarn.sorry=false", "-Dweak.says.verify=true"]
+moreLeanArgs = ["-Dweak.says.verify=true"]
 
 [[lean_exe]]
 name = "check_file_imports"

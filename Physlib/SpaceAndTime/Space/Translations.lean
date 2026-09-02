@@ -5,13 +5,16 @@ Authors: Joseph Tooby-Smith
 -/
 module
 
-public import Physlib.SpaceAndTime.Space.Derivatives.Div
+public import Physlib.SpaceAndTime.Space.Derivatives.Laplacian
 /-!
 
 # Translations on space
 
 We define translations on space, and how translations act on distributions.
 Translations for part of the Poincaré group.
+
+The distributional gradient, divergence, and Laplacian commute with translations. Translations
+also carry a Dirac delta at a point to the Dirac delta at the translated point.
 
 -/
 
@@ -107,6 +110,20 @@ lemma distTranslate_apply {d : ℕ} (a : EuclideanSpace ℝ (Fin d))
     (T : (Space d) →d[ℝ] X) (η : 𝓢(Space d, ℝ)) :
     distTranslate a T η = T (translateSchwartz (-a) η) := rfl
 
+/-- Successive distributional translations compose by addition of their translation vectors. -/
+lemma distTranslate_add {d : ℕ} (a b : EuclideanSpace ℝ (Fin d))
+    (T : (Space d) →d[ℝ] X) :
+    distTranslate a (distTranslate b T) = distTranslate (a + b) T := by
+  ext η
+  rw [distTranslate_apply, distTranslate_apply, distTranslate_apply]
+  congr 1
+  ext x
+  simp only [translateSchwartz_apply, map_neg, sub_neg_eq_add]
+  congr 1
+  ext i
+  simp only [add_apply, PiLp.add_apply, basis_repr_symm_apply]
+  ring
+
 open InnerProductSpace
 
 @[simp]
@@ -145,6 +162,19 @@ lemma distTranslate_ofFunction {d : ℕ} (a : EuclideanSpace ℝ (Fin d))
   funext x
   simp [f']
 
+/-- Translating a Dirac delta translates its support point by the same spatial vector. -/
+lemma distTranslate_diracDelta {d : ℕ} (a : EuclideanSpace ℝ (Fin d)) (x : Space d) :
+    distTranslate a (Distribution.diracDelta ℝ x) =
+      Distribution.diracDelta ℝ (a +ᵥ x) := by
+  ext η
+  rw [distTranslate_apply]
+  simp only [Distribution.diracDelta_apply, translateSchwartz_apply, map_neg,
+    sub_neg_eq_add]
+  congr 1
+  ext i
+  simp only [add_apply, basis_repr_symm_apply, vadd_apply]
+  ring
+
 @[simp]
 lemma distDiv_distTranslate {d : ℕ} (a : EuclideanSpace ℝ (Fin d))
     (T : (Space d) →d[ℝ] EuclideanSpace ℝ (Fin d)) :
@@ -168,5 +198,12 @@ lemma distDiv_distTranslate {d : ℕ} (a : EuclideanSpace ℝ (Fin d))
     simp only [map_neg, sub_neg_eq_add]
     rw [fderiv_comp_add_right]
   rw [h1]
+
+/-- The distributional Laplacian commutes with spatial translations. -/
+@[simp]
+lemma distLaplacian_distTranslate {d : ℕ} (a : EuclideanSpace ℝ (Fin d))
+    (T : (Space d) →d[ℝ] ℝ) :
+    Δᵈ (distTranslate a T) = distTranslate a (Δᵈ T) := by
+  simp [distLaplacian]
 
 end Space

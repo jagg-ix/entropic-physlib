@@ -1,0 +1,94 @@
+/-
+Copyright (c) 2026 Jorge A. Garcia. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jorge A. Garcia
+-/
+module
+
+public import Physlib.QuantumMechanics.OpenSystems.LindbladDrivenLeads.ContinuumWeakCouplingReduction
+public import Physlib.Meta.AxiomWhitelistCheck
+
+/-!
+# Audit for continuum correlation, Markovization, and secular reduction
+
+The registered declarations cover the fixed Gaussian spectral `L2` bath and
+its normalized-vacuum correlation, the one-sided transform bridge, additive
+Volterra-to-Markov error, exact secular projection, finite-time averaging
+interfaces, and the composed error bound against the one-level LDDL field.
+-/
+
+#physlib_axiom_clean_all
+  [QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.transform_eq_integral,
+   QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.goldenRuleGamma_eq_coupling_mul_transform_re,
+   QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.truncatedTransform_error,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.phase_norm,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.unitaryEvolution_add,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.unitaryEvolution_inverse,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.unitaryEvolution_lintegral_normSq,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBathC0Group_apply_ae,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBathC0Group_norm,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.vacuum_matrixCoefficient,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.norm_vacuum,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.correlation_eq_vacuum_matrixCoefficient,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.correlation_eq_spectralIntegral,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.modulatedCorrelation_eq,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.integrable_modulatedCorrelation,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.transform_integral,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.truncatedTransform_tendsto,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.truncationError_tendsto_zero,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBath_unitaryCorrelationTransform,
+   QuantumMechanics.LindbladDrivenLeads.VolterraMarkovApproximation.memory_markov_bound,
+   QuantumMechanics.LindbladDrivenLeads.VolterraMarkovApproximation.memoryTerm_eq_markovTerm_of_zero_errors,
+   QuantumMechanics.LindbladDrivenLeads.secularProjection_idempotent,
+   QuantumMechanics.LindbladDrivenLeads.secular_add_nonsecular,
+   QuantumMechanics.LindbladDrivenLeads.FiniteFrequencySecularCertificate.resonant_averaging_bound,
+   QuantumMechanics.LindbladDrivenLeads.FiniteFrequencySecularCertificate.nonresonant_averaging_bound,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.goldenRuleGamma_eq_correlationTransform,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.total_reduction_error_bound,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.exactReducedVectorField_eq_lddl_of_zero_errors,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.exactReductionCertificate_zero_error,
+   QuantumMechanics.LindbladDrivenLeads.oneLevelGKSLMatrix_occState_one_one,
+   QuantumMechanics.LindbladDrivenLeads.daviesUnitaryBathChannel_isUnitary,
+   QuantumMechanics.LindbladDrivenLeads.daviesUnitaryBathChannel_reduces_to,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_eq,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_rescaled_eq,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_tendsto,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_uniform_zero,
+   QuantumMechanics.LindbladDrivenLeads.gaussianContinuumBath_davies_cptp_gksl_capstone]
+
+#physlib_non_vacuous_all
+  [QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.transform_eq_integral,
+   QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.goldenRuleGamma_eq_coupling_mul_transform_re,
+   QuantumMechanics.LindbladDrivenLeads.BathCorrelationTransformCertificate.truncatedTransform_error,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.unitaryEvolution_add,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.unitaryEvolution_lintegral_normSq,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBathC0Group_apply_ae,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBathC0Group_norm,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.vacuum_matrixCoefficient,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.norm_vacuum,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.correlation_eq_vacuum_matrixCoefficient,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.correlation_eq_spectralIntegral,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.modulatedCorrelation_eq,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.integrable_modulatedCorrelation,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.transform_integral,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.truncatedTransform_tendsto,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.truncationError_tendsto_zero,
+   QuantumMechanics.LindbladDrivenLeads.GaussianContinuumBath.persistentBath_unitaryCorrelationTransform,
+   QuantumMechanics.LindbladDrivenLeads.VolterraMarkovApproximation.memory_markov_bound,
+   QuantumMechanics.LindbladDrivenLeads.VolterraMarkovApproximation.memoryTerm_eq_markovTerm_of_zero_errors,
+   QuantumMechanics.LindbladDrivenLeads.secularProjection_idempotent,
+   QuantumMechanics.LindbladDrivenLeads.secular_add_nonsecular,
+   QuantumMechanics.LindbladDrivenLeads.FiniteFrequencySecularCertificate.resonant_averaging_bound,
+   QuantumMechanics.LindbladDrivenLeads.FiniteFrequencySecularCertificate.nonresonant_averaging_bound,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.goldenRuleGamma_eq_correlationTransform,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.total_reduction_error_bound,
+   QuantumMechanics.LindbladDrivenLeads.OneLevelWeakCouplingReductionCertificate.exactReducedVectorField_eq_lddl_of_zero_errors,
+   QuantumMechanics.LindbladDrivenLeads.oneLevelGKSLMatrix_occState_one_one,
+   QuantumMechanics.LindbladDrivenLeads.daviesUnitaryBathChannel_isUnitary,
+   QuantumMechanics.LindbladDrivenLeads.daviesUnitaryBathChannel_reduces_to,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_rescaled_eq,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_tendsto,
+   QuantumMechanics.LindbladDrivenLeads.daviesReducedUnitaryBathChannel_uniform_zero,
+   QuantumMechanics.LindbladDrivenLeads.gaussianContinuumBath_davies_cptp_gksl_capstone]
+
+#zil_formalization_lint physlib.lindbladDrivenLeads.continuumWeakCouplingReduction

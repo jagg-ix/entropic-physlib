@@ -1,0 +1,4 @@
+# Generated per round; regenerate with run.sh rather than committing.
+candidates.out
+plan.json
+plan.applied.json

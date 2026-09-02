@@ -520,7 +520,7 @@ private lemma trace_conj_eq_inner_rpow {ρ σ : MState d} {t : ℝ} (ht : t ≠ 
   convert congr_arg Complex.re h_cyclic using 1 ; simp [ HermitianMat.conj ] ; ring!;
   rw [ Matrix.trace_mul_comm ]
 
--- The weight of eigenvalue i in the inner product decomposition
+/-- The weight of eigenvalue `i` in the inner-product decomposition. -/
 private def eigenWeight (ρ σ : MState d) (i : d) : ℝ :=
   RCLike.re ((Matrix.vecMul (star (σ.M.H.eigenvectorBasis i : d → ℂ)) ρ.M.mat) ⬝ᵥ (σ.M.H.eigenvectorBasis i : d → ℂ))
 
@@ -649,7 +649,7 @@ private lemma hasDerivAt_trace_rpow_sub_trace (A : HermitianMat d ℂ) (hA : 0 �
     HasDerivAt (fun s : ℝ => (A ^ s).trace - A.trace) ⟪A, A.log⟫ 1 := by
   simpa using hasDerivAt_trace_rpow_at_one A hA
 
--- Abbreviation for the "B(α)" matrix appearing in the sandwiched trace.
+/-- The `B(α)` matrix appearing in the sandwiched trace. -/
 private abbrev B_of (ρ σ : MState d) (α : ℝ) : HermitianMat d ℂ :=
   ρ.M.conj (σ.M ^ ((1 - α) / (2 * α))).mat
 
@@ -1870,6 +1870,7 @@ variable {d : Type*} [Fintype d] [DecidableEq d]
 
 open scoped InnerProductSpace RealInnerProductSpace HermitianMat
 
+/-- Bounded-below logarithm approximation used for lower-semicontinuity arguments. -/
 private def approxLog (N : ℕ) : ℝ → ℝ := fun t => Real.log (max t (Real.exp (-(N : ℝ))))
 
 private lemma approxLog_continuous (N : ℕ) : Continuous (approxLog N) := by

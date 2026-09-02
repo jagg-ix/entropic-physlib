@@ -1,7 +1,14 @@
 cff-version: 1.2.0
-message: "If you use this library, please cite it as below."
+message: "If you use this library, please cite it as below, and also cite the upstream Physlib project it builds on."
 authors:
-- name: "The Physlib Community"
-title: "Physlib: The Lean Physics Library"
-date-released: 2024-04-16
-url: "https://github.com/leanprover-community/physlib"
+- family-names: "Garcia"
+  given-names: "Jorge A."
+title: "Entropic Physlib: a Lean 4 formalization of entropic gravity with a machine-audited knowledge graph"
+date-released: 2026-08-30
+url: "https://github.com/jagg-ix/entropic-physlib"
+references:
+- type: software
+  title: "Physlib: The Lean Physics Library"
+  authors:
+  - name: "The Physlib Community"
+  url: "https://github.com/leanprover-community/physlib"

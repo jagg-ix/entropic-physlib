@@ -48,7 +48,6 @@ public import QuantumInfo.Operators.Unitary
 public import QuantumInfo.Capacity.Capacity_doc
 
 --Classical information theory
--- import QuantumInfo.ClassicalInfo.Capacity
 -- import QuantumInfo.ClassicalInfo.Channel
 public import QuantumInfo.ClassicalInfo.Distribution
 public import QuantumInfo.ClassicalInfo.Entropy

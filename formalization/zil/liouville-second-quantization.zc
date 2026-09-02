@@ -1,0 +1,153 @@
+MODULE physlib.quantum.open_systems.liouville_second_quantization.
+
+// ZIL orchestration model for the Lean formalization arc.
+// ZIL records implementation dependencies and source traceability.
+// Lean's kernel and CI remain the proof authority.
+
+component:lean4_mathlib#kind@entity:component.
+component:lean4_mathlib#state@state:healthy.
+component:mathlib_matrix_single#kind@entity:component.
+component:mathlib_matrix_single#provided_by@api:Mathlib.Matrix.single.
+component:mathlib_matrix_single#state@state:healthy.
+component:mathlib_l2_space#kind@entity:component.
+component:mathlib_l2_space#provided_by@api:Mathlib.MeasureTheory.Lp.
+component:mathlib_l2_space#state@state:healthy.
+component:mathlib_memlp#kind@entity:component.
+component:mathlib_memlp#provided_by@api:Mathlib.MeasureTheory.MemLp.
+component:mathlib_memlp#state@state:healthy.
+component:physlib_space_d_hilbert_space#kind@entity:component.
+component:physlib_space_d_hilbert_space#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.
+component:physlib_space_d_hilbert_space#state@state:healthy.
+component:physlib_pointwise_mul_operator#kind@entity:component.
+component:physlib_pointwise_mul_operator#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.mulOperator.
+component:physlib_pointwise_mul_operator#state@state:healthy.
+component:physlib_dirac_distribution#kind@entity:component.
+component:physlib_dirac_distribution#provided_by@api:Physlib.Distribution.diracDelta.
+component:physlib_dirac_distribution#state@state:healthy.
+
+source:arxiv_2207_14234_eq4_eq5#kind@entity:source.
+source:arxiv_2207_14234_eq8#kind@entity:source.
+source:arxiv_2207_14234_eq9#kind@entity:source.
+source:arxiv_2207_14234_eq10#kind@entity:source.
+source:arxiv_2207_14234_eq13#kind@entity:source.
+source:arxiv_2207_14234_phase_space_outlook#kind@entity:source.
+
+assumption:decidable_discrete_index_equality#kind@entity:assumption.
+assumption:decidable_discrete_index_equality#state@state:verified_parameter.
+assumption:infinite_level_index#kind@entity:assumption.
+assumption:infinite_level_index#state@state:parameter.
+assumption:finite_particle_number_per_sector#kind@entity:assumption.
+assumption:finite_particle_number_per_sector#state@state:verified_by_type.
+assumption:lindblad_generator_closable#kind@entity:assumption.
+assumption:lindblad_generator_closable#state@state:open.
+assumption:continuum_semigroup_wellposed#kind@entity:assumption.
+assumption:continuum_semigroup_wellposed#state@state:open.
+
+claim:discrete_arbitrary_index_left_action#kind@entity:theorem.
+claim:discrete_arbitrary_index_left_action#supported_by@source:arxiv_2207_14234_eq8.
+claim:discrete_arbitrary_index_left_action#requires@assumption:decidable_discrete_index_equality.
+claim:discrete_arbitrary_index_left_action#uses@component:mathlib_matrix_single.
+claim:discrete_arbitrary_index_left_action#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.leftKernelAction_matrixUnit_same.
+
+claim:discrete_arbitrary_index_right_action#kind@entity:theorem.
+claim:discrete_arbitrary_index_right_action#supported_by@source:arxiv_2207_14234_eq9.
+claim:discrete_arbitrary_index_right_action#requires@assumption:decidable_discrete_index_equality.
+claim:discrete_arbitrary_index_right_action#uses@component:mathlib_matrix_single.
+claim:discrete_arbitrary_index_right_action#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.rightKernelAction_matrixUnit_same.
+
+claim:discrete_arbitrary_index_reservoir_sandwich#kind@entity:theorem.
+claim:discrete_arbitrary_index_reservoir_sandwich#supported_by@source:arxiv_2207_14234_eq10.
+claim:discrete_arbitrary_index_reservoir_sandwich#uses@component:mathlib_matrix_single.
+claim:discrete_arbitrary_index_reservoir_sandwich#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.independentReservoirKernel_eq_single.
+
+claim:infinite_mode_set#kind@entity:theorem.
+claim:infinite_mode_set#requires@assumption:infinite_level_index.
+claim:infinite_mode_set#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.kernelMode_infinite.
+
+claim:fixed_particle_sector_arbitrary_modes#kind@entity:theorem.
+claim:fixed_particle_sector_arbitrary_modes#supported_by@source:arxiv_2207_14234_eq13.
+claim:fixed_particle_sector_arbitrary_modes#requires@assumption:finite_particle_number_per_sector.
+claim:fixed_particle_sector_arbitrary_modes#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.kernelOccupationBasis_particleNumber.
+
+claim:continuum_l2_kernel_carrier#kind@entity:interface.
+claim:continuum_l2_kernel_carrier#uses@component:mathlib_l2_space.
+claim:continuum_l2_kernel_carrier#uses@component:mathlib_memlp.
+claim:continuum_l2_kernel_carrier#formalized_by@lean:QuantumMechanics.LiouvilleSecondQuantization.ContinuumKernelSpace.
+claim:continuum_l2_kernel_carrier#status@status:provided_by_existing_api.
+
+claim:continuum_kernel_constructor#kind@entity:theorem.
+claim:continuum_kernel_constructor#requires@claim:continuum_l2_kernel_carrier.
+claim:continuum_kernel_constructor#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.coe_mkContinuumKernel_ae.
+
+claim:regular_pointwise_kernel_actions#kind@entity:theorem.
+claim:regular_pointwise_kernel_actions#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.leftPointwise_rightPointwise_commute.
+
+claim:doubled_space_pointwise_operator#kind@entity:theorem.
+claim:doubled_space_pointwise_operator#uses@component:physlib_space_d_hilbert_space.
+claim:doubled_space_pointwise_operator#uses@component:physlib_pointwise_mul_operator.
+claim:doubled_space_pointwise_operator#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.spacePointwiseKernelOperator_hasDenseDomain.
+
+claim:continuum_dirac_matrix_unit#kind@entity:theorem.
+claim:continuum_dirac_matrix_unit#supported_by@source:arxiv_2207_14234_eq4_eq5.
+claim:continuum_dirac_matrix_unit#uses@component:physlib_dirac_distribution.
+claim:continuum_dirac_matrix_unit#formalized_by@proof:QuantumMechanics.LiouvilleSecondQuantization.continuumMatrixUnit_apply.
+claim:continuum_dirac_matrix_unit#excludes@claim:continuum_matrix_unit_as_kronecker_function.
+
+claim:genuinely_infinite_particle_representation#kind@entity:theorem.
+claim:genuinely_infinite_particle_representation#target_state@state:open.
+claim:genuinely_infinite_particle_representation#requires@claim:fixed_particle_sector_arbitrary_modes.
+
+claim:continuum_lindblad_generator#kind@entity:theorem.
+claim:continuum_lindblad_generator#target_state@state:open.
+claim:continuum_lindblad_generator#requires@claim:continuum_l2_kernel_carrier.
+claim:continuum_lindblad_generator#requires@assumption:lindblad_generator_closable.
+claim:continuum_lindblad_generator#requires@assumption:continuum_semigroup_wellposed.
+
+claim:phase_space_fokker_planck_bridge#kind@entity:theorem.
+claim:phase_space_fokker_planck_bridge#target_state@state:open.
+claim:phase_space_fokker_planck_bridge#supported_by@source:arxiv_2207_14234_phase_space_outlook.
+claim:phase_space_fokker_planck_bridge#requires@claim:continuum_lindblad_generator.
+
+proof:QuantumMechanics.LiouvilleSecondQuantization.leftKernelAction_matrixUnit_same#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.rightKernelAction_matrixUnit_same#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.independentReservoirKernel_eq_single#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.kernelMode_infinite#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.kernelOccupationBasis_particleNumber#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.coe_mkContinuumKernel_ae#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.leftPointwise_rightPointwise_commute#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.spacePointwiseKernelOperator_hasDenseDomain#verification@state:pending_ci.
+proof:QuantumMechanics.LiouvilleSecondQuantization.continuumMatrixUnit_apply#verification@state:pending_ci.
+
+RULE implementation_declared:
+IF ?claim#formalized_by@?witness
+THEN ?claim#implementation_state@state:declared.
+
+RULE verified_from_kernel_witness:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE awaiting_ci:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:awaiting_ci.
+
+RULE weak_open_target:
+IF ?claim#kind@entity:theorem AND ?claim#target_state@state:open
+THEN ?claim#status@status:weak.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY implementation_registry:
+FIND ?claim ?witness WHERE ?claim#formalized_by@?witness.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY open_targets:
+FIND ?claim WHERE ?claim#target_state@state:open.

@@ -1,0 +1,83 @@
+name: Lean v4.33 migration build
+
+on:
+  pull_request:
+    branches:
+      - rebase/entropic-physlib-linear-full-v433
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v433-migration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build migration branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout v4.33 migration branch
+        uses: actions/checkout@v4
+        with:
+          ref: rebase/entropic-physlib-linear-full-v433
+
+      - name: Install elan
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- --default-toolchain none -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify toolchain and pinned ZIL dependency
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test "$(tr -d '\r\n' < lean-toolchain)" = "leanprover/lean4:v4.33.0"
+          grep -F 'git = "https://github.com/jagg-ix/zil-lean.git"' lakefile.toml
+          grep -F 'rev = "abfddd3d4466f24e81830c5f96b102938a832565"' lakefile.toml
+          lean --version
+          lake --version
+
+      - name: Fetch Mathlib cache
+        shell: bash
+        run: |
+          set -o pipefail
+          lake exe cache get | tee mathlib-cache.log
+
+      - name: Build ZIL integration smoke target
+        shell: bash
+        run: |
+          set -o pipefail
+          env LEAN_ABORT_ON_PANIC=1 lake build -KCI \
+            Physlib.Meta.ZilDiscovery | tee zil-integration-build.log
+
+      - name: Build full Physlib root
+        shell: bash
+        run: |
+          set -o pipefail
+          env LEAN_ABORT_ON_PANIC=1 lake build -KCI Physlib | tee physlib-build.log
+
+      - name: Build authoritative full-root gate
+        shell: bash
+        run: |
+          set -o pipefail
+          env LEAN_ABORT_ON_PANIC=1 lake build \
+            Physlib.Meta.FullRootGate | tee full-root-build.log
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v433-migration-build-logs
+          path: |
+            mathlib-cache.log
+            zil-integration-build.log
+            physlib-build.log
+            full-root-build.log
+          if-no-files-found: ignore

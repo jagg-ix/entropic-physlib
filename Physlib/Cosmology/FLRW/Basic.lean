@@ -95,15 +95,16 @@ end SpatialGeometry
 - The scale factor `a(t)`
 - An element of `SpatialGeometry`.
 
-Semiformal implementation note: It is possible that we should restrict
-`a(t)` to be smooth or at least twice differentiable.
+Differentiability assumptions on the scale factor (smoothness, or at least twice
+differentiability) are imposed at the point of use rather than bundled here.
 -/
-@[sorryful]
-def FLRW : Type := sorry
-
-TODO "Replace the placeholder `FLRW` type with a concrete structure bundling a positive
-  scale factor `a : Time → ℝ` (smooth, or at least twice differentiable) together with an
-  element of `SpatialGeometry`."
+structure FLRW : Type where
+  /-- The scale factor `a(t)` as a function of cosmic time. -/
+  scaleFactor : Time → ℝ
+  /-- The scale factor is everywhere positive. -/
+  scaleFactor_pos : ∀ t, 0 < scaleFactor t
+  /-- The spatial geometry (spherical, euclidean, or hyperbolic). -/
+  spatialGeometry : SpatialGeometry
 
 namespace FLRW
 

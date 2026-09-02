@@ -1,0 +1,13 @@
+# Reviewed module pairs the graph proposes but which should stay apart.
+# Format:  <moduleA> <moduleB>   # reason
+#
+# Mutual citation between two large, established modules in different sectors is
+# legitimate cross-sector welding, not one topic split in two. Merging them would
+# misfile the content and bloat a module past its sector's convention.
+
+Physlib.Thermodynamics.VerlindeEntropicForce Physlib.QuantumMechanics.ComplexAction.ComptonClock.EntropicClockComptonAnchor   # entropic-force / clock-anchor weld across sectors
+Physlib.QuantumMechanics.ComplexAction.ComptonClock.ComptonCellNewtonConstant Physlib.QuantumMechanics.ComplexAction.Curvature.SchwarzschildHorizonScaleMobius   # cell-constant / horizon-scale weld across sectors
+Physlib.QuantumMechanics.ComplexAction.MassOrigin.GravitonMassRoleSeparation Physlib.QuantumMechanics.ComplexAction.Dirac.CanonicalRepresentationZitterbewegung   # the mass-value no-go uses the dilation weights; distinct topics
+
+# Parallel-session framework infrastructure with dedicated Meta audit modules.
+Physlib.QuantumMechanics.L2StatePresentation Physlib.QuantumMechanics.L2KetAdapter   # audited interface pair, owned elsewhere

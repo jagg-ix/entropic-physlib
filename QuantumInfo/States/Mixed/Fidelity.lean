@@ -128,10 +128,6 @@ theorem fidelity_symm : fidelity ρ σ = fidelity σ ρ := by
   show ((σ.M.conj ρ.M.sqrt.mat).cfc Real.sqrt).trace = ((ρ.M.conj σ.M.sqrt.mat).cfc Real.sqrt).trace
   rw [HermitianMat.trace_cfc_eq, HermitianMat.trace_cfc_eq, h_eig]
 
-/-- The fidelity cannot decrease under the application of a channel. -/
-@[sorryful]
-theorem fidelity_channel_nondecreasing [DecidableEq d₂] (Λ : CPTPMap d d₂) : fidelity (Λ ρ) (Λ σ) ≥ fidelity ρ σ :=
-  sorry
 
 --TODO: Real.arccos ∘ fidelity forms a metric (triangle inequality), the Fubini–Study metric.
 --Matches with classical (squared) Bhattacharyya coefficient

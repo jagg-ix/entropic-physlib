@@ -1,0 +1,79 @@
+/-
+Copyright (c) 2026 Jorge A. Garcia. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jorge A. Garcia
+-/
+module
+
+public import Physlib.Thermodynamics.VerlindeCovariantGravity
+public import Physlib.Meta.AxiomWhitelistCheck
+
+/-!
+# Audit for the covariant Verlinde bridge
+
+Kernel and non-vacuity gates for the A14--A17 screen, Poisson flux,
+redshift-force, Komar, Killing-wave, four-dimensional Einstein source, and
+horizon-limit results.
+-/
+
+open Physlib.Thermodynamics.VerlindeCovariantGravity
+
+#physlib_axiom_clean_all [
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonEquipotentialScreen_eq_sphere,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonPotential3At_hasFDerivAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonAccelerationField3At_eq_neg_gradient,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonAccelerationField3At_on_centered_sphere,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.poisson_box_integral_flux,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.radialDensity_poisson_and_integralFlux,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingRedshiftPotential_hasDerivAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.redshiftedNormalGradient_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.covariantScreenForce_eq_newton,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.komarScreenFlux_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.komarScreenMass_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.isKillingVector_iff_killingEquationAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJetAt_of_metricLieDerivative,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_divergenceZero,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_divergenceDerivativeZero,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_wave_eq_neg_contraction,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.generalKilling_wave_eq_neg_raisedRicci,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.contDiffMetricKilling_wave_eq_neg_raisedRicci_onChart,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.einsteinFieldEquation_traceReversedRicci,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.einsteinFieldEquation_traceReversedRicci4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.raisedRicciActionAt_eq_einsteinMatterSource,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.raisedRicciActionAt_eq_einsteinMatterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killing_wave_eq_traceReversedMatterSource,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killing_wave_eq_traceReversedMatterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingEinstein_box_flux_eq_matterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.redshiftedNormalGradient_tendsto_horizon_surfaceGravity,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.schwarzschild_redshift_force_komar_chain ]
+
+#physlib_non_vacuous_all [
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonEquipotentialScreen_eq_sphere,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonPotential3At_hasFDerivAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonAccelerationField3At_eq_neg_gradient,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.newtonAccelerationField3At_on_centered_sphere,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.poisson_box_integral_flux,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.radialDensity_poisson_and_integralFlux,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingRedshiftPotential_hasDerivAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.redshiftedNormalGradient_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.covariantScreenForce_eq_newton,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.komarScreenFlux_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.komarScreenMass_eq,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.isKillingVector_iff_killingEquationAt,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJetAt_of_metricLieDerivative,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_divergenceZero,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_divergenceDerivativeZero,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingSecondJet_wave_eq_neg_contraction,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.generalKilling_wave_eq_neg_raisedRicci,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.contDiffMetricKilling_wave_eq_neg_raisedRicci_onChart,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.einsteinFieldEquation_traceReversedRicci,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.einsteinFieldEquation_traceReversedRicci4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.raisedRicciActionAt_eq_einsteinMatterSource,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.raisedRicciActionAt_eq_einsteinMatterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killing_wave_eq_traceReversedMatterSource,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killing_wave_eq_traceReversedMatterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.killingEinstein_box_flux_eq_matterSource4,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.redshiftedNormalGradient_tendsto_horizon_surfaceGravity,
+  Physlib.Thermodynamics.VerlindeCovariantGravity.schwarzschild_redshift_force_komar_chain ]
+
+#zil_formalization_lint physlib.verlindeCovariantGravity

@@ -1,0 +1,216 @@
+MODULE physlib.qft.scalar_green_functions.rivers1987.
+
+// Dependency and evidence graph for the formalization of Rivers, Chapter 1.
+// Lean remains the sole proof authority. ZIL records source traceability,
+// reused infrastructure, theorem dependencies, and explicit open boundaries.
+
+component:measure_path_integral_model#kind@entity:component.
+component:measure_path_integral_model#provided_by@api:Physlib.QFT.PathIntegral.MeasurePathIntegralModel.
+component:measure_expectation#kind@entity:component.
+component:measure_expectation#provided_by@api:Physlib.QFT.PathIntegral.MeasurePathIntegralModel.normalizedExpectation.
+component:source_coupled_partition#kind@entity:component.
+component:source_coupled_partition#provided_by@api:Physlib.QFT.PathIntegral.MeasurePathIntegralModel.sourceCoupledPartition.
+component:dominated_convergence#kind@entity:component.
+component:dominated_convergence#provided_by@api:Physlib.QFT.PathIntegral.MeasurePathIntegralModel.finiteDimApproximation_tendsto.
+component:wick_contractions#kind@entity:component.
+component:wick_contractions#provided_by@api:WickContraction.
+component:wick_theorem#kind@entity:component.
+component:wick_theorem#provided_by@api:wicks_theorem.
+component:complex_action_weight#kind@entity:component.
+component:complex_action_weight#provided_by@api:Physlib.QFT.Wick.Consistency.complexActionWeight.
+component:entropic_complex_weight#kind@entity:component.
+component:entropic_complex_weight#provided_by@api:Physlib.QFT.Wick.Consistency.entropicComplexWeight.
+component:entropic_proper_time#kind@entity:component.
+component:entropic_proper_time#provided_by@api:QuantumInfo.Finite.entropicProperTimeMetric.
+component:local_admissible_variation#kind@entity:component.
+component:local_admissible_variation#provided_by@api:ClassicalFieldTheory.Local.AdmissibleVariation.
+component:schwinger_dyson_kernel#kind@entity:component.
+component:schwinger_dyson_kernel#provided_by@api:Physlib.QFT.HamiltonianRenormalisation.weightedSDEKernel.
+component:finite_determinant#kind@entity:component.
+component:finite_determinant#provided_by@api:Matrix.det.
+
+source:rivers1987_eq1_11_eq1_13#kind@entity:source.
+source:rivers1987_eq1_14_eq1_20#kind@entity:source.
+source:rivers1987_eq1_28_eq1_36#kind@entity:source.
+source:rivers1987_eq1_38_eq1_50#kind@entity:source.
+source:rivers1987_eq1_51_eq1_59#kind@entity:source.
+source:rivers1987_eq1_60_eq1_79#kind@entity:source.
+source:rivers1987_eq1_80_eq1_88#kind@entity:source.
+source:rivers1987_eq1_89_eq1_93#kind@entity:source.
+source:rivers1987_eq1_94_eq1_100#kind@entity:source.
+
+claim:finite_functional_derivative#kind@entity:theorem.
+claim:finite_functional_derivative#supported_by@source:rivers1987_eq1_11_eq1_13.
+claim:finite_functional_derivative#uses@component:local_admissible_variation.
+claim:finite_functional_derivative#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.finiteFunctionalDerivative_evaluation.
+
+claim:quartic_potential_derivative#kind@entity:theorem.
+claim:quartic_potential_derivative#supported_by@source:rivers1987_eq1_28_eq1_36.
+claim:quartic_potential_derivative#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.quarticPotential_hasDerivAt.
+
+claim:scalar_green_generating_functional#kind@entity:definition.
+claim:scalar_green_generating_functional#supported_by@source:rivers1987_eq1_14_eq1_20.
+claim:scalar_green_generating_functional#uses@component:measure_path_integral_model.
+claim:scalar_green_generating_functional#uses@component:source_coupled_partition.
+claim:scalar_green_generating_functional#formalized_by@lean:Physlib.QFT.ScalarGreenFunctions.scalarGeneratingFunctional.
+
+claim:bose_symmetric_green_functions#kind@entity:theorem.
+claim:bose_symmetric_green_functions#supported_by@source:rivers1987_eq1_14_eq1_20.
+claim:bose_symmetric_green_functions#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.scalarGreenFunction_pair_comm.
+
+claim:source_jet_extraction#kind@entity:theorem.
+claim:source_jet_extraction#supported_by@source:rivers1987_eq1_14_eq1_20.
+claim:source_jet_extraction#requires@claim:scalar_green_generating_functional.
+claim:source_jet_extraction#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.recoverGreenFromSourceJet.
+
+claim:quartic_dyson_schwinger_hierarchy#kind@entity:theorem.
+claim:quartic_dyson_schwinger_hierarchy#supported_by@source:rivers1987_eq1_28_eq1_36.
+claim:quartic_dyson_schwinger_hierarchy#uses@component:schwinger_dyson_kernel.
+claim:quartic_dyson_schwinger_hierarchy#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.QuarticDysonSchwingerData.hierarchy.
+
+claim:dyson_schwinger_contact_terms#kind@entity:theorem.
+claim:dyson_schwinger_contact_terms#supported_by@source:rivers1987_eq1_28_eq1_36.
+claim:dyson_schwinger_contact_terms#requires@claim:quartic_dyson_schwinger_hierarchy.
+claim:dyson_schwinger_contact_terms#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.contactTerm_pair.
+
+claim:even_odd_sector_decoupling#kind@entity:theorem.
+claim:even_odd_sector_decoupling#supported_by@source:rivers1987_eq1_38_eq1_50.
+claim:even_odd_sector_decoupling#requires@claim:quartic_dyson_schwinger_hierarchy.
+claim:even_odd_sector_decoupling#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.QuarticDysonSchwingerData.hierarchyOrders_sameParity.
+
+claim:unique_formal_perturbative_recursion#kind@entity:theorem.
+claim:unique_formal_perturbative_recursion#supported_by@source:rivers1987_eq1_38_eq1_50.
+claim:unique_formal_perturbative_recursion#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.exists_unique_perturbativeCoefficient.
+
+claim:zero_dimensional_ds_recurrence#kind@entity:theorem.
+claim:zero_dimensional_ds_recurrence#supported_by@source:rivers1987_eq1_89_eq1_93.
+claim:zero_dimensional_ds_recurrence#requires@claim:unique_formal_perturbative_recursion.
+claim:zero_dimensional_ds_recurrence#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.ZeroDimensionalQuarticDS.recurrence_one.
+
+claim:free_real_gaussian_functional#kind@entity:definition.
+claim:free_real_gaussian_functional#supported_by@source:rivers1987_eq1_51_eq1_59.
+claim:free_real_gaussian_functional#formalized_by@lean:Physlib.QFT.ScalarGreenFunctions.freeRealGeneratingFunctional.
+
+claim:free_odd_moments_vanish#kind@entity:theorem.
+claim:free_odd_moments_vanish#supported_by@source:rivers1987_eq1_38_eq1_50.
+claim:free_odd_moments_vanish#requires@claim:free_real_gaussian_functional.
+claim:free_odd_moments_vanish#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.freeRealGeneratingFunctional_neg_source.
+
+claim:external_field_dyson_resolvent#kind@entity:theorem.
+claim:external_field_dyson_resolvent#supported_by@source:rivers1987_eq1_60_eq1_79.
+claim:external_field_dyson_resolvent#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.ExternalFieldResolventData.dysonEquation.
+
+claim:external_field_resolvent_difference#kind@entity:theorem.
+claim:external_field_resolvent_difference#supported_by@source:rivers1987_eq1_60_eq1_79.
+claim:external_field_resolvent_difference#requires@claim:external_field_dyson_resolvent.
+claim:external_field_resolvent_difference#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.ExternalFieldResolventFamily.resolventDifference.
+
+claim:finite_neumann_remainder#kind@entity:theorem.
+claim:finite_neumann_remainder#supported_by@source:rivers1987_eq1_60_eq1_79.
+claim:finite_neumann_remainder#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.one_sub_mul_neumannPartial.
+
+claim:vacuum_factor_cancels#kind@entity:theorem.
+claim:vacuum_factor_cancels#supported_by@source:rivers1987_eq1_51_eq1_59.
+claim:vacuum_factor_cancels#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.externalNormalizedGenerating_eq_exp.
+
+claim:complex_scalar_source_functional#kind@entity:definition.
+claim:complex_scalar_source_functional#supported_by@source:rivers1987_eq1_80_eq1_88.
+claim:complex_scalar_source_functional#uses@component:source_coupled_partition.
+claim:complex_scalar_source_functional#formalized_by@lean:Physlib.QFT.ScalarGreenFunctions.complexScalarGeneratingFunctional.
+
+claim:complex_scalar_loop_doubling#kind@entity:theorem.
+claim:complex_scalar_loop_doubling#supported_by@source:rivers1987_eq1_80_eq1_88.
+claim:complex_scalar_loop_doubling#uses@component:finite_determinant.
+claim:complex_scalar_loop_doubling#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.complexScalarLoopAction_eq_two_real.
+
+claim:shifted_gaussian_vacuum#kind@entity:theorem.
+claim:shifted_gaussian_vacuum#supported_by@source:rivers1987_eq1_94_eq1_100.
+claim:shifted_gaussian_vacuum#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.gaussianVacuumAction_completeSquare.
+
+claim:vacuum_center_unique#kind@entity:theorem.
+claim:vacuum_center_unique#supported_by@source:rivers1987_eq1_94_eq1_100.
+claim:vacuum_center_unique#requires@claim:shifted_gaussian_vacuum.
+claim:vacuum_center_unique#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.vacuumRelativeAction_eq_zero_iff.
+
+claim:vacuum_entropic_selection#kind@entity:theorem.
+claim:vacuum_entropic_selection#supported_by@source:rivers1987_eq1_94_eq1_100.
+claim:vacuum_entropic_selection#uses@component:complex_action_weight.
+claim:vacuum_entropic_selection#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.norm_vacuumComplexWeight_eq_one_iff.
+
+claim:global_imaginary_action_cancels#kind@entity:theorem.
+claim:global_imaginary_action_cancels#uses@component:measure_expectation.
+claim:global_imaginary_action_cancels#uses@component:complex_action_weight.
+claim:global_imaginary_action_cancels#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.shiftImaginaryAction_normalizedExpectation.
+
+claim:global_entropic_gap_damps_but_cancels#kind@entity:theorem.
+claim:global_entropic_gap_damps_but_cancels#uses@component:entropic_complex_weight.
+claim:global_entropic_gap_damps_but_cancels#uses@component:entropic_proper_time.
+claim:global_entropic_gap_damps_but_cancels#requires@claim:global_imaginary_action_cancels.
+claim:global_entropic_gap_damps_but_cancels#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.globalEntropicOffset_damps_but_cancels.
+
+claim:entropic_weighted_dyson_wick#kind@entity:theorem.
+claim:entropic_weighted_dyson_wick#supported_by@source:rivers1987_eq1_51_eq1_59.
+claim:entropic_weighted_dyson_wick#uses@component:wick_contractions.
+claim:entropic_weighted_dyson_wick#uses@component:wick_theorem.
+claim:entropic_weighted_dyson_wick#uses@component:complex_action_weight.
+claim:entropic_weighted_dyson_wick#formalized_by@proof:Physlib.QFT.ScalarGreenFunctions.complexActionWeightedDysonWick.
+
+claim:continuum_coincident_field_products#kind@entity:theorem.
+claim:continuum_coincident_field_products#target_state@state:external_regularization_required.
+claim:continuum_coincident_field_products#uses@component:dominated_convergence.
+
+claim:interacting_continuum_measure#kind@entity:theorem.
+claim:interacting_continuum_measure#target_state@state:open_constructive_qft_boundary.
+claim:interacting_continuum_measure#uses@component:dominated_convergence.
+
+proof:Physlib.QFT.ScalarGreenFunctions.finiteFunctionalDerivative_evaluation#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.quarticPotential_hasDerivAt#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.scalarGreenFunction_pair_comm#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.recoverGreenFromSourceJet#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.QuarticDysonSchwingerData.hierarchy#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.contactTerm_pair#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.QuarticDysonSchwingerData.hierarchyOrders_sameParity#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.exists_unique_perturbativeCoefficient#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.ZeroDimensionalQuarticDS.recurrence_one#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.freeRealGeneratingFunctional_neg_source#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.ExternalFieldResolventData.dysonEquation#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.ExternalFieldResolventFamily.resolventDifference#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.one_sub_mul_neumannPartial#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.externalNormalizedGenerating_eq_exp#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.complexScalarLoopAction_eq_two_real#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.gaussianVacuumAction_completeSquare#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.vacuumRelativeAction_eq_zero_iff#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.norm_vacuumComplexWeight_eq_one_iff#verification@state:pending_ci.
+proof:Physlib.QFT.ScalarGreenFunctions.shiftImaginaryAction_normalizedExpectation#verification@state:kernel_checked.
+proof:Physlib.QFT.ScalarGreenFunctions.globalEntropicOffset_damps_but_cancels#verification@state:kernel_checked.
+proof:Physlib.QFT.ScalarGreenFunctions.complexActionWeightedDysonWick#verification@state:kernel_checked.
+
+RULE verified_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:kernel_checked
+THEN ?claim#status@status:proved.
+
+RULE pending_claim:
+IF ?claim#kind@entity:theorem AND ?claim#formalized_by@?proof AND ?proof#verification@state:pending_ci
+THEN ?claim#status@status:pending.
+
+RULE boundary_claim:
+IF ?claim#kind@entity:theorem AND ?claim#target_state@?boundary
+THEN ?claim#status@?boundary.
+
+QUERY claim_statuses:
+FIND ?claim ?status WHERE ?claim#status@?status.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY dependency_edges:
+FIND ?claim ?dependency WHERE ?claim#requires@?dependency.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.
+
+QUERY open_boundaries:
+FIND ?claim ?boundary WHERE ?claim#target_state@?boundary.

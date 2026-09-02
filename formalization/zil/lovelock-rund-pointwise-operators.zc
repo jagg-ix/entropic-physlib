@@ -1,0 +1,47 @@
+MODULE physlib.mathematics.lovelock_rund.pointwise_operators.
+
+component:mathlib_l2#kind@entity:component.
+component:mathlib_l2#provided_by@api:MeasureTheory.Lp.
+component:mathlib_memlp#kind@entity:component.
+component:mathlib_memlp#provided_by@api:MeasureTheory.MemLp.
+component:physlib_space_hilbert#kind@entity:component.
+component:physlib_space_hilbert#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.
+component:physlib_mul_operator#kind@entity:component.
+component:physlib_mul_operator#provided_by@api:QuantumMechanics.SpaceDHilbertSpace.mulOperator.
+
+source:lovelock_rund_ch6_continuum_variation#kind@entity:source.
+source:lovelock_rund_ch8_field_theories#kind@entity:source.
+
+claim:vector_valued_continuum_field#kind@entity:definition.
+claim:vector_valued_continuum_field#supported_by@source:lovelock_rund_ch8_field_theories.
+claim:vector_valued_continuum_field#uses@component:mathlib_l2.
+claim:vector_valued_continuum_field#uses@component:mathlib_memlp.
+claim:vector_valued_continuum_field#formalized_by@lean:Physlib.Mathematics.LovelockRund.ContinuumFieldSpace.
+
+claim:maximal_pointwise_field_operator#kind@entity:definition.
+claim:maximal_pointwise_field_operator#supported_by@source:lovelock_rund_ch6_continuum_variation.
+claim:maximal_pointwise_field_operator#uses@component:physlib_space_hilbert.
+claim:maximal_pointwise_field_operator#uses@component:physlib_mul_operator.
+claim:maximal_pointwise_field_operator#formalized_by@lean:Physlib.Mathematics.LovelockRund.pointwiseFieldOperator.
+
+claim:pointwise_operator_dense_domain#kind@entity:theorem.
+claim:pointwise_operator_dense_domain#requires@claim:maximal_pointwise_field_operator.
+claim:pointwise_operator_dense_domain#formalized_by@proof:Physlib.Mathematics.LovelockRund.pointwiseFieldOperator_hasDenseDomain.
+
+claim:pointwise_operator_ae_action#kind@entity:theorem.
+claim:pointwise_operator_ae_action#requires@claim:maximal_pointwise_field_operator.
+claim:pointwise_operator_ae_action#formalized_by@proof:Physlib.Mathematics.LovelockRund.pointwiseFieldOperator_apply_ae.
+
+claim:pointwise_euler_lagrange_operator#kind@entity:definition.
+claim:pointwise_euler_lagrange_operator#supported_by@source:lovelock_rund_ch8_field_theories.
+claim:pointwise_euler_lagrange_operator#uses@component:physlib_mul_operator.
+claim:pointwise_euler_lagrange_operator#formalized_by@lean:Physlib.Mathematics.LovelockRund.pointwiseEulerLagrangeOperator.
+
+QUERY reused_components:
+FIND ?claim ?component WHERE ?claim#uses@?component.
+
+QUERY proof_registry:
+FIND ?claim ?proof WHERE ?claim#formalized_by@?proof.
+
+QUERY source_traceability:
+FIND ?claim ?source WHERE ?claim#supported_by@?source.

@@ -1,0 +1,31 @@
+/-
+Copyright (c) 2026 Jorge A. Garcia. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jorge A. Garcia
+-/
+module
+
+public import Physlib.QuantumMechanics.ComplexAction.AdSCFT.RyuTakayanagiFormulaAlgebra
+public import Physlib.Meta.AxiomWhitelistCheck
+
+/-!
+# Audit of the Liouville-complexity holographic spine
+-/
+
+open Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine
+
+#physlib_axiom_clean_all [
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.matterWeldingExponent_eq_liouvilleComplexityPrefactor,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.liouvilleComplexityPrefactor_carries_centralCharge,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.brownHenneaux_sixth_eq_rtAreaEntropy,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.vacuumLiouvilleComplexity_brownHenneaux,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.vacuumLiouvilleComplexity_pos,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.liouville_complexity_brownHenneaux_spine ]
+
+#physlib_non_vacuous_all [
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.matterWeldingExponent_eq_liouvilleComplexityPrefactor,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.liouvilleComplexityPrefactor_carries_centralCharge,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.brownHenneaux_sixth_eq_rtAreaEntropy,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.vacuumLiouvilleComplexity_brownHenneaux,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.vacuumLiouvilleComplexity_pos,
+  Physlib.QuantumMechanics.ComplexAction.AdSCFT.LiouvilleComplexityHolographicSpine.liouville_complexity_brownHenneaux_spine ]

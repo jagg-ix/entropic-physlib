@@ -6,6 +6,7 @@ Authors: Shlok Vaibhav Singh
 module
 
 public import Physlib.Meta.Linters.Sorry
+public import Mathlib.Data.Real.Basic
 /-!
 # Coplanar Double Pendulum
 ### Tag: LnL_1.5.1
@@ -69,9 +70,12 @@ namespace ClassicalMechanics
 
 namespace CoplanarDoublePendulum
 
-/-- The configuration space of the coplaner double pendulum. -/
-@[sorryful]
-def ConfigurationSpace : Type := sorry
+/-- The configuration space of the coplanar double pendulum.
+
+Implemented, following the file's own solution, as the two string angles
+`(φ₁, φ₂)` measured from the vertical — i.e. angle coordinates on the universal cover
+`ℝ × ℝ` of the torus of configurations, as Landau–Lifshitz work with them. -/
+def ConfigurationSpace : Type := ℝ × ℝ
 
 end CoplanarDoublePendulum
 end ClassicalMechanics

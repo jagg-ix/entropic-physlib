@@ -653,5 +653,153 @@ lemma heavisideStep_apply (d : ℕ) (η : 𝓢(EuclideanSpace ℝ (Fin d.succ), 
       η x ∂MeasureTheory.volume := by
   rfl
 
+
+/-!
+
+## F. Localized-Fourier wavefront carriers
+
+The full Hörmander wavefront set is chart-local: one multiplies a
+distribution by compactly supported cutoffs and tests rapid Fourier decay in
+open conic neighborhoods.  `MicrolocalFourierProbe` packages those
+chart/cutoff/modulation test functions without postulating a wavefront set.
+The set below is computed from the distribution's evaluations on the probes.
+
+A concrete curved-spacetime development must additionally prove that its
+probe family is the chart/cutoff family required by the standard microlocal
+definition.  This file deliberately does not infer that analytic fact from a
+bare set of covectors.
+-/
+
+section MicrolocalFourier
+
+variable {E : Type} {X Ξ : Type*}
+variable [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable [NormedAddCommGroup Ξ]
+
+/-- A family of localized oscillatory Schwartz tests.  `baseRegion i` is the
+chart/cutoff region and `coneRegion i` is its conic frequency region;
+`test i ξ` is the corresponding cutoff-modulated test function. -/
+structure MicrolocalFourierProbe
+    (E : Type) (X Ξ : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup Ξ] where
+  /-- Index type for compatible chart, cutoff, and conic-frequency choices. -/
+  Index : Type
+  /-- Base points controlled by a localized cutoff. -/
+  baseRegion : Index → Set X
+  /-- Frequency directions controlled by the same probe. -/
+  coneRegion : Index → Set Ξ
+  /-- Localized oscillatory Schwartz test at a frequency. -/
+  test : Index → Ξ → 𝓢(E, ℂ)
+
+/-- Polynomially weighted uniform decay of a complex amplitude on a
+frequency set, for every polynomial order. -/
+def HasRapidFourierDecayOn (amplitude : Ξ → ℂ) (cone : Set Ξ) : Prop :=
+  ∀ N : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ ξ ∈ cone,
+    (1 + ‖ξ‖) ^ N * ‖amplitude ξ‖ ≤ C
+
+/-- A quantitative obstruction to rapid Fourier decay: at one polynomial
+order the weighted amplitude escapes every nonnegative bound on the tested
+frequency set.  This is the lower-growth estimate used to prove that a
+covector is genuinely singular, rather than merely declaring failure of
+microlocal regularity. -/
+def HasPolynomialLowerEscapeOn (amplitude : Ξ → ℂ) (cone : Set Ξ) : Prop :=
+  ∃ N : ℕ, ∀ C : ℝ, 0 ≤ C → ∃ ξ ∈ cone,
+    C < (1 + ‖ξ‖) ^ N * ‖amplitude ξ‖
+
+/-- A polynomial lower-escape estimate rules out rapid Fourier decay. -/
+lemma not_hasRapidFourierDecayOn_of_hasPolynomialLowerEscapeOn
+    {amplitude : Ξ → ℂ} {cone : Set Ξ}
+    (h : HasPolynomialLowerEscapeOn amplitude cone) :
+    ¬ HasRapidFourierDecayOn amplitude cone := by
+  intro hrapid
+  obtain ⟨N, hN⟩ := h
+  obtain ⟨C, hC, hbound⟩ := hrapid N
+  obtain ⟨ξ, hξ, hescape⟩ := hN C hC
+  exact (not_lt_of_ge (hbound ξ hξ)) hescape
+
+/-- A distribution is microlocally regular at `(x,ξ)` relative to a
+localized-Fourier probe family when one probe contains both the base point
+and frequency and all polynomially weighted Fourier amplitudes are bounded
+on that probe's cone. -/
+def IsMicrolocallyRegularAt
+    (u : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ)
+    (x : X) (ξ : Ξ) : Prop :=
+  ∃ i : P.Index, x ∈ P.baseRegion i ∧ ξ ∈ P.coneRegion i ∧
+    HasRapidFourierDecayOn (fun η ↦ u (P.test i η)) (P.coneRegion i)
+
+/-- The localized-Fourier wavefront set computed from a distribution and a
+probe family.  Zero covectors are excluded, as in the standard wavefront-set
+convention. -/
+def distributionalWavefrontSet
+    (u : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ) : Set (X × Ξ) :=
+  {xξ | xξ.2 ≠ 0 ∧ ¬ IsMicrolocallyRegularAt u P xξ.1 xξ.2}
+
+/-- Rapid Fourier decay depends only on the amplitude values on the tested
+cone.  This small congruence lemma is the analytic transport primitive used
+when two distributions have the same localized Fourier probe pairings. -/
+lemma hasRapidFourierDecayOn_congr
+    {amplitude₁ amplitude₂ : Ξ → ℂ} {cone : Set Ξ}
+    (h : ∀ ξ ∈ cone, amplitude₁ ξ = amplitude₂ ξ) :
+    HasRapidFourierDecayOn amplitude₁ cone ↔
+      HasRapidFourierDecayOn amplitude₂ cone := by
+  constructor
+  · intro h₁ N
+    obtain ⟨C, hC, hbound⟩ := h₁ N
+    exact ⟨C, hC, fun ξ hξ => by simpa [h ξ hξ] using hbound ξ hξ⟩
+  · intro h₂ N
+    obtain ⟨C, hC, hbound⟩ := h₂ N
+    exact ⟨C, hC, fun ξ hξ => by simpa [h ξ hξ] using hbound ξ hξ⟩
+
+/-- Distributions agreeing on every localized oscillatory test of a probe
+family have identical microlocal regularity relative to that family. -/
+lemma isMicrolocallyRegularAt_congr_distribution
+    (u v : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ)
+    (hprobe : ∀ (i : P.Index) (η : Ξ),
+      u (P.test i η) = v (P.test i η))
+    (x : X) (ξ : Ξ) :
+    IsMicrolocallyRegularAt u P x ξ ↔
+      IsMicrolocallyRegularAt v P x ξ := by
+  constructor
+  · rintro ⟨i, hx, hξ, hdecay⟩
+    exact ⟨i, hx, hξ,
+      (hasRapidFourierDecayOn_congr
+        (fun η _ => hprobe i η)).mp hdecay⟩
+  · rintro ⟨i, hx, hξ, hdecay⟩
+    exact ⟨i, hx, hξ,
+      (hasRapidFourierDecayOn_congr
+        (fun η _ => hprobe i η)).mpr hdecay⟩
+
+/-- **Probe-level distributional transport.**  Equality of all localized
+Fourier pairings implies equality of the wavefront sets computed from those
+probes.  This is stronger than merely transporting an abstract cone label. -/
+lemma distributionalWavefrontSet_eq_of_probe_pairing_eq
+    (u v : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ)
+    (hprobe : ∀ (i : P.Index) (η : Ξ),
+      u (P.test i η) = v (P.test i η)) :
+    distributionalWavefrontSet u P =
+      distributionalWavefrontSet v P := by
+  ext xξ
+  simp only [distributionalWavefrontSet, Set.mem_setOf_eq]
+  rw [isMicrolocallyRegularAt_congr_distribution u v P hprobe]
+
+/-- The computed localized-Fourier wavefront set contains no zero covector. -/
+lemma distributionalWavefrontSet_covector_ne_zero
+    (u : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ)
+    {xξ : X × Ξ} (hxξ : xξ ∈ distributionalWavefrontSet u P) :
+    xξ.2 ≠ 0 :=
+  hxξ.1
+
+/-- Exact identification with a cone immediately implies the microlocal
+spectrum inclusion.  This is the bridge used by Hadamard certificates after
+the analytic localized-Fourier estimate has established equality. -/
+lemma distributionalWavefrontSet_subset_of_eq
+    (u : E →d[ℂ] ℂ) (P : MicrolocalFourierProbe E X Ξ)
+    (cone : Set (X × Ξ))
+    (h : distributionalWavefrontSet u P = cone) :
+    distributionalWavefrontSet u P ⊆ cone := by
+  rw [h]
+
+end MicrolocalFourier
+
 end Distribution
 end Physlib

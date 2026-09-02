@@ -35,6 +35,10 @@ def uConj (ρ : MState d) (U : 𝐔[d]) : MState d where
   nonneg := HermitianMat.conj_nonneg U.val ρ.nonneg
   tr := by simp
 
+/-- Deprecated compatibility name for private modules written before the upstream rename. -/
+@[deprecated uConj (since := "2026-08-23")]
+abbrev U_conj (ρ : MState d) (U : 𝐔[d]) : MState d := ρ.uConj U
+
 /-- `MState.uConj`, the action of a unitary on a mixed state by conjugation.
 The ◃ notation comes from the theory of racks and quandles, where this is a
 conjugation-like operation. -/
@@ -50,9 +54,19 @@ theorem uConj_spectrum_eq (ρ : MState d) (U : 𝐔[d]) :
     (ρ.uConj U).spectrum = ρ.spectrum := by
   simp [spectrum, uConj]
 
+/-- Deprecated compatibility name for private modules written before the upstream rename. -/
+@[deprecated uConj_spectrum_eq (since := "2026-08-23")]
+theorem U_conj_spectrum_eq (ρ : MState d) (U : 𝐔[d]) :
+    (ρ.U_conj U).spectrum = ρ.spectrum := uConj_spectrum_eq ρ U
+
 @[simp]
 theorem inner_uConj (ρ σ : MState d) (U : 𝐔[d]) : ⟪U ◃ ρ, U ◃ σ⟫_Prob = ⟪ρ, σ⟫_Prob := by
   simp [uConj, inner_def]
+
+/-- Deprecated compatibility name for private modules written before the upstream rename. -/
+@[deprecated inner_uConj (since := "2026-08-23")]
+theorem inner_U_conj (ρ σ : MState d) (U : 𝐔[d]) :
+    ⟪U ◃ ρ, U ◃ σ⟫_Prob = ⟪ρ, σ⟫_Prob := inner_uConj ρ σ U
 
 /-- The **No-cloning theorem**, saying that if states `ψ` and `φ` can both be perfectly cloned
 using a unitary `U` and a fiducial state `f`, and they aren't identical (their inner product is

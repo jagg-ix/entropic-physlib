@@ -1,0 +1,28 @@
+MODULE physlib.m9.charge_klein_orbital_criteria.
+
+criterion:charge_quantization#kind@entity:criterion.
+criterion:klein_gordon#kind@entity:criterion.
+criterion:orbital_quantization#kind@entity:criterion.
+
+claim:winding_charge_quantization#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.M9ChargeKleinOrbitalCriteria.chargeQuantizationCriterion.
+claim:fock_charge_grading#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.M9ChargeKleinOrbitalCriteria.chargeCreationOperatorGrading.
+criterion:charge_quantization#supported_by@claim:winding_charge_quantization.
+criterion:charge_quantization#supported_by@claim:fock_charge_grading.
+criterion:charge_quantization#boundary@obligation:elementary_electric_charge_identity.
+criterion:charge_quantization#boundary@obligation:spontaneous_sector_selection.
+
+claim:finite_klein_gordon_mode#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.M9ChargeKleinOrbitalCriteria.kleinGordonFiniteModeCriterion.
+criterion:klein_gordon#supported_by@claim:finite_klein_gordon_mode.
+criterion:klein_gordon#boundary@obligation:full_interacting_scalar_field_emergence.
+criterion:klein_gordon#boundary@obligation:physical_mass_calibration.
+
+claim:coulomb_o4_orbital_quantization#formalized_by@proof:Physlib.QuantumMechanics.ComplexAction.EntropicTime.M9ChargeKleinOrbitalCriteria.orbitalQuantizationCriterion.
+criterion:orbital_quantization#supported_by@claim:coulomb_o4_orbital_quantization.
+criterion:orbital_quantization#boundary@obligation:emergent_electron_nucleus_identity.
+criterion:orbital_quantization#boundary@obligation:radiative_transitions_and_physical_units.
+
+QUERY criterion_support:
+FIND ?criterion ?claim WHERE ?criterion#supported_by@?claim.
+
+QUERY retained_boundaries:
+FIND ?criterion ?obligation WHERE ?criterion#boundary@?obligation.

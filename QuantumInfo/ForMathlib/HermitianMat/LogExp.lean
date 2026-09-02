@@ -8,6 +8,7 @@ module
 public import QuantumInfo.ForMathlib.HermitianMat.Proj
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
 
 /-! # Properties of the matrix logarithm and exponential
 
@@ -102,6 +103,20 @@ end exp
   It coincides with a standard definition if A is positive definite. -/
 def log (A : HermitianMat d 𝕜) : HermitianMat d 𝕜 :=
   A.cfc Real.log
+
+/-- **`log` inverts `exp` on Hermitian matrices.**  Both are the continuous functional calculus of
+the corresponding real function, so this is Mathlib's `CFC.log_exp` transported across
+`HermitianMat.mat`: `HermitianMat.log = cfc Real.log` and `CFC.log` are the same operation, and
+`CFC.real_exp_eq_normedSpace_exp` bridges `cfc Real.exp` to `NormedSpace.exp`. -/
+@[simp]
+theorem log_exp (A : HermitianMat d 𝕜) : A.exp.log = A := by
+  ext1
+  simp only [HermitianMat.log, HermitianMat.exp, HermitianMat.mat_cfc]
+  have hsa : IsSelfAdjoint A.mat := A.H
+  have hcont : ContinuousOn Real.log (Real.exp '' spectrum ℝ A.mat) := by
+    fun_prop (disch := simp)
+  rw [← _root_.cfc_comp' Real.log Real.exp A.mat hcont]
+  simp [_root_.cfc_id' (R := ℝ) A.mat]
 
 @[aesop unsafe apply 50% (rule_sets := [Commutes])]
 theorem _root_.Commute.log_left (hAB : Commute A.mat B.mat) :
