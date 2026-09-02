@@ -183,7 +183,158 @@ information dimension too, and does.
 and [`Physlib/Meta/PathIntegralBitGate.lean`](../Physlib/Meta/PathIntegralBitGate.lean)
 (`kuikenWeight_entropicAction_eq_exp_natCount`, `areaPerBitCoupling`).
 
-### 9. Where experiment enters
+### 9. Complex action, entropic proper time, and Caticha's entropic dynamics
+
+The gravitational construction is part of a wider dynamical picture in the repository.
+Nagao and Nielsen replace a purely real action by a complex action
+
+\[
+S=S_R+iS_I.
+\]
+
+Its path-integral weight has the exact factorization
+
+\[
+e^{iS/\hbar}
+  =e^{iS_R/\hbar}e^{-S_I/\hbar}.
+\]
+
+The two components have different dynamical roles. The real action supplies the oscillatory
+phase, while the imaginary action supplies the positive or negative exponential selection of
+histories. The repository proves the factorization, proves that the phase has unit modulus,
+and proves
+
+\[
+\left\lVert e^{iS/\hbar}\right\rVert=e^{-S_I/\hbar},
+\qquad
+\tau_{\mathrm{ent}}
+   :=\frac{S_I}{\hbar}
+   =-\log\left\lVert e^{iS/\hbar}\right\rVert .
+\]
+
+This makes entropic proper time more than a label attached to an external clock. It is the
+intrinsic accumulated imaginary action, equivalently the logarithmic ordering parameter of
+the complex path weight. For positive `\hbar`, increasing `S_I` makes
+`\tau_{\mathrm{ent}}` monotone and strengthens the suppression of a history; at `S_I=0`,
+the entropic advance vanishes and the weight reduces to its reversible phase. When a concrete
+dynamics supplies an action-production rate, the same quantity acquires physical time units.
+For example, an action law
+
+\[
+\Delta S_I=\hbar\omega_0\,\Delta\tau
+\]
+
+gives `\Delta\tau_{\mathrm{ent}}=\omega_0\Delta\tau`, and division by the physical phase
+frequency `\omega_0` recovers the elapsed proper time. The action-rate relation is therefore
+the dimensional bridge from the intrinsic complex-action ordering variable to a clock
+reading, rather than the definition of the ordering variable itself.
+
+The repository also realizes entropic proper time directly on quantum states. For a pair of
+states it defines the information-theoretic core as the quantum relative entropy
+`D(\rho\Vert\sigma)`. The thermal scale converts this information interval into metric time,
+
+\[
+\tau_{\mathrm{ent}}^{\mathrm{metric}}
+  =\frac{\hbar}{k_B T_\infty}D(\rho\Vert\sigma).
+\]
+
+The complex-action and information forms meet when the imaginary action is written as the
+entropic action `S_I=(\hbar/k_B)S_{\mathrm{ent}}`; then
+`S_I/\hbar=S_{\mathrm{ent}}/k_B`, and the modulus of the Nagao--Nielsen weight is the
+Boltzmann-like information weight. Instantiating `S_{\mathrm{ent}}/k_B` with the
+relative-entropy gap connects the state-space interval to the same damping exponent. Thus
+relative entropy, imaginary action, and damping are three compatible representations once
+the displayed conversion is supplied; the code keeps that conversion visible.
+
+Caticha's entropic dynamics supplies the local transition and evolution side of this
+correspondence. Its short-step field transition has the Gaussian weight
+
+\[
+P(\Delta\chi)\propto
+  \exp\!\left[-\frac{\alpha}{2}(\Delta\chi-b)^2\right].
+\]
+
+Under the explicit identification
+
+\[
+S_I=(\Delta\chi-b)^2,
+\qquad
+\hbar_{\mathrm{eff}}=\frac{2}{\alpha},
+\]
+
+the repository proves that this transition weight is exactly the modulus
+`e^{-S_I/\hbar_{\mathrm{eff}}}` of the complex-action weight. Caticha's current potential
+supplies the other half: the reconstructed wave functional
+`\Psi=\sqrt{\rho}\,e^{i\Phi}` has phase `\Phi=S_R/\hbar`. The transition modulus and wave
+phase therefore reconstruct the imaginary and real parts of the same complex-action
+integrand.
+
+The identification also carries the local clock. Caticha's multiplier
+`\alpha_x=1/\delta\xi_x^\perp` makes the fluctuation variance
+
+\[
+\left\langle\Delta w_x^2\right\rangle
+  =\frac{\delta\xi_x^\perp}{\sqrt{g_x}},
+\]
+
+so local proper-time advance is measured by local diffusion. Substitution into the
+complex-action map gives `\hbar_{\mathrm{eff}}=2\delta\xi_x^\perp`. The repository carries
+this local clock through the Fokker--Planck continuity equation, its ensemble-Hamiltonian
+generation, and the functional Schrödinger construction. In the coupled Ipek--Caticha
+sector, the fixed-background generator is complex-linear, while the gravitational
+backreaction is the nonlinear departure from that linear Schrödinger flow.
+
+These links use the repository's additional **information dimension** `[I]`. Ordinary
+dimensional analysis treats a bit or nat as just another dimensionless number. The extended
+basis
+
+\[
+[L,T,M,C,\Theta,I]
+\]
+
+instead records information as an independent coordinate. In this convention `k_B` has
+dimension `E\Theta^{-1}I^{-1}`: it converts an information count into thermodynamic entropy,
+and `\hbar/(k_BT)` carries `T I`. Forgetting `[I]` maps the extended system back to ordinary
+dimensional analysis, but the repository proves that this map is not injective; quantities
+that differ only by information content become indistinguishable.
+
+The code keeps two readings of complex action separate. In the standard scalar
+Nagao--Nielsen reading, both `S_R` and `S_I` have the mechanical dimension of action, as
+required for `e^{iS/\hbar}`. The repository then adds an information-graded reading in which
+the imaginary sector has a nonzero `[I]` coordinate. That extra grading is not attributed to
+Nagao and Nielsen; it is a repository extension that records the information carried by
+irreversible selection. The same `[I]` axis types the holographic bit count as information
+and Newton's constant as area per bit. It therefore joins the screen-counting, Landauer,
+complex-action, and entropic-time sectors without erasing the conversion constants that move
+between them.
+
+*In the code:*
+[`EntropicDampingEquivalence.lean`](../Physlib/QuantumMechanics/ComplexAction/NonHermitianComplexAction/EntropicDampingEquivalence.lean),
+[`ComplexActionDampingCoercivity.lean`](../Physlib/QuantumMechanics/ComplexAction/PathIntegral/ComplexActionDampingCoercivity.lean),
+and [`ComplexActionPathIntegralWeight.lean`](../Physlib/QuantumMechanics/ComplexAction/PathIntegral/ComplexActionPathIntegralWeight.lean)
+for the complex-action factorization and entropic proper time
+(`norm_nnPathWeight`, `entropicProperTime_eq_neg_log_norm`,
+`master_modulus_is_entropy`);
+[`EntropicDynamicsComplexActionNagaoNielsen.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/EntropicDynamicsComplexActionNagaoNielsen.lean),
+[`IpekCatichaTransitionLocalEntropicTime.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/IpekCatichaTransitionLocalEntropicTime.lean),
+and [`IpekCatichaSchrodingerNagaoNielsen.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/IpekCatichaSchrodingerNagaoNielsen.lean)
+for the Caticha--Nagao--Nielsen bridge (`ed_is_nagaoNielsen_complexAction`,
+`local_clock_variance`, `ipekCaticha_on_nagaoNielsen_contour`);
+[`EntropicDynamicsFokkerPlanckHamiltonian.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/EntropicDynamicsFokkerPlanckHamiltonian.lean)
+and [`IpekCatichaFunctionalSchrodinger.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/IpekCatichaFunctionalSchrodinger.lean)
+for the dynamical evolution;
+[`EntropicProperTime.lean`](../Physlib/SpaceAndTime/EntropicProperTime.lean) and
+[`ClockRelativeEntropy.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/ClockRelativeEntropy.lean)
+for the relative-entropy metric lift; and
+[`LTMCTIDimensionBase.lean`](../Physlib/Units/LTMCTIDimensionBase.lean),
+[`EntropicDimension.lean`](../Physlib/QuantumMechanics/ComplexAction/EntropicTime/EntropicDimension.lean),
+[`ComplexActionDimension.lean`](../Physlib/Units/ComplexActionDimension.lean), and
+[`GravitationalCouplingDimensions.lean`](../Physlib/Units/GravitationalCouplingDimensions.lean)
+for the `[I]`-extended dimensional system (`forgetInfo_not_injective`,
+`planckianPeriod_dim_framework_eq_null_mul_I`, `complexAction_ne_angularMomentum`,
+`information_typing_unique`).
+
+### 10. Where experiment enters
 
 The least-tested assumption in the whole stack is Unruh thermality (§1). The repository
 formalizes exactly where it becomes measurable: a detector of mass `m` accelerating at `a`
@@ -206,7 +357,7 @@ complete list of places to aim.
 1. **Forces are entropy gradients** — the rule `F = T·ΔS/Δx` (§1). The founding premise;
    nothing here derives it.
 2. **Screens are thermal** — the Unruh temperature is real and the equipartition rule for
-   screen bits is right (§1). The Unruh half is testable (§9); equipartition is a model
+   screen bits is right (§1). The Unruh half is testable (§10); equipartition is a model
    choice.
 3. **The cell tiling counts bits** — the Gaussian-measurement cells of §3 are the screen's
    independent degrees of freedom. This is the assumption with the widest reach in the
@@ -223,7 +374,7 @@ complete list of places to aim.
   forced, the couplings are forced.
 - No derivation of the inverse-square law from first principles — in §6 it is the
   *hypothesis*.
-- No proof of Unruh thermality — that is physics, and it is pointed at an experiment (§9).
+- No proof of Unruh thermality — that is physics, and it is pointed at an experiment (§10).
 
 ## Check it yourself
 
