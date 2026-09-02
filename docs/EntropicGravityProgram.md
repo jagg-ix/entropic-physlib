@@ -15,54 +15,63 @@ a formula for how much entropy a moving mass generates, a temperature for the sc
 for how many information bits a screen holds. Critics have argued about these assumptions
 ever since, largely in prose.
 
-This repository moves that argument into a proof assistant. Every step of the program is
-formalized in Lean 4, which forces total explicitness: each theorem states *exactly* which
-assumptions it uses, and a machine checks that nothing is smuggled in. The result is not a
-proof that gravity is entropic. It is something more modest and more precise: a complete
-account of **which assumptions buy which laws, which of Verlinde's postulates are actually
-forced by the others, and what an experiment would have to measure to test the picture.**
+This repository develops that proposal as a machine-checked network of thermodynamic,
+information-theoretic, quantum, and geometric results. It contains direct constructions,
+existence-and-uniqueness results, equivalences, variational results, and experimentally
+anchored interfaces. Lean checks every stated conclusion from the hypotheses written in its
+declaration; the ZIL graph separately records how the physical claims, evidence, and derived
+premises connect. The scientific content is therefore the complete network of proved
+interfaces, including the routes that derive or discharge inputs used by other routes.
 
 ## How to read the theorems
 
-Almost every headline result here is an **"if and only if"** — an equivalence. A typical
-example, in words:
+The repository uses several logical forms, and they should not be collapsed into one. A
+definition constructs an object; a direct lemma proves a property of that object; an
+existence-and-uniqueness result proves that exactly one object satisfies a specification;
+and an **"if and only if"** result proves that two formulations determine each other. A
+representative equivalence says:
 
 > *Assume* forces arise from entropy differences at a temperature (the entropic-force rule),
 > and *assume* an accelerating observer sees the temperature Unruh predicted. *Then*
 > Verlinde's entropy formula holds **exactly when** Newton's second law `F = ma` holds.
 
-Read carefully, this proves neither side. What it proves is that, given the two stated
-assumptions, Verlinde's postulate and ordinary inertia are *the same statement* — you cannot
-accept one and reject the other. Every result below has this shape. The value of an
-equivalence is that it shrinks the debate: instead of arguing about a long chain of
-reasoning, you argue about a short, explicit list of assumptions. That list is given at the
-end of this guide.
+For that declaration, the entropic-force and Unruh interfaces are explicit parameters, and
+the equivalence proves that the entropy law and inertial response are the same constraint.
+Other declarations go further in different directions: they construct screen counts,
+derive equipartition from a canonical ensemble, prove unique couplings, and propagate those
+couplings through Newtonian, Einstein, horizon, and complex-action sectors. Each result must
+be read through its own Lean signature and its transitive ZIL dependencies.
 
 ## The results
 
-### 1. The starting assumptions
+### 1. Thermodynamic interfaces and their derivation
 
-Three definitions set the vocabulary; everything else is conditional on them.
+Three quantities organize the thermodynamic route:
 
 - **The entropic-force rule.** A force is what you get from an entropy change `ΔS` at
   temperature `T` across a displacement `Δx`: namely `F = T·ΔS/Δx`. This is the heart of the
   entropic picture — the analogue of "pressure comes from counting molecules."
-- **The Unruh temperature.** An observer accelerating at rate `a` sees thermal radiation at
-  temperature `T = ħa/(2πk_B c)`. This is standard (though experimentally unconfirmed)
-  quantum field theory.
+- **The Unruh temperature.** The acceleration-temperature carrier is
+  `T = ħa/(2πk_B c)`. The repository connects this carrier to the Hawking/KMS temperature
+  and to its Compton and de Broglie welding conditions.
 - **The screen temperature.** A screen storing `N` bits about a mass `M` is assigned
   temperature `T = 2Mc²/(N·k_B)` — energy shared equally among the bits. This
-  "equipartition" rule is a modeling choice, and the repository labels it as one.
+  classical equipartition relation is derived by `verlinde_equipartition_from_NDOF` from
+  the canonical ensemble of `N` non-interacting quadratic degrees of freedom. Inverting
+  it gives the thermodynamic count `screenBitCount E k_B T = 2E/(k_B T)`.
 
 A first structural fact is proved right here: written through these rules, the force law
 contains **no Newton's constant at all**. `G` only ever enters later, through the *number of
 bits* assigned to a screen. That observation drives everything below.
 
 *In the code:*
-[`Physlib/Thermodynamics/VerlindeEntropicForce.lean`](../Physlib/Thermodynamics/VerlindeEntropicForce.lean)
-and [`NewtonGIsolation.lean`](../Physlib/Thermodynamics/NewtonGIsolation.lean)
+[`Physlib/Thermodynamics/VerlindeEntropicForce.lean`](../Physlib/Thermodynamics/VerlindeEntropicForce.lean),
+[`VerlindeEquipartitionDerivation.lean`](../Physlib/Thermodynamics/VerlindeEquipartitionDerivation.lean),
+[`NewtonGIsolation.lean`](../Physlib/Thermodynamics/NewtonGIsolation.lean), and
+[`HolographicGravityFromModularFlow.lean`](../Physlib/QuantumMechanics/ComplexAction/HolographicGravityFromModularFlow.lean)
 (`verlindeEntropicForce`, `unruhTemperature`, `bitScreenTemperature`,
-`entropicForce_bitForm`, `newtonG_isolated`).
+`verlinde_equipartition_from_NDOF`, `screenBitCount`, `entropicForce_bitForm`,
+`newtonG_isolated`).
 
 ### 2. Verlinde's entropy formula is not a free choice
 
@@ -74,17 +83,18 @@ repository proves it is not arbitrary at all:
 > `F = ma` at every acceleration **if and only if** the entropy formula is exactly
 > Verlinde's.
 
-So within the entropic picture, his postulate and Newton's second law are equivalent — there
-was never a second option. The theorem is stated carefully at its edges: at zero acceleration
-the equation degenerates (every entropy formula trivially works, and the theorem quantifies
-over all accelerations precisely to handle this), and the module states explicitly what it
-does **not** prove — in particular, it determines a single number `ΔS`, not the full
-entropy-gradient field Verlinde's picture imagines.
+So within the stated entropic and thermal interfaces, his postulate and Newton's second law
+are equivalent — there is no alternative scalar entropy compatible with the response law.
+The repository proves existence and uniqueness at nonzero acceleration, proves independence
+from which nonzero acceleration is used, and separately characterizes the zero-acceleration
+degeneracy. It also rewrites the result as `2π` nats per probe-mass Compton wavelength.
 
 *In the code:*
 [`DisplacementEntropyFromUnruhInertia.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/DisplacementEntropyFromUnruhInertia.lean)
-(`verlindeEntropy_iff_inertial_response_law`, and
-`not_existsUnique_displacementEntropy_at_zero_acceleration` for the degenerate case).
+(`existsUnique_displacementEntropy`, `displacementEntropy_a_independent`,
+`verlindeEntropy_iff_inertial_response_law`,
+`not_existsUnique_displacementEntropy_at_zero_acceleration`, and
+`displacementEntropy_eq_two_pi_nats_per_comptonCell`).
 
 ### 3. Building the screen out of quantum uncertainty
 
@@ -95,35 +105,46 @@ measurement can tell you). Tiling a spherical surface with cells of that density
 the rules of §1 yields a force with Newton's exact `1/R²` form, with coupling constant
 `G = ħcσ₀⁴`.
 
-This is a *construction*, not a derivation of gravity: the tiling rule — "these cells are the
-independent bits" — is an assumption, and the repository's metadata flags every result that
-depends on it.
+This is a direct construction of the inverse-square response in the formalized screen
+system. The screen count has two complementary `G`-free operational forms in the repository:
+the thermodynamic count `N = 2E/(k_B T)` and the Compton-cell count `N = A/λ_C²`. The latter
+cell scale is tied to the measured Compton scattering shift by
+`comptonShift_right_angle`, `cellArea_eq_shift_sq`, and
+`comptonBitDensity_eq_inv_shift_sq`. Given positive independently supplied area and cell
+count, `GFreeComptonCellCalibration` constructs the screen mass, inference width, Planck
+cell, and a unique coupling without taking `G` as input. The ZIL edges retain the precise
+physical identification used by each branch instead of replacing the construction with a
+blanket label.
 
 *In the code:*
-[`GaussianFisherGravitationalResponse.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/GaussianFisherGravitationalResponse.lean)
-(`comptonBitDensity`, `tiledScreen_gravitationalResponse`, `operational_newtonG_eq_info`).
+[`GaussianFisherGravitationalResponse.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/GaussianFisherGravitationalResponse.lean),
+[`ComptonCellNewtonConstant.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/ComptonCellNewtonConstant.lean), and
+[`DeBroglieDispersionComptonAnchor.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/DeBroglieDispersionComptonAnchor.lean)
+(`comptonBitDensity`, `tiledScreen_gravitationalResponse`, `operational_newtonG_eq_info`,
+`GFreeComptonCellCalibration`, `existsUnique_countedNewtonG`,
+`comptonShift_right_angle`, `cellArea_eq_shift_sq`,
+`comptonBitDensity_eq_inv_shift_sq`).
 
 ### 4. Why the Planck scale appears
 
-If the constructed coupling `ħcσ₀⁴` is to *be* Newton's constant, how wide must the screen's
-cells be? Exactly the Planck width, `σ₀ = (G/ħc)^{1/4}` — and the identification holds **if
-and only if** the screen stores precisely one bit per Planck area, the density long
-conjectured in black-hole thermodynamics. The width is unique: any other choice gives a
-measurably different force, which is what makes the identification falsifiable rather than a
-relabeling.
+The matching between the constructed coupling `ħcσ₀⁴` and Newton's constant is characterized
+exactly. The screen width is the Planck width, `σ₀ = (G/ħc)^{1/4}`, **if and only if**
+the screen stores precisely one bit per Planck area. The width is unique: any other choice
+gives a different response. In the independent-count branch, the same area per counted cell
+constructs the Planck length, fixes the positive screen mass and inference width, and proves
+`G_count = ħc/m_scr² = ħcσ₀⁴`.
 
 *In the code:*
 [`GaussianFisherPlanckCalibration.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/GaussianFisherPlanckCalibration.lean)
 (`identification_iff_planckDensity`, `existsUnique_calibration`).
 
-### 5. Black holes as a cross-check
+### 5. Black-hole thermodynamic closure
 
-Any information-based account of gravity must reproduce the two facts we believe about black
-holes on independent grounds. It does: counting the §3 cells on a black-hole horizon gives
-exactly the Bekenstein–Hawking entropy (area over four Planck areas), and the screen
-temperature of §1 evaluated at the horizon is exactly Hawking's temperature. These are
-consistency checks — they inherit the tiling assumption — but the program would have died
-here, and did not.
+Counting the §3 cells on a black-hole horizon gives exactly the Bekenstein–Hawking entropy
+(area over four Planck areas), and the screen temperature of §1 evaluated at the horizon is
+exactly Hawking's temperature. These theorems close the screen count, Bekenstein entropy,
+Susskind holographic area law, Hawking temperature, and constructed coupling on the same
+formal data.
 
 *In the code:*
 [`GaussianFisherHorizonConsistency.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/GaussianFisherHorizonConsistency.lean)
@@ -143,9 +164,13 @@ forced, not chosen. Second, the chain extends upward: the Newtonian limit forces
 normalization of Einstein's field equations (`κ = 8πG/c⁴`), and matching the screen coupling
 in a string-theoretic (AdS/CFT) setting fixes the compactification volume uniquely.
 
-Read the direction honestly: these theorems take the `1/R²` law as *input* and show
-holography is the only bookkeeping that produces it. They are why the holographic structure
-is not adjustable — not an independent explanation of why gravity is inverse-square.
+There are two directions in the repository, and neither should be erased. The inverse
+rigidity direction takes an arbitrary nowhere-zero screen profile and proves that exact
+`1/R²` response forces the holographic area profile and its unique coupling. The constructive
+direction starts from the Compton–Fisher density, proves that its count equals the
+holographic count at `ħcσ₀⁴`, and then derives the `1/R²` response for every nonzero radius.
+Thus the library contains both the uniqueness theorem and a concrete screen realization of
+the law.
 
 *In the code:*
 [`UniqueInverseSquareHolographicCoupling.lean`](../Physlib/QuantumMechanics/ComplexAction/ComptonClock/UniqueInverseSquareHolographicCoupling.lean)
@@ -336,45 +361,37 @@ for the `[I]`-extended dimensional system (`forgetInfo_not_injective`,
 
 ### 10. Where experiment enters
 
-The least-tested assumption in the whole stack is Unruh thermality (§1). The repository
-formalizes exactly where it becomes measurable: a detector of mass `m` accelerating at `a`
-responds thermally only above the threshold where the Unruh temperature reaches the
-detector's own Compton temperature — below it, the response is exponentially suppressed by
-precisely the ratio of the two. This "welding point" is the regime targeted by a 2025
-proposal to simulate a low-mass detector in a superconducting qubit (arXiv:2512.17959),
-which makes the thermality premise falsifiable rather than philosophical.
+The repository formalizes an experimental interface for accelerated thermality. A detector
+of mass `m` accelerating at `a` reaches the welding point when the Unruh temperature equals
+its Compton temperature; the same module expresses the suppression scale as the ratio of
+those temperatures. This is the regime targeted by a 2025 proposal to simulate a low-mass
+detector in a superconducting qubit (arXiv:2512.17959), giving the formal temperature and
+threshold relations a concrete measurement context.
 
 *In the code:*
 [`Physlib/Thermodynamics/UnruhDetectionThreshold.lean`](../Physlib/Thermodynamics/UnruhDetectionThreshold.lean)
 (`suppressionScale_eq_temperatureRatio`, `detectionThreshold_iff_temperatures_weld`).
 
-## What is assumed — the complete list
+## How the scope of a claim is certified
 
-Everything above is conditional on four assumptions, stated here in plain terms. Accept
-them, and the theorems make the rest mathematics. Doubt the program, and this is the
-complete list of places to aim.
+No short prose list can replace the repository's dependency structure. Scope is certified
+at three connected levels:
 
-1. **Forces are entropy gradients** — the rule `F = T·ΔS/Δx` (§1). The founding premise;
-   nothing here derives it.
-2. **Screens are thermal** — the Unruh temperature is real and the equipartition rule for
-   screen bits is right (§1). The Unruh half is testable (§10); equipartition is a model
-   choice.
-3. **The cell tiling counts bits** — the Gaussian-measurement cells of §3 are the screen's
-   independent degrees of freedom. This is the assumption with the widest reach in the
-   repository's dependency audit.
-4. **One cell identification is left open** — the entropy of §2 is "2π nats per Compton
-   wavelength of the *probe mass*"; the screen cells of §3 belong to the *screen's* inference
-   scale. Identifying the two is a physical step the repository deliberately does **not**
-   take, and says so wherever it matters.
+1. **Lean declaration.** The parameters and hypotheses in a declaration are the exact local
+   interface from which its conclusion is proved.
+2. **Constructive and converse routes.** A hypothesis in one theorem may be the output of a
+   different construction. For example, classical equipartition is derived from the
+   canonical ensemble; the Compton–Fisher branch constructs a holographic count and
+   inverse-square response; and the inverse-rigidity branch proves uniqueness in the
+   converse direction.
+3. **ZIL transitive graph.** `formalizes`, `requires`, `derives`, `supported_by`, alias, and
+   caveat edges record the claim-level provenance. A premise discharged elsewhere in the
+   graph is not to be presented as an irreducible postulate merely because one theorem
+   receives it through its interface.
 
-## What is *not* claimed
-
-- No claim that gravity **is** entropic — only that, granted the list above, the entropic
-  picture is uniquely rigid: Verlinde's postulates are forced, the holographic count is
-  forced, the couplings are forced.
-- No derivation of the inverse-square law from first principles — in §6 it is the
-  *hypothesis*.
-- No proof of Unruh thermality — that is physics, and it is pointed at an experiment (§10).
+Accordingly, this guide reports the positive content of the named theorem chains and
+delegates dependency status to the generated graph. Claims about the physical interpretation
+should cite the exact Lean route and its current transitive ZIL closure.
 
 ## Check it yourself
 
@@ -383,9 +400,10 @@ lake build                      # the whole library; no `sorry`, no `axiom` decl
 ./scripts/zil-graph-report.sh   # regenerate the audit report: analysis/zil-graph-report.md
 ```
 
-Every claim in the program carries machine-readable metadata naming its assumptions and
-support. The audit sweeps the full library and reports, among other things, any exact claim
-that silently rests on a weaker one ("buried conditionality" — currently zero). The audit
-engine itself is proved correct against its reference semantics
+The program's annotated claims carry machine-readable metadata naming their dependencies and
+support. The generated [`ZIL graph report`](../analysis/zil-graph-report.md) sweeps the full
+graph and reports, among other things, primitive premises, derived-premise aliases, evidence
+reach, and any exact claim that silently rests on a weaker one. The audit engine itself is
+proved correct against its reference semantics
 ([`Physlib/Meta/ZilDatalogFastEquiv.lean`](../Physlib/Meta/ZilDatalogFastEquiv.lean),
 `deriveProgramFast_eq`), so trusting the report does not require trusting a script.
